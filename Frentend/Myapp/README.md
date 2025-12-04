@@ -1,59 +1,26 @@
-# Myapp
+# 01BLOG
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.1.
+## Project Structure
 
-## Development server
+The project is organized into the following main directories:
 
-To start a local development server, run:
-
-```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+-   **`src/`**: Contains the main source code of the application.
+    -   **`app/`**: The root component of the application.
+        -   **`core/`**: Contains core features like services, models, guards, and interceptors.
+            -   **`guards/`**: Route guards for authentication and authorization.
+            -   **`interceptors/`**: HTTP interceptors.
+            -   **`models/`**: Data models used in the application.
+            -   **`services/`**: Services that provide specific functionalities like authentication, post management, etc.
+        -   **`features/`**: Contains the different features of the application, organized by domain.
+            -   **`admin/`**: Components related to the admin dashboard.
+            -   **`auth/`**: Components for user authentication (login, register).
+            -   **`home/`**: The home page and post feed.
+            -   **`user-block/`**: Components related to user profiles.
+        -   **`layout/`**: Components for the general layout of the application, like navbar and footer.
+        -   **`shared/`**: Contains shared components, pipes, and directives.
+    -   **`public/`**: public assets.
+-   **`dist/`**: for the build output.
+-   **`node_modules/`**: Project dependencies.
+-   **`angular.json`**: Angular CLI configuration file.
+-   **`package.json`**: Project dependencies and scripts.
+-   **`tsconfig.json`**: TypeScript compiler configuration.
