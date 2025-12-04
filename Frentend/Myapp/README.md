@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # 01BLOG
 
 ## Project Structure
@@ -25,6 +24,4 @@ The project is organized into the following main directories:
 -   **`angular.json`**: Angular CLI configuration file.
 -   **`package.json`**: Project dependencies and scripts.
 -   **`tsconfig.json`**: TypeScript compiler configuration.
-=======
 
->>>>>>> 6a532f294b83d36327febddf5eb830a112d17492
