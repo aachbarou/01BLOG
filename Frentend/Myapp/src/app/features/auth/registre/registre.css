@@ -1,0 +1,159 @@
+/* register.css */
+
+/* Main Container - Renamed to register-container */
+.register-container {
+  width: 320px;
+  /* Prevent touching edges on mobile */
+  max-width: 95%;
+  padding: 40px 30px;
+
+  /* Glassmorphism Effect */
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 30px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  color: #ffffff;
+  text-align: center;
+
+  /* CRITICAL FOR REGISTER: Handle taller content */
+  max-height: 90vh; /* Never exceed 90% of screen height */
+  overflow-y: auto; /* Scroll if fields don't fit */
+  
+  /* Hide scrollbar for a cleaner look */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Hide scrollbar for Chrome/Safari */
+.register-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* Header Styles */
+.register-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+  text-align: left;
+}
+
+.logo {
+  flex-shrink: 0;
+  width: 35px;
+  height: 35px;
+  background: #fff;
+  color: #333;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 20px;
+  margin-right: 15px;
+}
+
+.register-header h2 {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.2;
+  font-weight: 500;
+}
+
+/* Form & Input Styles */
+.form-group {
+  margin-bottom: 15px; /* Slightly tighter spacing for register form */
+}
+
+input {
+  width: 100%;
+  padding: 15px;
+  box-sizing: border-box;
+  background: rgba(0, 0, 0, 0.25);
+  border: none;
+  border-radius: 15px;
+  color: #fff;
+  font-size: 14px;
+  outline: none;
+  transition: background-color 5000s ease-in-out 0s;
+  -webkit-text-fill-color: #fff !important;
+}
+
+input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Button Styles */
+.register-button {
+  width: 100%;
+  padding: 15px;
+  background-color: #ffffff;
+  color: #333;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.2s;
+  margin-top: 10px;
+}
+
+.register-button:hover {
+  background-color: #f0f0f0;
+}
+
+/* Divider */
+.divider {
+  margin: 20px 0;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Social Buttons */
+.social-login {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.social-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: none;
+  background: #fff;
+  color: #333;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.2s;
+}
+
+.social-btn:hover {
+  transform: scale(1.05);
+}
+
+/* Footer Links */
+.register-footer {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.register-footer p {
+  margin: 5px 0;
+}
+
+.register-footer a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.register-footer a:hover {
+  text-decoration: underline;
+}

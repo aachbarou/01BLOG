@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { afterNextRender } from '@angular/core';
+import { log } from 'console';
+// import { afterNextRender } from '@angular/core';
+//import {RegisterComponent} from '../registre/registre';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -9,8 +11,8 @@ import { afterNextRender } from '@angular/core';
   styleUrls: ['./login.css']
 })
 export class LoginComponent {
-
-  @Output() emitedResult = new EventEmitter<void>();
+  @Output() loginToregister =  new EventEmitter<void>();
+  @Output() loginSuccessemiter = new EventEmitter<void>();
   email = '';
   password = '';
   public LoginError = false;
@@ -32,10 +34,18 @@ export class LoginComponent {
           errelem.classList.add('hidden');
         }
       }, 1000);
-
-
-  } else {
-    this.emitedResult.emit();
+  }else  {
+    // Simulate successful login
+    this.LoginError = false;
+    this.ErrorMessage = '';
+    console.log('Login successful');
+    this.loginSuccessemiter.emit();
   }
 }
+showregister(){
+  
+  this.loginToregister.emit();
+}
+
+
 }
