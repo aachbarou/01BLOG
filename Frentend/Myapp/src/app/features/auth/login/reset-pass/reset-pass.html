@@ -1,0 +1,37 @@
+<div class="login-container">
+  <div class="login-header">
+    <div class="logo">01</div>
+    <h2>01Blog<br>Reset Password</h2>
+  </div>
+
+  <form (ngSubmit)="sendResetLink()">
+    <p class="instruction-text">
+      Enter your email below and we will send you a link to reset your password.
+    </p>
+
+    <div class="form-group">
+      <input 
+        type="email" 
+        id="email" 
+        name="email" 
+        [(ngModel)]="email" 
+        placeholder="Email Address" 
+        required
+      >
+    </div>
+
+    <button type="submit" class="login-button">Send Reset Link</button>
+
+    @if (message) {
+      <div class="info-message" [class]="messageType">
+        {{ message }}
+      </div>
+    }
+  </form>
+
+  <div class="login-footer">
+    <a (click)="backToLogin()" class="back-link">
+      ← Back to Login
+    </a>
+  </div>
+</div>

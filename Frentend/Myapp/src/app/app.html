@@ -1,15 +1,4 @@
+<app-navbar></app-navbar>
 <div class="app-main-container">
-
-  @if (!isLoggedIn ) {
-  @if ( !isLoggedIn && !registerView) {
-  <app-login (loginSuccessemiter)="loginsuccess()" (loginToregister)="toggleRegisterView(true)"></app-login>
-  }@else {
-  <app-registre (SwitchToLoginClick)="toggleRegisterView(false)">
-    <router-outlet></router-outlet>
-  </app-registre>
-  }
-  }@else {
-  <h1>Home page </h1>
   <router-outlet></router-outlet>
-  }
 </div>

@@ -1,17 +1,17 @@
 import { Component, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { form } from '@angular/forms/signals';
-import { EventEmitter } from '@angular/core';
+import  { Router } from '@angular/router';
 
 @Component({
   selector: 'app-registre',
+  standalone: true,
   imports: [FormsModule],
-  
   templateUrl: './registre.html',
   styleUrl: './registre.css',
+  host: { 'class': 'center-content' }
 })
 export class RegisterComponent {
-  @Output() SwitchToLoginClick = new EventEmitter<void>();
+ constructor(private router: Router) {}
   name: string = '';
   email: string = '';
   password: string = '';
@@ -25,10 +25,8 @@ export class RegisterComponent {
     console.log('Registration successful for', this.name, this.email);
     
   }
- onSignupClick(event?: Event) {
-   // 2. Press the button (Send the signal)
-   
-   this.SwitchToLoginClick.emit();
-}
+  onSignupClick(){
+    this.router.navigate(['/login']);
+  }
 
 }

@@ -1,0 +1,129 @@
+/* Inheriting core styles from login/register for consistency */
+
+.login-container {
+  width: 320px;
+  padding: 40px 30px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 30px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  color: #ffffff;
+  text-align: center;
+}
+
+.login-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+  text-align: left;
+}
+
+.logo {
+  width: 35px;
+  height: 35px;
+  background: #fff;
+  color: #333;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 20px;
+  margin-right: 15px;
+}
+
+.login-header h2 {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.2;
+  font-weight: 500;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+input {
+  width: 100%;
+  padding: 15px;
+  box-sizing: border-box;
+  background: rgba(0, 0, 0, 0.25);
+  border: none;
+  border-radius: 15px;
+  color: #fff;
+  font-size: 14px;
+  outline: none;
+}
+
+input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.login-button {
+  width: 100%;
+  padding: 15px;
+  background-color: #ffffff;
+  color: #333;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.2s;
+  margin-top: 10px;
+}
+
+.login-button:hover {
+  background-color: #f0f0f0;
+}
+
+/* Custom Styles for Reset Password */
+
+.instruction-text {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 25px;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.info-message {
+  padding: 10px;
+  margin-top: 15px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.info-message.success {
+  color: #c9e6c9;
+  background-color: rgba(76, 175, 80, 0.2);
+  border: 1px solid rgba(76, 175, 80, 0.4);
+}
+
+.info-message.error {
+  color: #f17a7a;
+  background-color: rgba(244, 67, 54, 0.2);
+  border: 1px solid rgba(244, 67, 54, 0.4);
+}
+
+.login-footer {
+  margin-top: 25px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.back-link {
+  color: #fff;
+  text-decoration: none;
+  cursor: pointer;
+  font-weight: 500;
+  display: block;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}

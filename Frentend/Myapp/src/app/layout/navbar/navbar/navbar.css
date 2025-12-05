@@ -1,0 +1,61 @@
+/* الحاوية الرئيسية للناف بار */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 30px;
+  height: 70px;
+  width: 100%;
+  box-sizing: border-box;
+  
+  /* تثبيت الناف بار في الأعلى */
+  position: sticky;
+  top: 0;
+  z-index: 1000; /* لضمان ظهوره فوق المحتوى */
+}
+
+/* تأثير الزجاج (Glassmorphism) */
+.glass-nav {
+  background: rgba(255, 255, 255, 0.05); /* شفافية عالية مثل الصورة */
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* تنسيق الشعار */
+.nav-brand .logo-text {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* تنسيق زر المستخدم */
+.user-profile-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  transition: transform 0.2s ease;
+}
+
+.user-profile-btn:hover {
+  transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* دائرة الأفاتار */
+.avatar-circle {
+  width: 40px;
+  height: 40px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
