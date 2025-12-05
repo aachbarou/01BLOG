@@ -25,9 +25,7 @@ export class LoginComponent {
 
       setTimeout(() => {
         this.LoginError = false;
-        // this.ErrorMessage = '';
         console.log(this.LoginError);
-        // hide the error after 1 second
         let errelem  = document.getElementById('error-message');
         if (errelem) {
           console.log('Hiding error message element');
