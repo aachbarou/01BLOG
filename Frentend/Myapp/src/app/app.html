@@ -1,6 +1,9 @@
+<div class="app-main-container">
 
-<app-login *ngIf="!isLoggedIn()" (loginSuccess)="loginSuccess()"></app-login>
+  <app-login *ngIf="!isLoggedIn" (emitedResult)="loginsuccess()"></app-login>
 
-<div *ngIf="isLoggedIn()">
-    <router-outlet></router-outlet>
+  <div *ngIf="isLoggedIn" class="logged-in-content">
+      <router-outlet></router-outlet>
+  </div>
+
 </div>
