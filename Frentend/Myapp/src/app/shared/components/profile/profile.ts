@@ -1,30 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PostComponent } from '../post/post';
-
-// Define models for the simulation
-export interface UserProfile {
-  id: string;
-  name: string;
-  avatarUrl: string;
-  bio: string;
-  stats: {
-    posts: number;
-    followers: string;
-    following: number;
-  };
-}
-
-export interface Post {
-  id: string;
-  authorName: string;
-  authorAvatar: string;
-  content: string;
-  date: Date;
-  likes: number;
-  comments: number;
-}
-
+import  { Post } from '../../../core/models/post.model';
+import { UserProfile } from '../../../core/models/user.model';
 @Component({
   selector: 'app-profile',
   standalone: true,
@@ -32,15 +10,16 @@ export interface Post {
   templateUrl: './profile.html',
   styleUrl: './profile.css'
 })
-export class ProfileComponent {
+export  class ProfileComponent {
   profile: UserProfile = {
     id: 'u1',
-    name: 'Sarah Tech',
-    avatarUrl: 'https://i.pravatar.cc/150?u=sarah', 
-    bio: 'Tech enthusiast & UI designer. Sharing my journey.',
+    name: 'Simo 6 ',
+    avatarUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQixhzI7xr1ouPUT_f7BIIS8ErIWs3Vx8FiZA&s',
+    bio: ' tikxbila twliwla ',
+    
     stats: {
       posts: 12,
-      followers: '1.2k',
+      followers: '0',
       following: 340
     }
   };
@@ -48,18 +27,20 @@ export class ProfileComponent {
   posts: Post[] = [
     {
       id: 'p1',
-      authorName: 'Sarah Tech',
-      authorAvatar: 'https://i.pravatar.cc/150?u=sarah',
-      content: 'Just finished the new Angular tutorial. Signals are a game changer for reactivity! #webdev #angular',
+      authorName: 'Simo 6',
+      authorAvatar: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQixhzI7xr1ouPUT_f7BIIS8ErIWs3Vx8FiZA&s',
+      bio : 'Tech enthusiast & UI designer. Sharing my journey.',
+      content: 'ghandiro haja jdida had l3am 2030, stay tuned! #excited #newbeginnings',
       date: new Date(new Date().getTime() - (1000 * 60 * 30)), // 30 mins ago
       likes: 45,
       comments: 12
     },
     {
       id: 'p2',
-      authorName: 'Sarah Tech',
-      authorAvatar: 'https://i.pravatar.cc/150?u=sarah',
-      content: 'Just finished the new Angular tutorial. Signals are a game changer for reactivity! #webdev #angular',
+      authorName: 'Simo 6',
+      authorAvatar: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQixhzI7xr1ouPUT_f7BIIS8ErIWs3Vx8FiZA&s',
+      bio : 'Tech enthusiast & UI designer. Sharing my journey.',
+      content: 'ikone khire l3am jay inshallah (20??)! #motivation #goals',
       date: new Date(new Date().getTime() - (1000 * 60 * 30)), // 30 mins ago
       likes: 45,
       comments: 12

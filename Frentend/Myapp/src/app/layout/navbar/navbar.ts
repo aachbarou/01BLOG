@@ -16,11 +16,9 @@ export class Navbar {
   }
   protected  imageUrl:string = 'https://upload.wikimedia.org/wikipedia/ary/8/88/Lmorphine.jpg'
   protected profileToggle(){
-    // Implement logout functionality here
     this.router.navigate(['/profile']);
   }
   rerender(){
-    // Implement rerender functionality here
     console.log('rerender Home  page');
     this.router.navigate(['/home']);
   }
