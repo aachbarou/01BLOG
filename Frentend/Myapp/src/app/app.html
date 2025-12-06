@@ -1,9 +1,10 @@
-@if (isLoading) {
-  <app-loading></app-loading>
-} @else  {
+@if  (  this.isLoading  ){
+      <app-loading></app-loading>
+}@else  {
    <div class="app-main-container">
-  <router-outlet></router-outlet>
-</div>
+      <router-outlet></router-outlet>
+  </div>
+
 }
  
 

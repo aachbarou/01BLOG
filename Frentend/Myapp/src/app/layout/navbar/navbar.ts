@@ -15,9 +15,9 @@ export class Navbar {
     this.router.navigate(['/profile']);
   }
   protected  imageUrl:string = 'https://upload.wikimedia.org/wikipedia/ary/8/88/Lmorphine.jpg'
-  protected logout(){
+  protected profileToggle(){
     // Implement logout functionality here
-    this.router.navigate(['/login']);
+    this.router.navigate(['/profile']);
   }
   rerender(){
     // Implement rerender functionality here

@@ -1,13 +1,26 @@
+<app-navbar></app-navbar>
+
 <div class="home-container">
-<app-navbar></app-navbar><br>
-<aside class="sidebar">
+
+  <main class="main-content">
+    @for (post of posts; track post.id) {
+      <app-post [post]="post"></app-post>
+    } @empty {
+      <div class="glass-card no-posts">
+        <p>No posts available yet. Be the first to post!</p>
+      </div>
+    }
+  </main>
+
+  <aside class="sidebar">
     <div class="glass-card sidebar-card">
       <h3>Trending Topics</h3>
       <ul class="topic-list">
-        <li>#Angular17</li>
+        <li>#Angular18</li>
         <li>#Glassmorphism</li>
         <li>#WebDev</li>
       </ul>
     </div>
   </aside>
+
 </div>

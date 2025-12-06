@@ -1,0 +1,37 @@
+<div class="glass-card post-container">
+  <div class="post-header">
+    <div class="author-info">
+      <img [src]="post.authorAvatar" alt="Avatar" class="avatar">
+      <div class="author-details">
+        <span class="author-name">{{ post.authorName }}</span>
+        <span class="post-date">{{ post.date}}</span>
+      </div>
+    </div>
+    <button class="more-options">...</button>
+  </div>
+
+  <div class="post-content">
+    <p>{{ post.content }}</p>
+    
+    @if (post.imageUrl) {
+      <div class="image-wrapper">
+        <img [src]="post.imageUrl" alt="Post Image">
+      </div>
+    }
+  </div>
+
+  <div class="post-actions">
+    <button class="action-btn" [class.liked]="isLiked" (click)="toggleLike()">
+      <span class="icon">❤️</span> 
+      <span>{{ post.likes }}</span>
+    </button>
+    <button class="action-btn">
+      <span class="icon">💬</span> 
+      <span>{{ post.comments }}</span>
+    </button>
+    <button class="action-btn share-btn">
+      <span class="icon">↗️</span>
+      <span>Share</span>
+    </button>
+  </div>
+</div>
