@@ -5,9 +5,12 @@
 
   <div class="nav-actions">
     <button class="user-profile-btn" (click)="logout()" title="Logout">
-      <div class="avatar-circle">
-        <span class="avatar-initials">AB</span>
-       </div>
+      <div class="user-profile">
+        <div class="avatar-circle">
+          <img src="{{imageUrl}}" alt="">
+        </div>
+        <span class="username">{{username}}</span>
+      </div>
     </button>
   </div>
 </nav>

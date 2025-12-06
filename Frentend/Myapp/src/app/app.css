@@ -13,13 +13,6 @@
   padding: 20px; 
 }
 
-.center-content {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: calc(100vh - 110px);
-}
-
 /* Optional: Style for the container holding routed content after login */
 .logged-in-content {
     width: 100%;

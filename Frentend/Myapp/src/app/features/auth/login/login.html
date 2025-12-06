@@ -3,6 +3,7 @@
     <div class="logo">01</div>
     <h2>01Blog <br> Login</h2>
   </div>
+  
   <form (ngSubmit)="login()">
     <div class="form-group">
       <input type="text" id="email" name="email" [(ngModel)]="email" placeholder="Email">
@@ -11,6 +12,9 @@
       <input type="password" id="password" name="password" [(ngModel)]="password" placeholder="Password">
     </div>
     <button type="submit" class="login-button">Sign In</button>
+    @if (isLoading) {
+    <app-loading ></app-loading>
+    }
     @if (LoginError) { <div class="error-message"> {{ ErrorMessage }}
     </div>
     }

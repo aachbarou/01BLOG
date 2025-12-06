@@ -3,7 +3,7 @@ import { LoginComponent } from './features/auth/login/login';
 import { HomeComponent } from './features/home/home';
 import { RegisterComponent } from './features/auth/registre/registre';
 import { ResetPass } from './features/auth/login/reset-pass/reset-pass';
-import { register } from 'module';
+import { Loading } from './shared/components/loading/loading';
 export const routes: Routes = [
     { path: '', component: HomeComponent },
     { path: 'login', component: LoginComponent },

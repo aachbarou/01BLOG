@@ -1,14 +1,13 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import  { Navbar } from '../../layout/navbar/navbar/navbar';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [],
+  imports: [Navbar],
   templateUrl: './home.html',
   styleUrls: ['./home.css'],
 })
 export class HomeComponent {
-  protected isLoged = true ;
   
 }

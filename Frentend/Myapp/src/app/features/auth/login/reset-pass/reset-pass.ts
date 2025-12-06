@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-reset-pass',
+  standalone: true,
   imports: [FormsModule],
   templateUrl: './reset-pass.html',
   styleUrl: './reset-pass.css',

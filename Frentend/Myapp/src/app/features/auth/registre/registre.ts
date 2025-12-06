@@ -7,8 +7,7 @@ import  { Router } from '@angular/router';
   standalone: true,
   imports: [FormsModule],
   templateUrl: './registre.html',
-  styleUrl: './registre.css',
-  host: { 'class': 'center-content' }
+  styleUrl: './registre.css'
 })
 export class RegisterComponent {
  constructor(private router: Router) {}
