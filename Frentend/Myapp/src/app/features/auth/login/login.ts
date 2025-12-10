@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Loading } from '../../../shared/components/loading/loading';
+import  {AutGuard} from  '../../../core/guards/auth.guard'
 import  {AuthServices} from  '../../../core/services/auth.service'
+
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -11,26 +13,32 @@ import  {AuthServices} from  '../../../core/services/auth.service'
   styleUrls: ['./login.css']
 })
 export class LoginComponent {
-  constructor(private router: Router , authservice  : AuthServices) {
+  constructor(private router: Router , private Auths : AuthServices , private  AuthGard  : AutGuard) {
    }
   isLoading: boolean = false;
+
 
   email = '';
   password = '';
   public LoginError = false;
   protected ErrorMessage = '';
+  
 
   login() {
     if (!this.email || !this.password) {
       this.LoginError = true;
       this.ErrorMessage = 'Please enter both email and password.';
 
-     this.authservice.login();
+     
     } else {
       // Simulate successful login
       this.LoginError = false;
       this.ErrorMessage = '';
-      console.log('Login successful');
+       this.Auths.loginSet();
+      
+
+      this.router.navigate(['/home'])
+
       
     }
   }
@@ -38,7 +46,6 @@ export class LoginComponent {
     this.router.navigate(['/signup']);
   }
   resetpass() {
-    
     this.router.navigate(['/help']);
   }
 

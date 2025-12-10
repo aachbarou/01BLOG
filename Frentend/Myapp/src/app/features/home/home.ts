@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import  { Navbar } from '../../layout/navbar/navbar';
 import  {PostComponent}  from  '../../shared/components/post/post'  ;
 import { fetchPosts } from '../../core/services/post.service';
@@ -9,7 +9,11 @@ import { fetchPosts } from '../../core/services/post.service';
   templateUrl: './home.html',
   styleUrls: ['./home.css'],
 })
-export class HomeComponent {
+export class HomeComponent  {
   protected posts  =  fetchPosts()  ;
-  
+
+  constructor(){
+            
+  }
+ 
 }

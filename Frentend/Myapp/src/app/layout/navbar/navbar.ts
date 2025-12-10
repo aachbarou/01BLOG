@@ -1,6 +1,7 @@
 import { Component, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { AutGuard } from '../../core/guards/auth.guard';
+import  {AuthServices} from  '../../core/services/auth.service' 
 
 @Component({
   selector: 'app-navbar',
@@ -13,12 +14,11 @@ import { AutGuard } from '../../core/guards/auth.guard';
   providedIn : 'root'
 })
 export class Navbar {
-  constructor(private router:Router , private Auth  : AutGuard){
+  constructor(private router:Router , private Auth  : AutGuard  , private   Auths : AuthServices ){
     
   }
   username: string = 'Simo 6'; 
   ShowProfile(){
-    this.Auth.canActivate(); 
     this.router.navigate(['/profile']);
   }
   protected  imageUrl:string = 'https://upload.wikimedia.org/wikipedia/ary/8/88/Lmorphine.jpg'
@@ -28,5 +28,11 @@ export class Navbar {
   rerender(){
     console.log('rerender Home  page');
     this.router.navigate(['/home']);
+  }
+  logout(){
+      this.Auths.logoutSet();
+      this.router.navigate(['/login'])
+
+      console.log('daaart ')
   }
 }
