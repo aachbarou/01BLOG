@@ -14,6 +14,8 @@ import  {AuthServices} from  '../../../core/services/auth.service'
 })
 export class LoginComponent {
   constructor(private router: Router , private Auths : AuthServices , private  AuthGard  : AutGuard) {
+        
+
    }
   isLoading: boolean = false;
 
@@ -28,18 +30,12 @@ export class LoginComponent {
     if (!this.email || !this.password) {
       this.LoginError = true;
       this.ErrorMessage = 'Please enter both email and password.';
-
-     
     } else {
       // Simulate successful login
       this.LoginError = false;
       this.ErrorMessage = '';
        this.Auths.loginSet();
-      
-
-      this.router.navigate(['/home'])
-
-      
+      this.router.navigate(['/home'])      
     }
   }
   showregister() {

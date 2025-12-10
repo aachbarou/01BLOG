@@ -13,6 +13,5 @@ export class AuthGuest implements CanActivate {
                 return   this.router.createUrlTree(['/home'])
            }
                return true ;
-                
         }
 }

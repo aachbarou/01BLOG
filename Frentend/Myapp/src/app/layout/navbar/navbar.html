@@ -1,19 +1,20 @@
 <nav class="navbar glass-nav">
   <div class="nav-brand">
-    <span class="logo-text">01BLOG</span>
+    <span class="logo-text" (click)="rerender()"><span class="sifrwa7d">01</span>BLOG</span>
   </div>
 
   <div class="nav-actions">
-    <button class="user-profile-btn" (click)="profileToggle()" title="profile">
-      <div class="user-profile">
-        <div class="avatar-circle">
-          <img src="{{imageUrl}}" alt="">
-        </div>
-        <span class="username">{{username}}</span>
-      </div>
-    </button>
-    <button class="logout-btn"  (click)="logout()" title="Logout">
+    <button class="glass-btn-logout" (click)="logout()" title="Logout">
       Logout
+    </button>
+
+    <button class="user-profile-btn" (click)="profileToggle()" title="Profile">
+      <div class="user-profile">
+        <span class="username">{{username}}</span>
+        <div class="avatar-circle">
+          <img src="{{imageUrl}}" alt="User avatar">
+        </div>
+      </div>
     </button>
   </div>
 </nav>

@@ -26,13 +26,11 @@ export class Navbar {
     this.router.navigate(['/profile']);
   }
   rerender(){
-    console.log('rerender Home  page');
+    
     this.router.navigate(['/home']);
   }
   logout(){
       this.Auths.logoutSet();
       this.router.navigate(['/login'])
-
-      console.log('daaart ')
   }
 }

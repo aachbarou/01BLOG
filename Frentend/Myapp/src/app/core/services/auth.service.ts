@@ -1,42 +1,55 @@
-import { Injectable, Inject, PLATFORM_ID, OnInit } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
-@Injectable({
-  providedIn: 'root'
-})
-export class AuthServices  {
-  constructor(@Inject(PLATFORM_ID) private platformId: object ) {
-    this.getlocalstoragev()
-  }
- 
-  private logged = new BehaviorSubject<boolean>(false );
+
+@Injectable({ providedIn: 'root' })
+export class AuthServices {
+
+  private logged = new BehaviorSubject<boolean>(false);
   Isloged$ = this.logged.asObservable();
-  
-  private getlocalstoragev(): void  {
-    if  (isPlatformBrowser(this.platformId)){
-       const saved  = localStorage.getItem('logged');
+  private lastValue: string | null = null;
+
+  constructor(@Inject(PLATFORM_ID) private platformId: object) {
+    const initial = this.getLocalStorageValue();
+    this.logged.next(initial);
+    if (isPlatformBrowser(this.platformId)) { 
+    this.lastValue = localStorage.getItem('logged');
+    }
+
+    setInterval(() => this.checkLocalStorage(), 1000); 
+  }
+  private getLocalStorageValue(): boolean {
+    if (isPlatformBrowser(this.platformId)) {
+      const saved = localStorage.getItem('logged');
       if (!saved) {
-           localStorage.setItem('logged', 'false');
-      }else  {
-        if (saved === 'true'){
-            this.logged.next(true) ;
-        }else  {
-          this.logged.next(false) ;
-        }
+        localStorage.setItem('logged', 'false');
+        return false;
+      }
+      return saved === 'true';
+    }
+    return false;
+  }
+
+  private checkLocalStorage() {
+    if (isPlatformBrowser(this.platformId)) {
+      const current = localStorage.getItem('logged');
+      if (current !== this.lastValue) {
+        this.lastValue = current;
+        this.logged.next(current === 'true');
       }
     }
   }
+
   loginSet() {
-    if  ( isPlatformBrowser(this.platformId)){
-              localStorage.setItem('logged', 'true');
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem('logged', 'true');
     }
     this.logged.next(true);
   }
 
   logoutSet() {
-    if (isPlatformBrowser(this.platformId)){
+    if (isPlatformBrowser(this.platformId)) {
       localStorage.setItem('logged', 'false');
-      
     }
     this.logged.next(false);
   }
@@ -44,5 +57,4 @@ export class AuthServices  {
   isLoggedIn(): boolean {
     return this.logged.value;
   }
-
 }

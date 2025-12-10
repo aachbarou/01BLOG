@@ -1,16 +1,17 @@
 import { Component, Inject, Injectable, OnInit  } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterOutlet, UrlTree } from '@angular/router';
 import  { Router } from  '@angular/router'  ;
 import { ChangeDetectorRef } from '@angular/core' ;
 import  {Loading} from  './shared/components/loading/loading'  ;
 import { Event as EventType , NavigationStart, NavigationEnd, NavigationCancel, NavigationError } from '@angular/router' ;
 import { AutGuard } from './core/guards/auth.guard';
 import  {AuthServices} from './core/services/auth.service'
+import { Navbar } from './layout/navbar/navbar';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [ RouterOutlet , Loading],
+  imports: [ RouterOutlet , Loading , Navbar],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
@@ -19,8 +20,7 @@ export class App implements OnInit{
   constructor( 
     private cdr: ChangeDetectorRef, 
     private router: Router, 
-    private Guard: AutGuard ,
-    private  AuthS : AuthServices
+    private  Auths : AuthServices 
   ) {
    
   }
@@ -44,5 +44,9 @@ export class App implements OnInit{
           }  ,  1000 )  ;
       }
     });
+  }
+  Islooged():boolean {
+    // console.log('hhhhh')
+     return  this.Auths.isLoggedIn()  ;
   }
 }

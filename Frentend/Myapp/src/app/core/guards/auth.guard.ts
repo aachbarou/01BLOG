@@ -6,7 +6,7 @@ import {  Injectable } from '@angular/core' ;
 })
 
 export  class  AutGuard  implements CanActivate {
-        constructor( private Auth : AuthServices  , private router : Router  ){
+        constructor( private Auth : AuthServices ,   private router : Router  ){
         }
         canActivate(): boolean | UrlTree {
            if  (this.Auth.isLoggedIn()){

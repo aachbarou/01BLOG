@@ -1,4 +1,3 @@
-/* الحاوية الرئيسية للناف بار */
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -7,98 +6,98 @@
   height: 70px;
   width: 100%;
   box-sizing: border-box;
-  
-  /* تثبيت الناف بار في الأعلى */
   position: sticky;
   top: 0;
-  z-index: 1000; /* لضمان ظهوره فوق المحتوى */
+  z-index: 1000;
 }
 
-/* تأثير الزجاج (Glassmorphism) */
 .glass-nav {
-  background: rgba(255, 255, 255, 0.05); /* شفافية عالية مثل الصورة */
+  background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 }
 
-/* تنسيق الشعار */
 .nav-brand .logo-text {
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 22px;
+  font-weight: 800;
   color: #ffffff;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
   text-transform: uppercase;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
 }
 
-/* تنسيق زر المستخدم */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.glass-btn-logout {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 8px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+.glass-btn-logout:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
 .user-profile-btn {
   background: transparent;
   border: none;
   cursor: pointer;
-  padding: 5px;
-  border-radius: 50%;
+  padding: 0;
+  display: flex;
+  align-items: center;
   transition: transform 0.2s ease;
 }
 
 .user-profile-btn:hover {
-  transform: scale(1.1);
-  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.05);
 }
 
-
-/* تنسيق الأزرار في الناف بار */
-.nav-actions {
-  display: flex;
-  align-items: center;
-  gap: 15px; /* Add some space between buttons */
-}
-
-/* دائرة الأفاتار */
 .user-profile {
   display: flex;
   align-items: center;
+  gap: 10px;
 }
 
 .username {
   color: white;
-  margin-left: 10px;
   font-weight: 500;
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .avatar-circle {
-  width: 30px;
-  height: 30px;
+  width: 36px;
+  height: 36px;
   background-color: rgba(255, 255, 255, 0.2);
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  overflow: hidden;
 }
 
 .avatar-circle img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 50%;
 }
 
-.logout-btn {
-  background-color: #ff4d4d; /* Red color for logout */
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  transition: background-color 0.3s ease;
-}
-
-.logout-btn:hover {
-  background-color: #ff3333;
+.sifrwa7d {
+  color: #4a90e2;
 }
