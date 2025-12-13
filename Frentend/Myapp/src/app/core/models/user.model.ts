@@ -1,4 +1,4 @@
-export interface  UserProfile {
+export  interface UserProfile {
     id: string;
     name: string;
     avatarUrl: string;
@@ -7,5 +7,17 @@ export interface  UserProfile {
         posts: number;
         followers: string;
         following: number;
-    };
+    }; 
+}
+export interface UserAuth {
+    name: string;
+    email: string;
+    password: string;
+}
+
+export  interface UserRegister {
+        username: string;
+        email: string;
+        password: string; 
+        confirmPassword: string;
 }

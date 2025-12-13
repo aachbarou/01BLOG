@@ -1,6 +1,8 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { UserRegister } from '../models/user.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthServices {
@@ -8,16 +10,22 @@ export class AuthServices {
   private logged = new BehaviorSubject<boolean>(false);
   Isloged$ = this.logged.asObservable();
   private lastValue: string | null = null;
+  private apiUrl = 'http://localhost:8080/Auth';
 
-  constructor(@Inject(PLATFORM_ID) private platformId: object) {
+  constructor(@Inject(PLATFORM_ID) private platformId: object, private http: HttpClient) {
     const initial = this.getLocalStorageValue();
     this.logged.next(initial);
-    if (isPlatformBrowser(this.platformId)) { 
+    if (isPlatformBrowser(this.platformId)) {
     this.lastValue = localStorage.getItem('logged');
     }
 
-    setInterval(() => this.checkLocalStorage(), 1000); 
+    setInterval(() => this.checkLocalStorage(), 1000);
   }
+
+  register(user: UserRegister): Observable<any> {
+    return this.http.post(`${this.apiUrl}/Register`, user);
+  }
+
   private getLocalStorageValue(): boolean {
     if (isPlatformBrowser(this.platformId)) {
       const saved = localStorage.getItem('logged');
