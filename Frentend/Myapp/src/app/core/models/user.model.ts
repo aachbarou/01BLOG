@@ -9,8 +9,7 @@ export  interface UserProfile {
         following: number;
     }; 
 }
-export interface UserAuth {
-    name: string;
+export interface UserLogin {
     email: string;
     password: string;
 }

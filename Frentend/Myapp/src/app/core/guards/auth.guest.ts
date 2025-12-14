@@ -9,7 +9,7 @@ export class AuthGuest implements CanActivate {
     constructor( private Auth : AuthServices  , private router : Router  ){
         }
         canActivate(): boolean | UrlTree  {
-           if  (this.Auth.isLoggedIn()){
+           if  (this.Auth.isLoggedIn() ){
                 return   this.router.createUrlTree(['/home'])
            }
                return true ;

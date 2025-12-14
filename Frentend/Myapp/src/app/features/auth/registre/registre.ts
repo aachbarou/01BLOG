@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthServices } from '../../../core/services/auth.service';
-import { UserAuth, UserRegister } from '../../../core/models/user.model';
+import {  UserRegister } from '../../../core/models/user.model';
 
 @Component({
   selector: 'app-registre',

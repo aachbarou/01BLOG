@@ -1,12 +1,12 @@
 import { Component, Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AutGuard } from '../../core/guards/auth.guard';
 import  {AuthServices} from  '../../core/services/auth.service' 
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [],
+  imports: [RouterModule],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })

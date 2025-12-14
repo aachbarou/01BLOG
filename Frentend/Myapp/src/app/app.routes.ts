@@ -6,6 +6,7 @@ import { ResetPass } from './features/auth/login/reset-pass/reset-pass';
 import { ProfileComponent } from './shared/components/profile/profile';
 import { AutGuard } from './core/guards/auth.guard'
 import { AuthGuest } from './core/guards/auth.guest'
+import { PostCreationComponent } from './features/post-creation/post-creation';
 
 
 export const routes: Routes = [
@@ -15,6 +16,6 @@ export const routes: Routes = [
     { path: 'signup', component: RegisterComponent, canActivate: [AuthGuest] },
     { path: 'help', component: ResetPass, canActivate: [AuthGuest] },
     { path: 'profile', component: ProfileComponent, canActivate: [AutGuard] },
+    { path: 'create-post', component: PostCreationComponent, canActivate: [AutGuard] },
     { path: '**', redirectTo: '' }
 ];
-

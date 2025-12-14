@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Loading } from '../../../shared/components/loading/loading';
-import  {AutGuard} from  '../../../core/guards/auth.guard'
 import  {AuthServices} from  '../../../core/services/auth.service'
+import { UserLogin } from '../../../core/models/user.model';
 
 @Component({
   selector: 'app-login',
@@ -13,9 +13,7 @@ import  {AuthServices} from  '../../../core/services/auth.service'
   styleUrls: ['./login.css']
 })
 export class LoginComponent {
-  constructor(private router: Router , private Auths : AuthServices , private  AuthGard  : AutGuard) {
-        
-
+  constructor(private router: Router , private Auths : AuthServices ) {
    }
   isLoading: boolean = false;
 
@@ -31,11 +29,23 @@ export class LoginComponent {
       this.LoginError = true;
       this.ErrorMessage = 'Please enter both email and password.';
     } else {
-      // Simulate successful login
-      this.LoginError = false;
-      this.ErrorMessage = '';
-       this.Auths.loginSet();
-      this.router.navigate(['/home'])      
+      const userlogin : UserLogin = {
+        email : this.email ,
+        password : this.password
+      };
+      this.Auths.login(userlogin).subscribe({
+        next: (response) => {
+          console.log('Login successful:', response);
+          this.Auths.loginSet( response.token);
+        
+          this.router.navigate(['/']);
+        },
+        error: (error) => {
+          console.error('Login failed:', error);
+          this.LoginError = true;
+          this.ErrorMessage = error.error.message || 'Login failed. Please try again.';
+        }
+      })
     }
   }
   showregister() {

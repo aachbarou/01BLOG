@@ -2,6 +2,7 @@ package com.project.block.Controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,7 +12,7 @@ import com.project.block.dto.ErrorResponse;
 import com.project.block.dto.LoginSeccess;
 import com.project.block.entity.User;
 import com.project.block.models.UserService;
-
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/Auth")
 public class AuthController {
