@@ -1,22 +1,4 @@
-/* app.component.css */
-
-/* Ensure body and html take full height so the container can too */
-:host {
-  display: block;
-  width: 100%;
-}
-
-/* This applies the dark background and centering to the whole app */
-.app-main-container {
-  /* Ensure padding doesn't affect width/height calculations */
-  box-sizing: border-box;
-  padding: 20px; 
-}
-
-/* Optional: Style for the container holding routed content after login */
-.logged-in-content {
-    width: 100%;
-    height: 100%;
-    /* You might need to reset centering here later if your app needs a standard top-left layout */
-    /* text-align: left; */
+.post-container {
+    padding-top: 0.5rem;
+    border: none;
 }

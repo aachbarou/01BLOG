@@ -4,7 +4,7 @@ import {  Injectable } from '@angular/core' ;
 @Injectable({
     providedIn : 'root' 
 })
-// check if the user is logged in before accessing certain routes
+
 export  class  AutGuard  implements CanActivate {
         constructor( private Auth : AuthServices ,   private router : Router  ){
         }

@@ -14,7 +14,7 @@ export  class ProfileComponent {
   profile: UserProfile = {
     id: 'u1',
     name: 'Simo 6 ',
-    avatarUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQixhzI7xr1ouPUT_f7BIIS8ErIWs3Vx8FiZA&s',
+    avatarUrl: 'https:
     bio: ' tikxbila twliwla ',
     
     stats: {
@@ -28,20 +28,20 @@ export  class ProfileComponent {
     {
       id: 'p1',
       authorName: 'Simo 6',
-      authorAvatar: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQixhzI7xr1ouPUT_f7BIIS8ErIWs3Vx8FiZA&s',
+      authorAvatar: 'https:
       bio : 'Tech enthusiast & UI designer. Sharing my journey.',
       content: 'ghandiro haja jdida had l3am 2030, stay tuned! #excited #newbeginnings',
-      date: new Date(new Date().getTime() - (1000 * 60 * 30)), // 30 mins ago
+      date: new Date(new Date().getTime() - (1000 * 60 * 30)), 
       likes: 45,
       comments: 12
     },
     {
       id: 'p2',
       authorName: 'Simo 6',
-      authorAvatar: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQixhzI7xr1ouPUT_f7BIIS8ErIWs3Vx8FiZA&s',
+      authorAvatar: 'https:
       bio : 'Tech enthusiast & UI designer. Sharing my journey.',
       content: 'ikone khire l3am jay inshallah (20??)! #motivation #goals',
-      date: new Date(new Date().getTime() - (1000 * 60 * 30)), // 30 mins ago
+      date: new Date(new Date().getTime() - (1000 * 60 * 30)), 
       likes: 45,
       comments: 12
     }

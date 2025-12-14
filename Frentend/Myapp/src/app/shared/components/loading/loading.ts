@@ -4,12 +4,12 @@ import { isPlatformBrowser , isPlatformServer } from '@angular/common';
 import { Inject , PLATFORM_ID } from '@angular/core';
 @Component({
   selector: 'app-loading',
-  imports: [],
+  standalone: true,
   templateUrl: './loading.html',
-  styleUrl: './loading.css',
+  styleUrl: './loading.css'
 })
 export class Loading {
   constructor(private router:Router ){} ;
-    loadingMessage: string = 'Loading Something...';
+    loadingMessage: string = 'Loading...';
 
 }

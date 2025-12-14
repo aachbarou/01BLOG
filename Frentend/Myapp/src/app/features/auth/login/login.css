@@ -1,151 +1,16 @@
-
-:host {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  min-height: calc(100vh - 110px);
-}
-
-.login-container {
-  width: 320px;
-  padding: 40px 30px;
-  background: rgba(255, 255, 255, 0.1); /* Semi-transparent white */
-  backdrop-filter: blur(15px);         /* Frosted glass blur */
-  -webkit-backdrop-filter: blur(15px); /* For Safari */
-  border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border */
-  border-radius: 30px;                 /* Highly rounded corners */
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); /* Soft shadow */
-  color: #ffffff;
-  text-align: center;
-}
-
-/* Header Styles */
-.login-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 30px;
-  text-align: left;
-}
-
-.logo {
-  width: 35px;
-  height: 35px;
-  background: #fff;
-  color: #333;
-  border-radius: 8px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: bold;
-  font-size: 20px;
-  margin-right: 15px;
-}
-
-.login-header h2 {
-  margin: 0;
-  font-size: 18px;
-  line-height: 1.2;
-  font-weight: 500;
-}
-
-/* Form & Input Styles */
-.form-group {
-  margin-bottom: 20px;
-}
-
-input {
-  width: 100%;
-  padding: 15px;
-  box-sizing: border-box;
-  /* Dark, semi-transparent input background */
-  background: rgba(0, 0, 0, 0.25);
-  border: none;
-  border-radius: 15px;
-  color: #fff;
-  font-size: 14px;
-  outline: none;
-}
-
-input::placeholder {
-  color: rgba(255, 255, 255, 0.6);
-}
-
-/* "Sign In" Button Styles */
-.login-button {
-  width: 100%;
-  padding: 15px;
-  background-color: #ffffff; /* White button */
-  color: #333;
-  border: none;
-  border-radius: 25px; /* Pill shape */
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: bold;
-  transition: background-color 0.2s;
-}
-
-.login-button:hover {
-  background-color: #f0f0f0;
-}
-
-/* Divider "OR" */
-.divider {
-  margin: 25px 0;
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.5);
-}
-
-/* 01Blog Login Buttons */
-.social-login {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-bottom: 30px;
-}
-
-.social-btn {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%; /* Circular */
-  border: none;
-  background: #fff;
-  color: #333;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* Footer Links */
 .login-footer {
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.7);
+    text-underline-offset: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
 }
-
-.login-footer p {
-  margin: 5px 0;
-}
-
-.login-footer a {
-  color: #fff;
-  text-decoration: none;
-}
-
 .login-footer a:hover {
-  text-decoration: underline;
+    color: var(--brand-600);
 }
 
 .forgot-password {
-  display: block;
-  margin-top: 15px;
-  font-size: 12px;
+    cursor: pointer;
+    transition: color 0.2s;
 }
-.error-message {
-  color: #f17a7a;
-  font-size: 12px;
-  text-align: center; 
-  display: block;
+.forgot-password:hover {
+    color: var(--stone-900);
 }

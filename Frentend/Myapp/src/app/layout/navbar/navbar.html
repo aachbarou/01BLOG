@@ -1,23 +1,25 @@
-<nav class="navbar glass-nav">
-  <div class="nav-brand">
-    <span class="logo-text" (click)="rerender()"><span class="sifrwa7d">01</span>BLOG</span>
-  </div>
-
-  <div class="nav-actions">
-    <button class="glass-btn-logout" routerLink="/create-post" title="Create Post">
-      Create Post
-    </button>
-    <button class="glass-btn-logout" (click)="logout()" title="Logout">
-      Logout
-    </button>
-
-    <button class="user-profile-btn" (click)="profileToggle()" title="Profile">
-      <div class="user-profile">
-        <span class="username">{{username}}</span>
-        <div class="avatar-circle">
-          <img src="{{imageUrl}}" alt="User avatar">
-        </div>
+<nav class="navbar">
+    <div class="navbar-content">
+        <div class="navbar-left">
+  
+          @if (isDropdownOpen) {
+            <div class="dropdown-menu">
+                <div class="dropdown-header">
+                    <p class="header-label">Signed in as</p>
+                    <p class="header-email">simo@example.com</p>
+                </div>
+                
+                <a (click)="navigateToProfile()" class="dropdown-item">
+                    <i data-lucide="user" class="icon-placeholder"></i> Profile
+                </a>
+                
+                <div class="dropdown-divider"></div>
+                
+                <button (click)="logout()" class="dropdown-item logout-btn">
+                    <i data-lucide="log-out" class="icon-placeholder"></i> Sign out
+                </button>
+            </div>
+          }
       </div>
-    </button>
   </div>
 </nav>

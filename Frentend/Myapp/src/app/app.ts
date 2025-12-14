@@ -7,11 +7,12 @@ import { Event as EventType , NavigationStart, NavigationEnd, NavigationCancel, 
 import { AutGuard } from './core/guards/auth.guard';
 import  {AuthServices} from './core/services/auth.service'
 import { Navbar } from './layout/navbar/navbar';
+import { FooterComponent } from './layout/footer/footer';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [ RouterOutlet , Loading , Navbar],
+  imports: [ RouterOutlet , Loading , Navbar, FooterComponent],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
@@ -46,7 +47,7 @@ export class App implements OnInit{
     });
   }
   Islooged():boolean {
-    // console.log('hhhhh')
+    
      return  this.Auths.isLoggedIn()  ;
   }
 }
