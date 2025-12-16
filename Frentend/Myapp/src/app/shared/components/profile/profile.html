@@ -1,40 +1,60 @@
-<div class="profile-container">
-  <header class="glass-card profile-header">
-    <div class="header-content">
-        <img [src]="profile.avatarUrl" alt="{{profile.name}}" class="profile-avatar">
-        
-        <div class="user-info">
-            <div class="name-action-row">
-                <h1 class="profile-name">{{ profile.name }}</h1>
-                <button class="glass-btn edit-btn">Edit Profile</button>
-            </div>
-            <p class="profile-bio">{{ profile.bio }}</p>
+<div class="profile-wrapper">
+    
+    <header class="profile-card">
+        <div class="deco-circle"></div>
+
+        <div class="profile-content">
             
-            <div class="profile-stats">
-                <div class="stat-box">
-                    <span class="stat-num">{{ profile.stats.posts }}</span>
-                    <span class="stat-label">Posts</span>
+            <div class="avatar-group">
+                <div class="avatar-border">
+                    <img [src]="profile.avatarUrl" [alt]="profile.name" class="avatar-img">
                 </div>
-                <div class="stat-box">
-                    <span class="stat-num">{{ profile.stats.followers }}</span>
-                    <span class="stat-label">Followers</span>
+                <div class="verified-badge">
+                    <i data-lucide="check" class="badge-icon"></i>
                 </div>
-                <div class="stat-box">
-                    <span class="stat-num">{{ profile.stats.following }}</span>
-                    <span class="stat-label">Following</span>
+            </div>
+            
+            <div class="info-section">
+                <div class="header-row">
+                    <div>
+                        <h1 class="user-name">{{ profile.name }}</h1>
+                        <p class="user-handle">@simo_dev</p>
+                    </div>
+                    <button class="btn-edit">Edit Profile</button>
+                </div>
+                
+                <p class="bio-text">
+                    {{ profile.bio }}
+                </p>
+                
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-value">{{ profile.stats.posts }}</span>
+                        <span class="stat-label">Posts</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">{{ profile.stats.followers }}</span>
+                        <span class="stat-label">Followers</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">{{ profile.stats.following }}</span>
+                        <span class="stat-label">Following</span>
+                    </div>
                 </div>
             </div>
         </div>
+    </header>
+
+    <div class="tabs-nav">
+        <button class="tab-btn active">Posts</button>
+        <button class="tab-btn">About</button>
+        <button class="tab-btn">Saved</button>
     </div>
-  </header>
 
-  <div class="profile-tabs">
-      <div class="tab-item active">Posts</div>
-  </div>
+    <main class="feed-grid">
+        @for (post of posts; track post.id) {
+            <app-post [post]="post"></app-post>
+        }
+    </main>
 
-  <main class="profile-feed">
-    @for (post of posts; track post.id) {
-      <app-post [post]="post"></app-post>
-    }
-  </main>
 </div>

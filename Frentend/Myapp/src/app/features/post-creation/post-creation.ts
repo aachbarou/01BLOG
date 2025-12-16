@@ -1,8 +1,8 @@
-import { Component, OnInit, AfterViewChecked, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewChecked, ElementRef, ViewChild, Inject, PLATFORM_ID, ChangeDetectorRef } from '@angular/core';
 import { PostService } from '../../core/services/post.service';
 import { Router } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
-import { CommonModule } from '@angular/common'; 
+import { CommonModule, isPlatformBrowser } from '@angular/common'; // استيراد isPlatformBrowser
 
 declare var lucide: any; 
 
@@ -13,7 +13,7 @@ declare var lucide: any;
   templateUrl: './post-creation.html',
   styleUrls: ['./post-creation.css'],
 })
-export class PostCreationComponent implements OnInit, AfterViewChecked {
+export class PostCreationComponent implements OnInit {
   title: string = '';
   description: string = '';
   content: string = '';
@@ -26,16 +26,19 @@ export class PostCreationComponent implements OnInit, AfterViewChecked {
   constructor(
     private postService: PostService,
     private router: Router,
-    private el: ElementRef 
-  ) {}
+    private el: ElementRef,
+    @Inject(PLATFORM_ID) private platformId: Object
+  , private  cdr : ChangeDetectorRef  ) {}
 
   ngOnInit(): void {
     
   }
 
-  ngAfterViewChecked(): void {
-    lucide.createIcons();
-  }
+  // ngAfterViewChecked(): void {
+  //   if (isPlatformBrowser(this.platformId) && typeof lucide !== 'undefined') {
+  //     console.log('Initializing lucide icons');
+  //   }
+  // }
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -47,16 +50,20 @@ export class PostCreationComponent implements OnInit, AfterViewChecked {
 
   clearFile(event: Event): void {
     event.preventDefault();
-    event.stopPropagation();
     this.mediaFile = null;
-    const fileInput = this.el.nativeElement.querySelector('#media') as HTMLInputElement;
-    if (fileInput) {
-      fileInput.value = ''; 
+    
+    if (isPlatformBrowser(this.platformId)) {
+        const fileInput = this.el.nativeElement.querySelector('#media') as HTMLInputElement;
+        if (fileInput) {
+        fileInput.value = ''; 
+        }
     }
     this.updateMediaDisplay();
   }
 
   updateMediaDisplay(): void {
+    if (!isPlatformBrowser(this.platformId)) return;
+
     const dropZone = this.el.nativeElement.querySelector('#drop-zone');
     const uploadPrompt = this.el.nativeElement.querySelector('#upload-prompt');
     const filePreview = this.el.nativeElement.querySelector('#file-preview');
@@ -83,6 +90,10 @@ export class PostCreationComponent implements OnInit, AfterViewChecked {
   createPost(): void {
     if (this.postForm.form.invalid) {
       this.errorMessage = 'Please fill in all required fields.';
+      this.isLoading = false  ;
+      if (isPlatformBrowser(this.platformId)) {
+          this.cdr.detectChanges();
+      }
       return;
     }
 
@@ -98,14 +109,25 @@ export class PostCreationComponent implements OnInit, AfterViewChecked {
     }
 
     this.postService.createPost(formData).subscribe({
+      
       next: (response) => {
         this.isLoading = false;
+        if (isPlatformBrowser(this.platformId)) {
+            setTimeout(() => {
+                this.cdr.detectChanges();
+            }, 500);
+        }
         this.router.navigate(['/home']);
       },
       error: (error) => {
-        this.isLoading = false;
-        this.errorMessage = 'Failed to create post. Please try again.';
-        console.error('Error creating post:', error);
+         this.isLoading = false;
+         this.errorMessage = 'Failed to create post. Please try again.';
+         if (isPlatformBrowser(this.platformId)) {
+            setTimeout(() => {
+                this.cdr.detectChanges();
+            }, 500);
+        }
+        
       }
     });
   }

@@ -7,7 +7,6 @@
 
   <form (ngSubmit)="createPost()" #postForm="ngForm" class="post-form-card">
       
-      
       <div class="form-group">
           <label for="title" class="form-label">Title</label>
           <input type="text" id="title" name="title" [(ngModel)]="title" required 
@@ -15,7 +14,6 @@
               placeholder="Enter an engaging title...">
       </div>
 
-      
       <div class="form-group">
           <label for="description" class="form-label">Summary</label>
           <textarea id="description" name="description" [(ngModel)]="description" required rows="2" 
@@ -23,7 +21,6 @@
               placeholder="What is this post about? (Displayed in the feed)"></textarea>
       </div>
 
-      
       <div class="form-group">
           <label class="form-label">Cover Media</label>
           <div class="media-upload-zone">
@@ -37,12 +34,12 @@
                       <p class="upload-hint">SVG, PNG, JPG or MP4 (MAX. 10MB)</p>
                   </div>
                   
-                  
                   <div id="file-preview" class="file-preview hidden">
                       <div class="preview-content">
                           <p id="file-name" class="preview-file-name"></p>
                       </div>
-                      <button type="button" (click)="clearFile($event)" class="clear-file-btn">
+                      
+                    <button type="button" (click)="clearFile($event)" class="clear-file-btn">
                           <i data-lucide="x" class="clear-icon"></i>
                       </button>
                   </div>
@@ -50,14 +47,12 @@
           </div>
       </div>
 
-      
       <div class="form-group">
           <label for="content" class="form-label">Story</label>
           <div class="textarea-wrapper">
               <textarea id="content" name="content" [(ngModel)]="content" required rows="12" 
                   class="text-input textarea-input large-textarea" 
                   placeholder="Tell your story..."></textarea>
-              
               
               <div class="formatting-hint">
                   <i data-lucide="bold" class="format-icon"></i>
@@ -67,7 +62,6 @@
           </div>
       </div>
 
-      
       <div class="action-buttons-group">
           <button type="button" class="draft-btn">
               Save Draft

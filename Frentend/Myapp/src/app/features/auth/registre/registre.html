@@ -1,35 +1,82 @@
-<div class="register-container">
-  <div class="register-header">
-    <div class="logo">S</div>
-    <h2>01Blog<br>Register</h2>
-  </div>
+<div class="nav-placeholder"></div>
 
-  <form (ngSubmit)="register()">
-     <div class="form-group">
-      <input type="text" id="name" name="name" [(ngModel)]="name" placeholder="Full Name" required>
+<div class="register-wrapper">
+    <div class="register-card">
+        
+        <div class="card-header">
+            <div class="brand-icon">S</div>
+            <h2 class="join-title">Join 01BLOG</h2>
+            <p class="subtitle">Create an account to start your journey.</p>
+        </div>
+
+        <form (ngSubmit)="register()">
+            
+            <div class="form-stack">
+                <div>
+                    <input 
+                        type="text" 
+                        name="name" 
+                        [(ngModel)]="name" 
+                        class="input-field" 
+                        placeholder="Full Name" 
+                        required>
+                </div>
+
+                <div>
+                    <input 
+                        type="email" 
+                        name="email" 
+                        [(ngModel)]="email" 
+                        class="input-field" 
+                        placeholder="Email address" 
+                        required>
+                </div>
+
+                <div>
+                    <input 
+                        type="password" 
+                        name="password" 
+                        [(ngModel)]="password" 
+                        class="input-field" 
+                        placeholder="Password" 
+                        required>
+                </div>
+
+                <div>
+                    <input 
+                        type="password" 
+                        name="confirmPassword" 
+                        [(ngModel)]="confirmPassword" 
+                        class="input-field" 
+                        placeholder="Confirm Password" 
+                        required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit">
+                <span>Create Account</span>
+                
+                </button>
+
+            @if (error) {
+                <p class="error-msg">{{ error }}</p>
+            }
+        </form>
+
+        <div class="social-divider">
+            <div class="divider-line"></div>
+            <span class="divider-text">Or join with</span>
+        </div>
+
+        <div class="social-actions">
+            <button class="social-btn-circle">G</button>
+            <button class="social-btn-circle">A</button>
+        </div>
+
+        <p class="card-footer">
+            Already have an account? 
+            <a (click)="onSignupClick()" class="signin-link">Sign In.</a>
+        </p>
+
     </div>
-    <div class="form-group">
-      <input type="email" id="email" name="email" [(ngModel)]="email" placeholder="Email Address" required>
-    </div>
-    <div class="form-group">
-      <input type="password" id="password" name="password" [(ngModel)]="password" placeholder="Password" required>
-    </div>
-     <div class="form-group">
-      <input type="password" id="confirmPassword" name="confirmPassword" [(ngModel)]="confirmPassword" placeholder="Confirm Password" required>
-    </div>
-
-    <button type="submit" class="register-button">Create Account</button>
-    <p class="Error">{{this.error}}</p>
-  </form>
-
-  <div class="divider">OR</div>
-
-  <div class="social-login">
-    <button class="social-btn google">G</button>
-    <button class="social-btn apple">A</button>
-  </div>
-
-  <div class="register-footer">
-    <p>Already have an account? <a (click)="onSignupClick()">Sign In.</a></p>
-  </div>
 </div>

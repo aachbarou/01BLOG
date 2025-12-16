@@ -1,31 +1,40 @@
-import  { CanActivate, Router, UrlTree  } from  '@angular/router'  ;
+import { CanActivate, Router, UrlTree } from '@angular/router';
 import { AuthServices } from '../services/auth.service';
-import {  Injectable } from '@angular/core' ;
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core'; // Import Inject and PLATFORM_ID
+import { isPlatformBrowser } from '@angular/common'; // Import isPlatformBrowser
+
 @Injectable({
-    providedIn : 'root' 
+  providedIn: 'root'
 })
+export class AutGuard implements CanActivate {
+  constructor(
+    private Auth: AuthServices,
+    private router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object 
+  ) {}
 
-export  class  AutGuard  implements CanActivate {
-        constructor( private Auth : AuthServices ,   private router : Router  ){
-        }
-        canActivate(): boolean | UrlTree {
-           if  (this.Auth.isLoggedIn() &&  this.checkToken() ) {
-                 return  true 
-           }else  {
-                this.RemoveToken( ) ;
-               return   this.router.createUrlTree(['/login'])
-           }
-        }
+  canActivate(): boolean | UrlTree {
+    if (!isPlatformBrowser(this.platformId)) {
+       return true; 
+    }
 
-        checkToken(): boolean {
-            const token = localStorage.getItem('token');
-            return token !== null && token.length > 0;
-        }
+    if (this.Auth.isLoggedIn() && this.checkToken()) {
+      return true;
+    } else {
+      this.RemoveToken();
+      return this.router.createUrlTree(['/login']);
+    }
+  }
 
+  checkToken(): boolean {
+    if (isPlatformBrowser(this.platformId)) {
+      const token = localStorage.getItem('token');
+      return token !== null && token.length > 0;
+    }
+    return false;
+  }
 
-        RemoveToken() {
-            this.Auth.logoutSet();
-        }
-        
-
+  RemoveToken() {
+    this.Auth.logoutSet();
+  }
 }

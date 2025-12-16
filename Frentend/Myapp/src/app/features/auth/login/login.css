@@ -1,16 +1,270 @@
-.login-footer {
-    text-underline-offset: 4px;
+/* --- Login Page Layout --- */
+:host {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: var(--stone-50);
+    font-family: var(--font-sans);
+}
+
+/* Navbar Placeholder (Visual Context) */
+.nav-placeholder {
+    width: 100%;
+    height: 4rem; /* h-16 */
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(231, 229, 228, 0.6);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+}
+
+/* Main Container */
+.login-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1rem;
+    position: relative;
+    z-index: 20;
+}
+
+/* --- Card Design --- */
+.login-card {
+    width: 100%;
+    max-width: 28rem; /* max-w-md */
+    background-color: white;
+    padding: 2.5rem; /* p-10 */
+    border-radius: 1.5rem; /* rounded-3xl */
+    border: 1px solid var(--stone-100);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); /* shadow-xl */
+    transition: transform 0.5s ease, box-shadow 0.5s ease;
+}
+
+.login-card:hover {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); /* shadow-2xl */
+}
+
+/* --- Header Section --- */
+.card-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.brand-icon {
+    width: 3rem; /* w-12 */
+    height: 3rem; /* h-12 */
+    background-color: var(--stone-900);
+    color: white;
+    border-radius: 0.75rem; /* rounded-xl */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.25rem; /* text-xl */
+    margin: 0 auto 1rem auto;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.welcome-title {
+    font-family: var(--font-serif);
+    font-size: 1.875rem; /* text-3xl */
+    font-weight: 700;
+    color: var(--stone-900);
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.025em;
+}
+
+.subtitle {
+    font-size: 0.875rem; /* text-sm */
+    color: var(--stone-500);
+}
+
+/* --- Form Elements --- */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.input-field {
+    display: block;
+    width: 100%;
+    padding: 0.75rem 1rem; /* py-3 px-4 */
+    background-color: var(--stone-50);
+    border: 1px solid var(--stone-200);
+    border-radius: 0.75rem; /* rounded-xl */
+    color: var(--stone-900);
+    font-size: 0.875rem;
+    transition: all 0.2s;
+}
+
+.input-field::placeholder {
+    color: var(--stone-400);
+}
+
+.input-field:hover {
+    background-color: var(--stone-100);
+}
+
+.input-field:focus {
+    outline: none;
+    background-color: white;
+    border-color: var(--brand-500); /* custom brand color focus border */
+    box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2); /* ring-brand-500 */
+}
+
+/* Forgot Password */
+.forgot-password-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1.5rem;
+}
+
+.forgot-link {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--stone-500);
+    transition: color 0.2s;
+    cursor: pointer;
+}
+
+.forgot-link:hover {
+    color: var(--stone-900);
+}
+
+/* Submit Button */
+.btn-submit {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 0.75rem; /* rounded-xl */
+    background-color: var(--stone-900);
+    color: white;
+    font-size: 0.875rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s;
+    overflow: hidden;
+}
+
+.btn-submit:hover {
+    background-color: var(--stone-800);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.btn-submit:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Spinner Logic */
+.spinner-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--stone-900);
+}
+
+.spinner-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: white;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* --- Social Section --- */
+.social-divider {
+    position: relative;
+    margin: 2rem 0;
+    text-align: center;
+}
+
+.divider-line {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: var(--stone-200);
+}
+
+.divider-text {
+    position: relative;
+    background-color: white;
+    padding: 0 0.5rem;
+    color: var(--stone-400);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.social-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.social-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.625rem;
+    background: white;
+    border: 1px solid var(--stone-200);
+    border-radius: 0.75rem; /* rounded-xl */
+    font-weight: 700;
+    color: var(--stone-600);
     cursor: pointer;
     transition: all 0.2s;
 }
-.login-footer a:hover {
-    color: var(--brand-600);
+
+.social-btn:hover {
+    background-color: var(--stone-50);
+    border-color: var(--stone-300);
 }
 
-.forgot-password {
+/* Footer Text */
+.card-footer {
+    text-align: center;
+    font-size: 0.875rem;
+    color: var(--stone-500);
+}
+
+.register-link {
+    font-weight: 700;
+    color: var(--stone-900);
+    text-decoration: underline;
+    text-decoration-color: rgba(245, 158, 11, 0.3); /* brand/30 */
+    text-underline-offset: 4px;
     cursor: pointer;
     transition: color 0.2s;
 }
-.forgot-password:hover {
-    color: var(--stone-900);
+
+.register-link:hover {
+    color: var(--brand-600);
+}
+
+/* Error Message */
+.error-alert {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    background-color: #fee2e2;
+    color: #991b1b;
+    font-size: 0.875rem;
+    text-align: center;
 }

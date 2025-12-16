@@ -1,36 +1,78 @@
-
-<div class="login-container">
-  <div class="login-header">
-    <div class="logo">01</div>
-    <h2>01Blog <br> Login</h2>
-  </div>
-  
-  <form (ngSubmit)="login()">
-    <div class="form-group">
-      <input type="text" id="email" name="email" [(ngModel)]="email" placeholder="Email">
+<div class="nav-placeholder">
     </div>
-    <div class="form-group">
-      <input type="password" id="password" name="password" [(ngModel)]="password" placeholder="Password">
+
+<div class="login-wrapper">
+    <div class="login-card">
+        
+        <div class="card-header">
+            <div class="brand-icon">01</div>
+            <h2 class="welcome-title">Welcome back</h2>
+            <p class="subtitle">Sign in to access your personalized feed.</p>
+        </div>
+
+        <form (ngSubmit)="login()">
+            
+            <div class="form-group">
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    [(ngModel)]="email" 
+                    class="input-field" 
+                    placeholder="Email address" 
+                    required>
+            </div>
+            
+            <div class="form-group">
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    [(ngModel)]="password" 
+                    class="input-field" 
+                    placeholder="Password" 
+                    required>
+            </div>
+
+            <div class="forgot-password-row">
+                <a (click)="resetpass()" class="forgot-link">Forgot password?</a>
+            </div>
+
+            <button type="submit" class="btn-submit" [disabled]="isLoading">
+                <span>Sign in</span>
+                
+                @if (isLoading) {
+                    <div class="spinner-overlay">
+                        <svg class="spinner-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" style="opacity: 0.25;"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" style="opacity: 0.75;"></path>
+                        </svg>
+                    </div>
+                }
+            </button>
+
+            @if (LoginError) {
+                <div class="error-alert">
+                    {{ ErrorMessage }}
+                </div>
+            }
+        </form>
+
+        <div class="social-divider">
+            <div class="divider-line"></div>
+            <span class="divider-text">Or continue with</span>
+        </div>
+
+        <div class="social-grid">
+            <button type="button" class="social-btn">G</button>
+            <button type="button" class="social-btn">A</button>
+            <button type="button" class="social-btn">X</button>
+        </div>
+
+        <p class="card-footer">
+            Not a member?
+            <a (click)="showregister()" class="register-link">Start writing now</a>
+        </p>
+
     </div>
-    <button type="submit" class="login-button">Sign In</button>
-    @if (isLoading) {
-    <app-loading ></app-loading>
-    }
-    @if (LoginError) { <div class="error-message"> {{ ErrorMessage }}
-    </div>
-    }
-  </form>
-
-  <div class="divider">OR</div>
-
-  <div class="social-login">
-    <button class="social-btn google">G</button>
-    <button class="social-btn apple">A</button>
-    <button class="social-btn other">X</button>
-  </div>
-
-  <div class="login-footer">
-    <p>Don't have an account? <a (click)="showregister()">Register</a> </p>
-    <a  class="forgot-password" (click)="resetpass()">Forgot password?</a>
-  </div>
 </div>

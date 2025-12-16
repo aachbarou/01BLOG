@@ -7,7 +7,7 @@ import { Post } from '../models/post.model';
   providedIn: 'root'
 })
 export class PostService {
-  private apiUrl = '/api/posts';
+  private apiUrl = 'http://localhost:8080/api/posts';
 
   constructor(private http: HttpClient) { }
 
@@ -18,4 +18,4 @@ export class PostService {
   createPost(formData: FormData): Observable<any> {
     return this.http.post(this.apiUrl, formData);
   }
-}
+}     
