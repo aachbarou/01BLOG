@@ -37,12 +37,20 @@ public class AuthController {
     @PostMapping("/Login")
     public ResponseEntity<?> loginUser(@RequestBody User user) {
         try {
-            LoginSeccess response = new LoginSeccess(
-                   Userservice.loginUser(user).getStatus().equals("Banned")
-            );
-            return ResponseEntity.status(HttpStatus.OK).body(response);
-        } catch (Exception e) {
-            ErrorResponse error = new ErrorResponse(e.getMessage(), 400);
+            var curentuser  = this.Userservice.loginUser(user) ;
+            if  (!curentuser.getStatus().equals("Active")){
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+                    new ErrorResponse("User account is not active", 403)
+                );
+            }
+            // Generate token (dummy implementation here)
+            var jwtToken = Userservice.GenerateToken(curentuser) ;
+
+            var response  = new LoginSeccess() ;   
+            
+            return ResponseEntity.status(HttpStatus.OK).body(response); // 200 OK
+        } catch (Exception e ) {
+            ErrorResponse error = new ErrorResponse(e.getMessage(), 500);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error); // 400 error     
         }
     }

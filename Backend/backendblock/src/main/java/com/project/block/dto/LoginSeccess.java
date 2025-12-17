@@ -4,11 +4,10 @@ import lombok.Data;
 
 @Data
 public class LoginSeccess {
-    private String Banned  ;
-    private String token;
-    public LoginSeccess(boolean  Banned) {
-        this.token = "dummy-token";
-        this.Banned = Banned ? "true" : "false";  
+    private   String token;
+    private   String message;
+    public LoginSeccess() {
+        this.token =  "dummy-token" ;
+        this.message =  "Login successful.";
     }
 }
-    

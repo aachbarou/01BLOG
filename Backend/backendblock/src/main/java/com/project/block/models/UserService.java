@@ -1,17 +1,23 @@
 package com.project.block.models;
 import org.springframework.stereotype.Service;
 
+import com.project.block.entity.Token;
 import com.project.block.entity.User;
 import com.project.block.repository.UserRepository;
+import com.project.block.repository.TokenRepository;
+import com.project.block.service.JwtUtil;
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private  final   TokenRepository  TokenRepository ;
+    private  final   JwtUtil JwtUtil ;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository , TokenRepository  TokenRepository , JwtUtil JwtUtil) {
+        this.TokenRepository = TokenRepository ;
+        this.JwtUtil = JwtUtil ;
         this.userRepository = userRepository;
     }
-
     public void   createUser(User user) {
         /// I must  check  all  Fields  Validation  before  save
         if (user.getUsername() == null || user.getEmail() == null || user.getPassword() == null) {
@@ -26,10 +32,21 @@ public class UserService {
         userRepository.save(user);
     }
     public  User loginUser(User user) {
-        // Simple login logic (for demonstration )
         User existingUser = userRepository.findAll().stream()
                 .filter(u -> u.getEmail().equals(user.getEmail()) && u.getPassword().equals(user.getPassword()))
                 .findFirst().orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
         return existingUser;
+    }
+
+
+
+    public  String GenerateNewToken(User user ){
+        Token   Jwttoken  = this.JwtUtil.generateToken(user) ;
+        try {
+                 this.TokenRepository.save(Jwttoken) ;
+        } catch (Exception e ){
+            throw new RuntimeException("Failed to save token: " + e.getMessage());
+        }
+        return  Jwttoken.token ;
     }
 }
