@@ -3,8 +3,8 @@ import org.springframework.stereotype.Service;
 
 import com.project.block.entity.Token;
 import com.project.block.entity.User;
-import com.project.block.repository.UserRepository;
 import com.project.block.repository.TokenRepository;
+import com.project.block.repository.UserRepository;
 import com.project.block.service.JwtUtil;
 
 @Service
@@ -41,12 +41,19 @@ public class UserService {
 
 
     public  String GenerateNewToken(User user ){
-        Token   Jwttoken  = this.JwtUtil.generateToken(user) ;
-        try {
-                 this.TokenRepository.save(Jwttoken) ;
-        } catch (Exception e ){
-            throw new RuntimeException("Failed to save token: " + e.getMessage());
+        Token jwtToken = this.JwtUtil.generateToken(user);
+        if (jwtToken == null || jwtToken.token == null || jwtToken.token.trim().isEmpty()) {
+            throw new IllegalStateException("JWT generation failed: token is null or empty");
         }
-        return  Jwttoken.token ;
+        if (jwtToken.user == null) {
+            jwtToken.user = user;
+        }
+        try {
+            this.TokenRepository.save(jwtToken);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to save token: " + e.getMessage(), e);
+        }
+
+        return jwtToken.token;
     }
 }
