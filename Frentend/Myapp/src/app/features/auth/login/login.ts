@@ -12,17 +12,12 @@ import { UserLogin } from '../../../core/models/user.model';
   styleUrls: ['./login.css']
 })
 export class LoginComponent {
-  constructor(private router: Router , private Auths : AuthServices ) {
-   }
+  constructor(private router: Router , private Auths : AuthServices ) {} 
   isLoading: boolean = false;
-
-
   email = '';
   password = '';
-  public LoginError = false;
+  public LoginError = false ;
   protected ErrorMessage = '';
-  
-
   login() {
     if (!this.email || !this.password) {
       this.LoginError = true;

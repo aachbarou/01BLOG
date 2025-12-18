@@ -6,8 +6,8 @@ import lombok.Data;
 public class LoginSeccess {
     private   String token;
     private   String message;
-    public LoginSeccess() {
-        this.token =  "dummy-token" ;
+    public LoginSeccess( String token ) {
+        this.token =  token;
         this.message =  "Login successful.";
     }
 }

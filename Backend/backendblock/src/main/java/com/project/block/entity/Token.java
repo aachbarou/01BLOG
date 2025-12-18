@@ -37,7 +37,7 @@ public class Token {
     public Token(String token, User user) {
         this.token = token;
         this.user = user;
-        this.revoked = false;
+        this.revoked = true ;
         this.expired = false;
     }
 }

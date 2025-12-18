@@ -14,8 +14,6 @@ export class AuthServices {
   constructor(@Inject(PLATFORM_ID) private platformId: object, private http: HttpClient) {
     const initial = this.getLocalStorageValue();
     this.logged.next(initial);
-  
-
   }
 
   register(user: UserRegister): Observable<any> {

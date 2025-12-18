@@ -44,14 +44,13 @@ public class AuthController {
                 );
             }
             // Generate token (dummy implementation here)
-            var jwtToken = Userservice.GenerateToken(curentuser) ;
 
-            var response  = new LoginSeccess() ;   
+            var response  = new LoginSeccess(Userservice.GenerateNewToken(curentuser))  ;
             
             return ResponseEntity.status(HttpStatus.OK).body(response); // 200 OK
         } catch (Exception e ) {
             ErrorResponse error = new ErrorResponse(e.getMessage(), 500);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error); // 400 error     
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error); // 400 error     
         }
     }
 }
