@@ -1,4 +1,4 @@
-package com.project.block.service;
+package com.project.block.filters;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.project.block.repository.UserRepository;
+import com.project.block.service.JwtUtil;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

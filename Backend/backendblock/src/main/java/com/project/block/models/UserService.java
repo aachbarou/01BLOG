@@ -40,6 +40,8 @@ public class UserService {
 
 
 
+    
+
     public  String GenerateNewToken(User user ){
         Token jwtToken = this.JwtUtil.generateToken(user);
         if (jwtToken == null || jwtToken.token == null || jwtToken.token.trim().isEmpty()) {
