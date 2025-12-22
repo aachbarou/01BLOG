@@ -1,11 +1,11 @@
 package com.project.block.models;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 import com.project.block.dto.PostDTO;
 import com.project.block.entity.Post;
-
 import com.project.block.repository.PostRepository;
 
 @Service
@@ -14,7 +14,17 @@ public class PostService {
     public  PostService(PostRepository postRepository) {
         this.postRepository = postRepository;
     }
-   public void createPost(PostDTO postDto) {
+    public List<Post> getPostsByUserId(Long userId) {
+        return postRepository.findPostsByUserId(userId);
+    }
+
+    public List<Post> getAllPosts() {
+        return postRepository.findAllByOrderByTimestampDesc();
+    }
+  
+  
+  
+    public void createPost(PostDTO postDto) {
  
     if (postDto.getTitle() == null || postDto.getTitle().trim().isEmpty()) {
         throw new IllegalArgumentException("Title is required.");

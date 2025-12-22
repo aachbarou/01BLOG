@@ -2,7 +2,6 @@ package com.project.block.Controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,7 +11,6 @@ import com.project.block.dto.ErrorResponse;
 import com.project.block.dto.LoginSeccess;
 import com.project.block.entity.User;
 import com.project.block.models.UserService;
-@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/Auth")
 public class AuthController {
@@ -48,9 +46,12 @@ public class AuthController {
             var response  = new LoginSeccess(Userservice.GenerateNewToken(curentuser))  ;
             
             return ResponseEntity.status(HttpStatus.OK).body(response); // 200 OK
-        } catch (Exception e ) {
+        }catch ( IllegalArgumentException e) {
+              ErrorResponse error = new ErrorResponse(e.getMessage(), 400);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error); // 400 error     
+        }catch (Exception e ) {
             ErrorResponse error = new ErrorResponse(e.getMessage(), 500);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error); // 400 error     
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error); // 500 error     
         }
     }
 }

@@ -49,11 +49,15 @@ public class JwtUtil {
     }
 
     public Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder()
+
+
+       Claims cl   =   Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
+                System.out.println("=======>>>>>>>>>>>>>>>>>>   "  + cl);
+        return cl ;
     }
 
     public String extractUsername(String token) {
