@@ -23,6 +23,7 @@ public class AuthController {
 
     @PostMapping("/Register")
     public ResponseEntity<?> createUser(@RequestBody User user) {
+        System.out.println("Registering user: ??????????????????????????+++++++++++++++" + user);
         try {
             Userservice.createUser(user);
             return ResponseEntity.status(HttpStatus.CREATED).build(); // 201 OK

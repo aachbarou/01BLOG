@@ -31,7 +31,7 @@ export class RegisterComponent {
       confirmPassword  : this.confirmPassword ,
     };
 
-
+    alert('Registering user: ' + JSON.stringify(user));
     this.authService.register(user).subscribe({
       next: () => {
         this.router.navigate(['/login']);

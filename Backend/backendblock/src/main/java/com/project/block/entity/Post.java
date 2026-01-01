@@ -12,7 +12,7 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
-    private String Content ;
+    private String Content;
     private String mediaUrl;
     private LocalDateTime timestamp;
 

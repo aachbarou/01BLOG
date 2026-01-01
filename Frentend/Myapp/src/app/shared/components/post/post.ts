@@ -10,9 +10,9 @@ import { Post } from '../../../core/models/post.model';
 export class PostComponent {
   @Input({ required: true }) post!: Post;
    isLiked : boolean  =  false  ;
-   toggleLike()  : void  {
-      this.isLiked  =  !this.isLiked  ;
-        this.post.likes += this.isLiked  ?  1  :  -1  ;
-  }
+  //  toggleLike()  : void  {
+  //     this.isLiked  =  !this.isLiked  ;
+  //       this.post.likes += this.isLiked  ?  1  :  -1  ;
+  // }
           
   }

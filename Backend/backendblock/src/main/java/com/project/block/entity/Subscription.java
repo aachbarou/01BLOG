@@ -17,5 +17,6 @@ public class Subscription {
 
     @ManyToOne
     @JoinColumn(name = "followed_id")
+    
     private User followed;
 }

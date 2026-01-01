@@ -1,17 +1,21 @@
 <div class="glass-card post-container">
-  @if (post.imageUrl) {
-    <div class="image-wrapper">
-      <img [src]="post.imageUrl" alt="Post Image">
-    </div>
+  @if (post.mediaUrl) {
+  <div class="image-wrapper">
+    @if (post.mediaUrl.endsWith('.mp4')) {
+    <video [src]="post.mediaUrl" controls style="width: 100%; border-radius: 8px;"></video>
+    } @else {
+    <img [src]="post.mediaUrl" alt="Post Media">
+    }
+  </div>
   }
 
   <div class="post-text-content">
     <div class="post-header">
       <div class="author-info">
-        <img [src]="post.authorAvatar" alt="Avatar" class="avatar">
+        <img [src]="'https://ui-avatars.com/api/?name=' + (post.user?.username || 'User')" alt="Avatar" class="avatar">
         <div class="author-details">
-          <span class="author-name">{{ post.authorName }}</span>
-          <span class="post-date">{{ post.date}}</span>
+          <span class="author-name">{{ post.user?.username || 'Unknown' }}</span>
+          <span class="post-date">{{ post.timestamp }}</span>
         </div>
       </div>
       <!-- <button class="more-options">...</button> -->
@@ -22,14 +26,14 @@
     </div>
 
     <div class="post-actions">
-      <button class="action-btn" [class.liked]="isLiked" (click)="toggleLike()">
-        <span class="icon">❤️</span> 
-        <span>{{ post.likes }}</span>
+      <button class="action-btn" [class.liked]="isLiked">
+        <span class="icon">❤️</span>
+        <span>{{ post.likes || 0 }}</span>
       </button>
       <button class="action-btn">
-        <span class="icon">💬</span> 
-        <span>{{ post.comments }}</span>
+        <span class="icon">💬</span>
+        <span>{{ post.comments || 0 }}</span>
       </button>
     </div>
   </div>
-</div>
+</div> 

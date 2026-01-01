@@ -4,12 +4,12 @@ import { Router } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule, isPlatformBrowser } from '@angular/common'; // استيراد isPlatformBrowser
 
-declare var lucide: any; 
+declare var lucide: any;
 
 @Component({
   selector: 'app-post-creation',
   standalone: true,
-  imports: [FormsModule, CommonModule], 
+  imports: [FormsModule, CommonModule],
   templateUrl: './post-creation.html',
   styleUrls: ['./post-creation.css'],
 })
@@ -28,10 +28,10 @@ export class PostCreationComponent implements OnInit {
     private router: Router,
     private el: ElementRef,
     @Inject(PLATFORM_ID) private platformId: Object
-  , private  cdr : ChangeDetectorRef  ) {}
+    , private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
-    
+
   }
 
   // ngAfterViewChecked(): void {
@@ -51,12 +51,12 @@ export class PostCreationComponent implements OnInit {
   clearFile(event: Event): void {
     event.preventDefault();
     this.mediaFile = null;
-    
+
     if (isPlatformBrowser(this.platformId)) {
-        const fileInput = this.el.nativeElement.querySelector('#media') as HTMLInputElement;
-        if (fileInput) {
-        fileInput.value = ''; 
-        }
+      const fileInput = this.el.nativeElement.querySelector('#media') as HTMLInputElement;
+      if (fileInput) {
+        fileInput.value = '';
+      }
     }
     this.updateMediaDisplay();
   }
@@ -90,9 +90,9 @@ export class PostCreationComponent implements OnInit {
   createPost(): void {
     if (this.postForm.form.invalid) {
       this.errorMessage = 'Please fill in all required fields.';
-      this.isLoading = false  ;
+      this.isLoading = false;
       if (isPlatformBrowser(this.platformId)) {
-          this.cdr.detectChanges();
+        this.cdr.detectChanges();
       }
       return;
     }
@@ -105,29 +105,29 @@ export class PostCreationComponent implements OnInit {
     formData.append('description', this.description);
     formData.append('content', this.content);
     if (this.mediaFile) {
-      formData.append('media', this.mediaFile, this.mediaFile.name);
+      formData.append('file', this.mediaFile, this.mediaFile.name);
     }
 
     this.postService.createPost(formData).subscribe({
-      
+
       next: (response) => {
         this.isLoading = false;
         if (isPlatformBrowser(this.platformId)) {
-            setTimeout(() => {
-                this.cdr.detectChanges();
-            }, 500);
+          setTimeout(() => {
+            this.cdr.detectChanges();
+          }, 500);
         }
         this.router.navigate(['/home']);
       },
       error: (error) => {
-         this.isLoading = false;
-         this.errorMessage = 'Failed to create post. Please try again.';
-         if (isPlatformBrowser(this.platformId)) {
-            setTimeout(() => {
-                this.cdr.detectChanges();
-            }, 500);
+        this.isLoading = false;
+        this.errorMessage = 'Failed to create post. Please try again.';
+        if (isPlatformBrowser(this.platformId)) {
+          setTimeout(() => {
+            this.cdr.detectChanges();
+          }, 500);
         }
-        
+
       }
     });
   }

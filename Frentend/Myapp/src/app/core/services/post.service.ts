@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Post } from '../models/post.model';
+import { ApiResponse } from '../models/api-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,16 +12,21 @@ export class PostService {
 
   constructor(private http: HttpClient) { }
 
-  getPosts(): Observable<Post[]> {
-    const token = localStorage.getItem('token'); 
+  getPosts(): Observable<ApiResponse<Post[]>> {
+    const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     });
 
-    return this.http.get<Post[]>(this.apiUrl, { headers });
+    return this.http.get<ApiResponse<Post[]>>(this.apiUrl, { headers });
   }
 
-  createPost(formData: FormData): Observable<any> {
-    return this.http.post(this.apiUrl, formData);
-  }
+ createPost(formData: FormData): Observable<any> {
+  const token = localStorage.getItem('token');
+  const headers = new HttpHeaders({
+    'Authorization': `Bearer ${token}` 
+  });
+
+  return this.http.post(this.apiUrl, formData, { headers });
+}
 }     

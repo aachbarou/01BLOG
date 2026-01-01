@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import  {PostComponent}  from  '../../shared/components/post/post'  ;
 import { PostService } from '../../core/services/post.service';
 import { Post } from '../../core/models/post.model';
@@ -15,20 +15,20 @@ import { Router } from '@angular/router';
 export class HomeComponent implements OnInit {
   posts: Post[] = [];
 
-  constructor(private postService: PostService  , private router: Router ) {}
+  constructor(private postService: PostService  , private router: Router  , private  cdn : ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.postService.getPosts().subscribe({
-      // this.posts = posts;
       next: (response) => {
-          console.log('Login successful:', response);
-          this.posts =  response 
-          alert(this.posts)
-        },
+        // alert(response.data)
+          this.posts = response.data 
+          this.cdn.detectChanges();
+        },  
         error: (error) => {
-          console.error('Login failed:', error);
-          // alert(this.posts)
-          // this.router.navigate(["/login"])
+          // chec
+          if  (error.status === 401) {
+            this.router.navigate(['/login']);
+          }
         }
     });
   }
