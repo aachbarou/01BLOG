@@ -22,6 +22,8 @@ export class HomeComponent implements OnInit {
       next: (response) => {
         // alert(response.data)
           this.posts = response.data 
+          // for (post)
+          
           this.cdn.detectChanges();
         },  
         error: (error) => {

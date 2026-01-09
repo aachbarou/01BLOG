@@ -121,7 +121,8 @@ export class PostCreationComponent implements OnInit {
       },
       error: (error) => {
         this.isLoading = false;
-        this.errorMessage = 'Failed to create post. Please try again.';
+        this.errorMessage = error.error;
+        console.log(error);
         if (isPlatformBrowser(this.platformId)) {
           setTimeout(() => {
             this.cdr.detectChanges();

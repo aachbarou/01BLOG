@@ -14,26 +14,44 @@ public class UserService {
     private final TokenRepository TokenRepository;
     private final JwtUtil JwtUtil;
 
+    /**
+     * Constructor for UserService
+     * 
+     * @param userRepository  Repository for User entity
+     * @param TokenRepository Repository for Token entity
+     * @param JwtUtil         Utility for JWT operations
+     */
     public UserService(UserRepository userRepository, TokenRepository TokenRepository, JwtUtil JwtUtil) {
         this.TokenRepository = TokenRepository;
         this.JwtUtil = JwtUtil;
         this.userRepository = userRepository;
     }
 
+    /**
+     * Create a new user with validation
+     * 
+     * @param user User entity to create
+     */
     public void createUser(User user) {
-        /// I must check all Fields Validation before save
+
         if (user.getUsername() == null || user.getEmail() == null || user.getPassword() == null) {
             throw new IllegalArgumentException("Username, email, and password must not be null");
         }
         if (user.getPassword().length() < 8) {
             throw new IllegalArgumentException("Password must be at least 8 characters long");
         }
-        // Set default role and status
+
         user.setRole("USER");
         user.setStatus("Active");
         userRepository.save(user);
     }
 
+    /**
+     * Authenticate a user
+     * 
+     * @param user User entity containing login credentials
+     * @return Authenticated User entity
+     */
     public User loginUser(User user) {
         String inputEmailOrUsername = user.getEmail() != null ? user.getEmail().trim() : "";
         String inputPassword = user.getPassword() != null ? user.getPassword().trim() : "";
@@ -42,7 +60,6 @@ public class UserService {
         System.out.println("Input Identity: '" + inputEmailOrUsername + "'");
         System.out.println("Input Password: '" + inputPassword + "'");
 
-        // Try finding by email first
         User existingUser = userRepository.findByEmail(inputEmailOrUsername)
                 .orElse(null);
 
@@ -51,8 +68,6 @@ public class UserService {
                     "Found user by EMAIL: " + existingUser.getUsername() + " (ID: " + existingUser.getUser_id() + ")");
         }
 
-        // If not found by email, try finding by username (treating user.getEmail() as
-        // username input)
         if (existingUser == null) {
             existingUser = userRepository.findByUsername(inputEmailOrUsername)
                     .orElse(null);
@@ -66,9 +81,6 @@ public class UserService {
             }
         }
 
-        // Verify password
-        // WARNING: Storing passwords in plain text is insecure. Use BCrypt in
-        // production.
         System.out.println("DB Password: '" + existingUser.getPassword() + "'");
 
         if (!existingUser.getPassword().equals(inputPassword)) {
@@ -80,6 +92,12 @@ public class UserService {
         return existingUser;
     }
 
+    /**
+     * Generate a new JWT token for a user
+     * 
+     * @param user User (must be persisted)
+     * @return Generated token string
+     */
     public String GenerateNewToken(User user) {
         Token jwtToken = this.JwtUtil.generateToken(user);
         if (jwtToken == null || jwtToken.token == null || jwtToken.token.trim().isEmpty()) {

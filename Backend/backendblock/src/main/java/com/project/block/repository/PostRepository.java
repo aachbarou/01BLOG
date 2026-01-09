@@ -12,8 +12,19 @@ import com.project.block.entity.Post;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
+    /**
+     * Find posts by user ID, ordered by timestamp descending
+     * 
+     * @param userId The User ID
+     * @return List of Posts
+     */
     @Query("SELECT p FROM Post p WHERE p.user.id = :userId ORDER BY p.timestamp DESC")
     List<Post> findPostsByUserId(@Param("userId") Long userId);
-    
+
+    /**
+     * Find all posts ordered by timestamp descending
+     * 
+     * @return List of Posts
+     */
     List<Post> findAllByOrderByTimestampDesc();
 }

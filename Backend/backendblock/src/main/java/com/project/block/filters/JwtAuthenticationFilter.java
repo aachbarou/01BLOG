@@ -24,11 +24,26 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
 
+    /**
+     * Constructor for JwtAuthenticationFilter
+     * 
+     * @param jwtUtil        Utility for JWT operations
+     * @param userRepository Repository for User entity
+     */
     public JwtAuthenticationFilter(JwtUtil jwtUtil, UserRepository userRepository) {
         this.jwtUtil = jwtUtil;
-        this.userRepository = userRepository;   
+        this.userRepository = userRepository;
     }
 
+    /**
+     * Filter incoming requests to check for valid JWT
+     * 
+     * @param request     The HTTP request
+     * @param response    The HTTP response
+     * @param filterChain The filter chain
+     * @throws ServletException If a servlet error occurs
+     * @throws IOException      If an I/O error occurs
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request,
             HttpServletResponse response,
@@ -60,4 +75,4 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
-}       
+}

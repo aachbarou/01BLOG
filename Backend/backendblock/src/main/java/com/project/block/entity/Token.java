@@ -15,7 +15,7 @@ import lombok.Data;
 @Table(name = "tokens")
 @Data
 public class Token {
-   
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer id;
@@ -23,7 +23,7 @@ public class Token {
     @Column(unique = true)
     public String token;
 
-    public boolean revoked; 
+    public boolean revoked;
 
     public boolean expired;
 
@@ -31,12 +31,22 @@ public class Token {
     @JoinColumn(name = "user_id")
     public User user;
 
-    public Token() {}
+    /**
+     * Default constructor
+     */
+    public Token() {
+    }
 
+    /**
+     * Constructor with fields
+     * 
+     * @param token The token string
+     * @param user  The user associated with the token
+     */
     public Token(String token, User user) {
         this.token = token;
         this.user = user;
-        this.revoked = true ;
+        this.revoked = true;
         this.expired = false;
     }
 }

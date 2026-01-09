@@ -11,48 +11,64 @@ import com.project.block.dto.ErrorResponse;
 import com.project.block.dto.LoginSeccess;
 import com.project.block.entity.User;
 import com.project.block.models.UserService;
+
 @RestController
 @RequestMapping("/Auth")
 public class AuthController {
 
     private final UserService Userservice;
 
+    /**
+     * Constructor for AuthController
+     * 
+     * @param IUserService Service for user management
+     */
     public AuthController(UserService IUserService) {
         this.Userservice = IUserService;
     }
 
+    /**
+     * Endpoint to register a new user
+     * 
+     * @param user User data
+     * @return ResponseEntity with status
+     */
     @PostMapping("/Register")
     public ResponseEntity<?> createUser(@RequestBody User user) {
         System.out.println("Registering user: ??????????????????????????+++++++++++++++" + user);
         try {
             Userservice.createUser(user);
-            return ResponseEntity.status(HttpStatus.CREATED).build(); // 201 OK
+            return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (Exception e) {
             ErrorResponse error = new ErrorResponse(e.getMessage(), 400);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error); // 400 error
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
         }
     }
 
+    /**
+     * Endpoint to login a user
+     * 
+     * @param user User credentials
+     * @return ResponseEntity with token or error
+     */
     @PostMapping("/Login")
     public ResponseEntity<?> loginUser(@RequestBody User user) {
         try {
-            var curentuser  = this.Userservice.loginUser(user) ;
-            if  (!curentuser.getStatus().equals("Active")){
+            var curentuser = this.Userservice.loginUser(user);
+            if (!curentuser.getStatus().equals("Active")) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
-                    new ErrorResponse("User account is not active", 403)
-                );
+                        new ErrorResponse("User account is not active", 403));
             }
-            // Generate token (dummy implementation here)
 
-            var response  = new LoginSeccess(Userservice.GenerateNewToken(curentuser))  ;
-            
-            return ResponseEntity.status(HttpStatus.OK).body(response); // 200 OK
-        }catch ( IllegalArgumentException e) {
-              ErrorResponse error = new ErrorResponse(e.getMessage(), 400);
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error); // 400 error     
-        }catch (Exception e ) {
+            var response = new LoginSeccess(Userservice.GenerateNewToken(curentuser));
+
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (IllegalArgumentException e) {
+            ErrorResponse error = new ErrorResponse(e.getMessage(), 400);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        } catch (Exception e) {
             ErrorResponse error = new ErrorResponse(e.getMessage(), 500);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error); // 500 error     
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
         }
     }
 }

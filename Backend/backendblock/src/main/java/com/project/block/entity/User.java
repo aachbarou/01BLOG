@@ -27,7 +27,5 @@ public class User {
     private String password;
     private String role;
     private String status;
-    // @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    // private List<Token> tokens;
 
 }

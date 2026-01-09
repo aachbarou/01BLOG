@@ -17,10 +17,22 @@ public class PostController {
 
     private final PostService postService;
 
+    /**
+     * Constructor for PostController
+     * 
+     * @param postService Service for handling post operations
+     */
     public PostController(PostService postService) {
         this.postService = postService;
     }
 
+    /**
+     * Endpoint to create a new post
+     * 
+     * @param post the post data
+     * @param file optional file upload
+     * @return ResponseEntity with status
+     */
     @PostMapping
     public ResponseEntity<?> createPost(@org.springframework.web.bind.annotation.ModelAttribute PostDTO post,
             @org.springframework.web.bind.annotation.RequestParam(value = "file", required = false) org.springframework.web.multipart.MultipartFile file) {
@@ -28,22 +40,32 @@ public class PostController {
             postService.createPost(post, file);
             return ResponseEntity.ok(new ResposeData("Post  Created  Seccess...", 200, null));
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(400).body("hada  hwa  error "+e.getMessage());
+            return ResponseEntity.status(400).body("hada  hwa  error " + e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Internal Server Error: " + e.getMessage());
         }
 
     }
 
+    /**
+     * Endpoint to get all posts
+     * 
+     * @return ResponseEntity containing all posts
+     */
     @GetMapping
     public ResponseEntity<?> getAllPosts() {
         return ResponseEntity.ok(new ResposeData("Posts fetched successfully", 200, postService.getAllPosts()));
     }
 
+    /**
+     * Endpoint to get posts by user ID
+     * 
+     * @param user_id ID of the user
+     * @return ResponseEntity containing user's posts
+     */
     @GetMapping("/User/{userId}")
-    public ResponseEntity<?> getUserPosts(@PathVariable Long user_id) {
-        return ResponseEntity
-                .ok(new ResposeData("Posts fetched successfully", 200, postService.getPostsByUserId(user_id)));
+    public ResponseEntity<?> getUserPosts(@PathVariable Long userId) {
+        return ResponseEntity.ok(new ResposeData("Posts fetched successfully", 200, postService.getPostsByUserId(userId)));
     }
 
 }
