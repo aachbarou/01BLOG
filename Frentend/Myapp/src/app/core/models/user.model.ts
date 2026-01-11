@@ -1,11 +1,13 @@
+import { Post } from "./post.model";
+
 export  interface UserProfile {
-    id: string;
+    id: number;
     name: string;
     avatarUrl: string;
     bio: string;
     stats: {
-        posts: number;
-        followers: string;
+        posts: Post[];
+        followers: number;
         following: number;
     }; 
 }

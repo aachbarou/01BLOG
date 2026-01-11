@@ -1,9 +1,15 @@
 package com.project.block.models;
 
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
+import com.project.block.entity.Post;
 import com.project.block.entity.Token;
 import com.project.block.entity.User;
+import com.project.block.repository.PostRepository;
 import com.project.block.repository.TokenRepository;
 import com.project.block.repository.UserRepository;
 import com.project.block.service.JwtUtil;
@@ -12,6 +18,7 @@ import com.project.block.service.JwtUtil;
 public class UserService {
     private final UserRepository userRepository;
     private final TokenRepository TokenRepository;
+    private final PostRepository postRepository;
     private final JwtUtil JwtUtil;
 
     /**
@@ -20,11 +27,13 @@ public class UserService {
      * @param userRepository  Repository for User entity
      * @param TokenRepository Repository for Token entity
      * @param JwtUtil         Utility for JWT operations
+     * @param postRepository  Repository for Post entity
      */
-    public UserService(UserRepository userRepository, TokenRepository TokenRepository, JwtUtil JwtUtil) {
+    public UserService(UserRepository userRepository, TokenRepository TokenRepository, JwtUtil JwtUtil , PostRepository postRepository) {
         this.TokenRepository = TokenRepository;
         this.JwtUtil = JwtUtil;
         this.userRepository = userRepository;
+        this.postRepository = postRepository;
     }
 
     /**
@@ -113,5 +122,20 @@ public class UserService {
         }
 
         return jwtToken.token;
+    }
+
+    public User getUserProfile() {
+       try {
+        // get user from security context
+        com.project.block.entity.User user = (com.project.block.entity.User) 
+            org.springframework.security.core.context.SecurityContextHolder.getContext()
+            .getAuthentication().getPrincipal();
+            return user;
+       } catch (Exception e) {
+           throw new RuntimeException("Failed to get user profile: " + e.getMessage(), e);
+       }
+    }
+    public List<Post> findPostsByUserId(Long userId) {
+        return this.postRepository.findPostsByUserId(userId);
     }
 }

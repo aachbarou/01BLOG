@@ -1,8 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PostComponent } from '../post/post';
-import  { Post } from '../../../core/models/post.model';
 import { UserProfile } from '../../../core/models/user.model';
+import { UserService } from '../../../core/services/user.service';
+
 @Component({
   selector: 'app-profile',
   standalone: true,
@@ -10,8 +11,31 @@ import { UserProfile } from '../../../core/models/user.model';
   templateUrl: './profile.html',
   styleUrl: './profile.css'
 })
-export  class ProfileComponent {
-   @Input({required: true}) profile!: UserProfile;
-   // there  i can add the  logic  of the  posts  and  profile 
-   @Input({required: true}) posts!: Post[]; 
+export class ProfileComponent implements OnInit {
+  profile?: UserProfile;
+  isEditing: boolean = false;
+
+  constructor(
+    private userService: UserService, 
+    private  cdn : ChangeDetectorRef) {}
+
+  ngOnInit(): void {
+    this.loadProfile();
+  }
+
+  loadProfile(): void {
+    this.userService.getProfile().subscribe({
+      next: (response) => {
+        this.profile = response.data;
+        this.cdn.detectChanges();
+        console.log('Profile fetched:', this.profile);
+      },
+      error: (error) => {
+        console.error('Error fetching profile:', error);
+      }
+    });
+  }
+
+  
+  
 }

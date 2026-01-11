@@ -1,16 +1,14 @@
+@if (profile) {
 <div class="profile-wrapper">
-    
     <header class="profile-card">
         <div class="deco-circle"></div>
-
         <div class="profile-content">
-            
             <div class="avatar-group">
                 <div class="avatar-border">
                     <img [src]="profile.avatarUrl" [alt]="profile.name" class="avatar-img">
                 </div>
                 <div class="verified-badge">
-                    <i data-lucide="check" class="badge-icon"></i>
+                    <i class="badge-icon">✓</i>
                 </div>
             </div>
             
@@ -18,18 +16,16 @@
                 <div class="header-row">
                     <div>
                         <h1 class="user-name">{{ profile.name }}</h1>
-                        <p class="user-handle">@simo_dev</p>
+                        <p class="user-handle">@{{ profile.name.split(' ')[0] }}_dev</p>
                     </div>
                     <button class="btn-edit">Edit Profile</button>
                 </div>
                 
-                <p class="bio-text">
-                    {{ profile.bio }}
-                </p>
+                <p class="bio-text">{{ profile.bio }}</p>
                 
                 <div class="stats-grid">
                     <div class="stat-item">
-                        <span class="stat-value">{{ profile.stats.posts }}</span>
+                        <span class="stat-value">{{ profile.stats.posts.length }}</span>
                         <span class="stat-label">Posts</span>
                     </div>
                     <div class="stat-item">
@@ -52,9 +48,17 @@
     </div>
 
     <main class="feed-grid">
-        @for (post of posts; track post.id) {
+        @for (post of profile.stats.posts; track post.id) {
             <app-post [post]="post"></app-post>
+        } @empty {
+            <div class="empty-posts">
+                <p>No posts available yet.</p>
+            </div>
         }
     </main>
-
 </div>
+} @else {
+    <div class="loading-container">
+        <p>Loading profile data...</p>
+    </div>
+}
