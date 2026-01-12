@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthServices } from '../../../core/services/auth.service';
@@ -12,7 +12,7 @@ import {  UserRegister } from '../../../core/models/user.model';
   styleUrl: './registre.css'
 })
 export class RegisterComponent {
-  constructor(private router: Router, private authService: AuthServices) {}
+  constructor(private router: Router, private authService: AuthServices , private cdn  : ChangeDetectorRef) {}
   name: string = '';
   email: string = '';
   password: string = '';
@@ -31,15 +31,13 @@ export class RegisterComponent {
       confirmPassword  : this.confirmPassword ,
     };
 
-    alert('Registering user: ' + JSON.stringify(user));
     this.authService.register(user).subscribe({
       next: () => {
         this.router.navigate(['/login']);
       },
       error: (err) => {
-        alert(err.error.message || 'Registration failed');
-        this.error = err.message || 'Registration failed';
-        console.error('----------------------------------------Registration failed', err);
+        this.error = err.error.message || 'Registration failed';
+        this.cdn.detectChanges();
       }
     });
   }

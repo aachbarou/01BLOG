@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.method.P;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.project.block.entity.Post;
@@ -20,6 +21,7 @@ public class UserService {
     private final TokenRepository TokenRepository;
     private final PostRepository postRepository;
     private final JwtUtil JwtUtil;
+    private final PasswordEncoder passwordEncoder;
 
     /**
      * Constructor for UserService
@@ -28,12 +30,14 @@ public class UserService {
      * @param TokenRepository Repository for Token entity
      * @param JwtUtil         Utility for JWT operations
      * @param postRepository  Repository for Post entity
+     * @param passwordEncoder Password encoder for password operations
      */
-    public UserService(UserRepository userRepository, TokenRepository TokenRepository, JwtUtil JwtUtil , PostRepository postRepository) {
+    public UserService(UserRepository userRepository, TokenRepository TokenRepository, JwtUtil JwtUtil , PostRepository postRepository , PasswordEncoder passwordEncoder) {
         this.TokenRepository = TokenRepository;
         this.JwtUtil = JwtUtil;
         this.userRepository = userRepository;
         this.postRepository = postRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     /**
@@ -50,9 +54,22 @@ public class UserService {
             throw new IllegalArgumentException("Password must be at least 8 characters long");
         }
 
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new IllegalArgumentException("Email already exists");
+        }
+
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+            throw new IllegalArgumentException("Username already exists");
+        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole("USER");
         user.setStatus("Active");
-        userRepository.save(user);
+        try  {
+            userRepository.save(user);
+        } catch (Exception e) {
+            System.out.println("Failed to create user: " + e.getMessage());
+        throw new RuntimeException("An internal error occurred while creating the account.");
+        }
     }
 
     /**
@@ -63,7 +80,7 @@ public class UserService {
      */
     public User loginUser(User user) {
         String inputEmailOrUsername = user.getEmail() != null ? user.getEmail().trim() : "";
-        String inputPassword = user.getPassword() != null ? user.getPassword().trim() : "";
+        String inputPassword = user.getPassword() != null ? user.getPassword() : "";        
 
         System.out.println("Login Attempt:");
         System.out.println("Input Identity: '" + inputEmailOrUsername + "'");
@@ -92,7 +109,7 @@ public class UserService {
 
         System.out.println("DB Password: '" + existingUser.getPassword() + "'");
 
-        if (!existingUser.getPassword().equals(inputPassword)) {
+        if (!passwordEncoder.matches(inputPassword, existingUser.getPassword())) {
             System.out.println("Password Mismatch!");
             throw new IllegalArgumentException("Invalid email/username or password");
         }

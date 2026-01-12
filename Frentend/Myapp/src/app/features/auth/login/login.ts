@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import  {AuthServices} from  '../../../core/services/auth.service'
@@ -12,7 +12,7 @@ import { UserLogin } from '../../../core/models/user.model';
   styleUrls: ['./login.css']
 })
 export class LoginComponent {
-  constructor(private router: Router , private Auths : AuthServices ) {} 
+  constructor(private router: Router , private Auths : AuthServices  , private cdn : ChangeDetectorRef) {} 
   isLoading: boolean = false;
   email = '';
   password = '';
@@ -38,6 +38,7 @@ export class LoginComponent {
           console.error('Login failed:', error);
           this.LoginError = true;
           this.ErrorMessage = error.error.message || 'Login failed. Please try again.';
+          this.cdn.detectChanges();
         }
       })
     }

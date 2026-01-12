@@ -82,8 +82,8 @@ public class PostService {
         String mediaUrl = null;
         if (file != null && !file.isEmpty()) {
 
-            if (file.getSize() > 10 * 1024 * 1024) {
-                throw new IllegalArgumentException("File size must be less than 10MB.");
+            if (file.getSize() > 100 * 1024 * 1024) {
+                throw new IllegalArgumentException("File size must be less than 100MB.");
             }
 
             String contentType = file.getContentType();
