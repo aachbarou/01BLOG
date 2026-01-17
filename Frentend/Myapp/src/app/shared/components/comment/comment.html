@@ -1,0 +1,10 @@
+<div class="comment-wrapper animate-in">
+  <img [src]="comment.authorAvatar" [alt]="comment.authorName" class="comment-avatar">
+  <div class="comment-bubble">
+    <div class="comment-header">
+      <span class="author-name">{{ comment.authorName }}</span>
+      <span class="comment-date">just now</span>
+    </div>
+    <p class="comment-text">{{ comment.content }}</p>
+  </div>
+</div>
