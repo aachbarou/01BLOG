@@ -22,11 +22,21 @@ export interface UserProfile extends UserAuthor {
     providedIn: 'root'
 })
 export class UserService {
+  private baseUrl = 'http://localhost:8080/api/users';
+
   constructor(private http: HttpClient) {}
-  getProfile(): Observable<ApiResponse<any>> {
-      const token = localStorage.getItem('token');
-      const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-      return this.http.get<ApiResponse<any>>('http://localhost:8080/api/users/me', { headers });
+
+  getUserProfile(id?: number): Observable<ApiResponse<any>> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const url = id ? `${this.baseUrl}/${id}` : `${this.baseUrl}/me`;
+    return this.http.get<ApiResponse<any>>(url, { headers });
+  }
+  
+  toggleFollow(id: number): Observable<ApiResponse<any>> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.post<ApiResponse<any>>(`${this.baseUrl}/${id}/follow`, {}, { headers });
   }
     
 }

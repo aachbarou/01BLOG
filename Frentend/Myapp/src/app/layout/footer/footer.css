@@ -1,67 +1,77 @@
-.footer-container {
-    background-color: var(--stone-900);
-    color: var(--stone-400);
-    padding: 4rem 1.5rem;
-    margin-top: auto;
-}
-
-.footer-content {
-    max-width: 1280px;
-    margin: 0 auto;
+.footer-canvas {
+    background-color: #ffffff;
+    border-top: 1px solid var(--stone-100);
+    padding: 6rem 1rem; /* py-24 */
+    text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2rem;
 }
 
-@media (min-width: 768px) {
-    .footer-content {
-        flex-direction: row;
-        justify-content: space-between;
-    }
-}
-
-.footer-brand {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    color: white;
-}
-
-.logo-icon {
-    width: 32px;
-    height: 32px;
-    background-color: var(--brand-500);
-    color: white;
-    font-weight: bold;
+/* Brand Group with grayscale and opacity logic */
+.footer-brand-group {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 6px;
+    gap: 0.75rem; /* gap-3 */
+    margin-bottom: 2rem; /* mb-8 */
+    opacity: 0.3;
+    filter: grayscale(100%);
+    transition: all 0.4s ease;
+    cursor: pointer;
+}
+
+.footer-brand-group:hover {
+    opacity: 1;
+    filter: grayscale(0%);
+}
+
+.brand-logo-container {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.logo-box {
+    width: 2rem; /* w-8 */
+    height: 2rem; /* h-8 */
+    background-color: var(--stone-900);
+    color: white;
+    border-radius: 0.75rem; /* rounded-xl */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.875rem; /* text-sm */
+    transition: background-color 0.3s ease;
+}
+
+.footer-brand-group:hover .logo-box {
+    background-color: var(--brand-500);
 }
 
 .logo-text {
     font-family: var(--font-serif);
-    font-weight: bold;
-    letter-spacing: 0.05em;
+    font-weight: 700;
+    font-size: 1.125rem; /* text-lg */
+    color: var(--stone-900);
+    letter-spacing: -0.05em;
 }
 
-.footer-links {
-    display: flex;
-    gap: 2rem;
+/* Slogan Styling */
+.footer-slogan {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--stone-300);
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    margin-bottom: 0.5rem;
 }
 
-.footer-links a {
-    font-size: 0.875rem;
-    color: var(--stone-400);
+.footer-copyright {
+    font-size: 9px;
     font-weight: 500;
-}
-
-.footer-links a:hover {
-    color: white;
-}
-
-.copyright {
-    font-size: 0.75rem;
-    opacity: 0.5;
+    color: var(--stone-200);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
 }

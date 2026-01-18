@@ -24,7 +24,7 @@ export class ProfileComponent implements OnInit {
   }
 
   loadProfile(): void {
-    this.userService.getProfile().subscribe({
+    this.userService.getUserProfile().subscribe({
       next: (response) => {
         this.profile = response.data;
         this.cdn.detectChanges();

@@ -14,10 +14,10 @@ export class AutGuard implements CanActivate {
   ) {}
 
   canActivate(): boolean | UrlTree {
+    //  to  avoid  the  server  Side rendering 
     if (!isPlatformBrowser(this.platformId)) {
-       return true; 
+      return true;
     }
-
     if (this.Auth.isLoggedIn() && this.checkToken()) {
       return true;
     } else {
@@ -27,11 +27,8 @@ export class AutGuard implements CanActivate {
   }
 
   checkToken(): boolean {
-    if (isPlatformBrowser(this.platformId)) {
       const token = localStorage.getItem('token');
       return token !== null && token.length > 0;
-    }
-    return false;
   }
 
   RemoveToken() {
