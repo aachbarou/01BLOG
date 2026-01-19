@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { PostComponent } from '../post/post';
 import { UserProfile } from '../../../core/models/user.model';
 import { UserService } from '../../../core/services/user.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -12,30 +13,59 @@ import { UserService } from '../../../core/services/user.service';
   styleUrl: './profile.css'
 })
 export class ProfileComponent implements OnInit {
-  profile?: UserProfile;
-  isEditing: boolean = false;
+  profile?: any; 
+  isOwnProfile: boolean = true;
+  isLoadingFollow: boolean = false;
 
   constructor(
     private userService: UserService, 
-    private  cdn : ChangeDetectorRef) {}
+    private cdn: ChangeDetectorRef,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
-    this.loadProfile();
-  }
-
-  loadProfile(): void {
-    this.userService.getUserProfile().subscribe({
-      next: (response) => {
-        this.profile = response.data;
-        this.cdn.detectChanges();
-        console.log('Profile fetched:', this.profile);
-      },
-      error: (error) => {
-        console.error('Error fetching profile:', error);
+    this.route.params.subscribe(params => {
+      const userId = params['id'];
+      if (userId) {
+        this.isOwnProfile = false;
+        this.fetchProfile(+userId); 
+      } else {
+        this.isOwnProfile = true;
+        this.fetchMyProfile(); 
       }
     });
   }
 
-  
-  
+  fetchMyProfile(): void {
+    this.userService.getUserProfile().subscribe({
+      next: (response) => {
+        this.profile = response.data;
+        this.cdn.detectChanges();
+      }
+    });
+  }
+
+  fetchProfile(id: number): void {
+    this.userService.getUserProfile(id).subscribe({
+      next: (response) => {
+        this.profile = response.data;
+        this.cdn.detectChanges();
+      }
+    });
+  }
+
+  toggleFollow(): void {
+    if (!this.profile || this.isOwnProfile || this.isLoadingFollow) return;
+
+    this.isLoadingFollow = true;
+    this.userService.toggleFollow(this.profile.id).subscribe({
+      next: () => {
+        this.profile.isFollowing = !this.profile.isFollowing;
+        this.profile.stats.followers += this.profile.isFollowing ? 1 : -1;
+        this.isLoadingFollow = false;
+        this.cdn.detectChanges();
+      },
+      error: () => this.isLoadingFollow = false
+    });
+  }
 }

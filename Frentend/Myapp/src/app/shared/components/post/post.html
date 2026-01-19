@@ -1,11 +1,11 @@
 <div class="post-card-container animate-in">
 
-  <div class="post-header">
-    <div class="author-info">
-      <img [src]="'https://ui-avatars.com/api/?name=' + (post.user?.username || 'User') + '&background=random'"
-        alt="Avatar" class="header-avatar">
+  <div class="post-header" >
+    <div class="author-info" >
+      <img class="clicked" [src]="'https://ui-avatars.com/api/?name=' + (post.user?.username || 'User') + '&background=random'"  (click)="serveProfile(post.user?.user_id)"
+        alt="Avatar" class="header-avatar" >
       <div class="author-meta">
-        <span class="author-name">{{ post.user?.username || 'Unknown' }}</span>
+        <span class="author-name clicked" (click)="serveProfile(post.user?.user_id)" >{{ post.user?.username || 'Unknown' }}</span>
         <span class="post-timestamp">{{ post.timestamp }}</span>
       </div>
     </div>

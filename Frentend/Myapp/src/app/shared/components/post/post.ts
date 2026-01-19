@@ -4,6 +4,7 @@ import { Comment } from '../../../core/models/comment.model';
 import { CommentComponent } from '../comment/comment';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-post',
@@ -13,6 +14,7 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./post.css']
 })
 export class PostComponent implements OnChanges {
+  constructor(private router: Router) {}
   @Input({ required: true }) post!: Post;
   
   showComments = false;
@@ -53,4 +55,8 @@ export class PostComponent implements OnChanges {
     if (url.startsWith('http')) return url;
     return `http://localhost:8080/files/${url}`;
   }
+  serveProfile(id?: number) {
+    this.router.navigate(['/profile', id]);
+}
+
 }

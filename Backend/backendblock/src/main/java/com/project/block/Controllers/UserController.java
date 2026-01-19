@@ -3,6 +3,7 @@ package com.project.block.Controllers;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -25,7 +26,7 @@ public class UserController {
 
     @GetMapping("/me")
     public ResponseEntity<?> getUserProfile() {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.getUserProfile(null);
         // get posts of user
         try {
         List<Post> posts = userService.findPostsByUserId(user.getUser_id());
@@ -34,5 +35,18 @@ public class UserController {
     } catch (Exception e) {
         return ResponseEntity.status(500).body("Internal Server Error: " + e.getMessage());
     }
+    }
+
+// Controle  to get  user  with  id 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getUserById(@PathVariable Long id) {
+        try {
+            System.out.println("===================================== ?>>>>             User ID: " + id);
+            User user = userService.getUserProfile(id); 
+            UserProfile userProfile = new UserProfile(user , userService.findPostsByUserId(user.getUser_id()));
+            return ResponseEntity.ok(new ResposeData("User fetched successfully", 200, userProfile));
+        } catch ( RuntimeException e) {
+            return ResponseEntity.status(404).body("User not found");
+        }
     }
 }

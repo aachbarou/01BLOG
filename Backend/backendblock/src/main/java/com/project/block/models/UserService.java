@@ -2,6 +2,7 @@ package com.project.block.models;
 
 import java.util.List;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.method.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -141,16 +142,19 @@ public class UserService {
         return jwtToken.token;
     }
 
-    public User getUserProfile() {
+    public User getUserProfile( Long id) {
        try {
         // get user from security context
-        com.project.block.entity.User user = (com.project.block.entity.User) 
+        if  (id  == null ) {
+            com.project.block.entity.User user = (com.project.block.entity.User) 
             org.springframework.security.core.context.SecurityContextHolder.getContext()
             .getAuthentication().getPrincipal();
             return user;
-       } catch (Exception e) {
-           throw new RuntimeException("Failed to get user profile: " + e.getMessage(), e);
-       }
+        }
+            return this.userRepository.findById(id).orElse(null);
+    } catch (Exception e) {
+        throw new RuntimeException("Failed to get user profile: " + e.getMessage(), e);
+    }
     }
     public List<Post> findPostsByUserId(Long userId) {
         return this.postRepository.findPostsByUserId(userId);
