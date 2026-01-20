@@ -1,7 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PostComponent } from '../post/post';
-import { UserProfile } from '../../../core/models/user.model';
 import { UserService } from '../../../core/services/user.service';
 import { ActivatedRoute } from '@angular/router';
 
@@ -13,39 +12,15 @@ import { ActivatedRoute } from '@angular/router';
   styleUrl: './profile.css'
 })
 export class ProfileComponent implements OnInit {
-  profile?: any; 
+  profile?: any;
   isOwnProfile: boolean = true;
   isLoadingFollow: boolean = false;
-
   constructor(
-    private userService: UserService, 
+    private userService: UserService,
     private cdn: ChangeDetectorRef,
     private route: ActivatedRoute
-  ) {}
-
-  ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      const userId = params['id'];
-      if (userId) {
-        this.isOwnProfile = false;
-        this.fetchProfile(+userId); 
-      } else {
-        this.isOwnProfile = true;
-        this.fetchMyProfile(); 
-      }
-    });
-  }
-
-  fetchMyProfile(): void {
-    this.userService.getUserProfile().subscribe({
-      next: (response) => {
-        this.profile = response.data;
-        this.cdn.detectChanges();
-      }
-    });
-  }
-
-  fetchProfile(id: number): void {
+  ) { }
+  fetchProfile(id?: number): void {
     this.userService.getUserProfile(id).subscribe({
       next: (response) => {
         this.profile = response.data;
@@ -53,6 +28,24 @@ export class ProfileComponent implements OnInit {
       }
     });
   }
+
+
+  ngOnInit(): void {
+    this.route.params.subscribe(params => {
+      const userId = params['id'];
+      if (userId) {
+        this.isOwnProfile = false;
+        this.fetchProfile(+userId);
+      } else {
+        this.isOwnProfile = true;
+        this.fetchProfile();
+      }
+    });
+  }
+
+  
+
+  
 
   toggleFollow(): void {
     if (!this.profile || this.isOwnProfile || this.isLoadingFollow) return;
@@ -65,7 +58,7 @@ export class ProfileComponent implements OnInit {
         this.isLoadingFollow = false;
         this.cdn.detectChanges();
       },
-      error: () => this.isLoadingFollow = false
+      error: () => this.isLoadingFollow = false 
     });
   }
 }

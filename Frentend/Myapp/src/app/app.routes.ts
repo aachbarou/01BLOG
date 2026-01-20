@@ -16,6 +16,7 @@ export const routes: Routes = [
     { path: 'signup', component: RegisterComponent, canActivate: [AuthGuest] },
     { path: 'help', component: ResetPass, canActivate: [AuthGuest] },
     { path: 'profile/:id', component: ProfileComponent, canActivate: [AutGuard] }, 
+    { path: 'profile', component: ProfileComponent, canActivate: [AutGuard] }, 
     { path: 'create-post', component: PostCreationComponent, canActivate: [AutGuard] },
     { path: '**', redirectTo: '' }
 ];
