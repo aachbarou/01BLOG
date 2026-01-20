@@ -24,6 +24,7 @@ export class ProfileComponent implements OnInit {
     this.userService.getUserProfile(id).subscribe({
       next: (response) => {
         this.profile = response.data;
+        this.isOwnProfile = this.profile.owned;
         this.cdn.detectChanges();
       }
     });
@@ -34,10 +35,8 @@ export class ProfileComponent implements OnInit {
     this.route.params.subscribe(params => {
       const userId = params['id'];
       if (userId) {
-        this.isOwnProfile = false;
         this.fetchProfile(+userId);
       } else {
-        this.isOwnProfile = true;
         this.fetchProfile();
       }
     });

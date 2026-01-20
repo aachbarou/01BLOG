@@ -1,8 +1,9 @@
 package com.project.block.dto;
 
-import com.project.block.entity.User;
-import com.project.block.entity.Post;
 import java.util.List;
+
+import com.project.block.entity.Post;
+import com.project.block.entity.User;
 
 import lombok.Data;
 
@@ -24,6 +25,7 @@ public class UserProfile {
     private String avatarUrl;
     private String bio;
     private Stats stats;
+    private   boolean isOwned; 
 
     @Data
     public static class Stats {
@@ -38,9 +40,10 @@ public class UserProfile {
         }
     }
 
-    public UserProfile(User user, List<Post> posts) {
+    public UserProfile(User user, List<Post> posts ,  boolean isOwned) {
         this.id = user.getUser_id();
         this.name = user.getUsername();
+        this.isOwned = isOwned;
         this.avatarUrl = "https://www.vecteezy.com/vector-art/67754607-flat-avatar-icon-man-user-profile-image-for-social-media-blogs-forums-or-online-work";
         this.bio = " We are a community of people who love to share their thoughts and ideas. We are here to help you find the information you need and to connect with others who share your interests.";
         this.stats = new Stats(posts, 56, 99090);

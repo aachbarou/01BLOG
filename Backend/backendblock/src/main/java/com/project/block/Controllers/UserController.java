@@ -1,19 +1,19 @@
 package com.project.block.Controllers;
 
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.project.block.dto.ResposeData;
+import com.project.block.dto.UserProfile;
+import com.project.block.entity.Post;
 import com.project.block.entity.User;
 import com.project.block.models.UserService;
-
-import com.project.block.entity.Post;
-import java.util.List;
-import com.project.block.dto.UserProfile;
-import com.project.block.dto.ResposeData;
 
 @RestController
 @RequestMapping("/api/users")
@@ -30,20 +30,21 @@ public class UserController {
         // get posts of user
         try {
         List<Post> posts = userService.findPostsByUserId(user.getUser_id());
-        UserProfile userProfile = new UserProfile(user, posts);
+        UserProfile userProfile = new UserProfile(user, posts  , true);
         return ResponseEntity.ok( new  ResposeData("User profile fetched successfully", 200, userProfile));
     } catch (Exception e) {
         return ResponseEntity.status(500).body("Internal Server Error: " + e.getMessage());
     }
     }
 
-// Controle  to get  user  with  id 
+    // Controle  to get  user  with  id 
     @GetMapping("/{id}")
     public ResponseEntity<?> getUserById(@PathVariable Long id) {
         try {
             System.out.println("===================================== ?>>>>             User ID: " + id);
+            User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             User user = userService.getUserProfile(id); 
-            UserProfile userProfile = new UserProfile(user , userService.findPostsByUserId(user.getUser_id()));
+            UserProfile userProfile = new UserProfile(user , userService.findPostsByUserId(user.getUser_id()) , currentUser.getUser_id().equals(id));
             return ResponseEntity.ok(new ResposeData("User fetched successfully", 200, userProfile));
         } catch ( RuntimeException e) {
             return ResponseEntity.status(404).body("User not found");

@@ -2,9 +2,7 @@ package com.project.block.models;
 
 import java.util.List;
 
-import org.springframework.dao.DataAccessException;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.method.P;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -143,15 +141,14 @@ public class UserService {
     }
 
     public User getUserProfile( Long id) {
+        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
        try {
         // get user from security context
         if  (id  == null ) {
-            com.project.block.entity.User user = (com.project.block.entity.User) 
-            org.springframework.security.core.context.SecurityContextHolder.getContext()
-            .getAuthentication().getPrincipal();
-            return user;
+            return currentUser;
         }
-            return this.userRepository.findById(id).orElse(null);
+        
+        return this.userRepository.findById(id).orElse(null);
     } catch (Exception e) {
         throw new RuntimeException("Failed to get user profile: " + e.getMessage(), e);
     }
