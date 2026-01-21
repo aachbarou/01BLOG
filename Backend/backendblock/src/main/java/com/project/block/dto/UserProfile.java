@@ -32,20 +32,22 @@ public class UserProfile {
         private List<Post> posts;
         private int followers;
         private int following;
+        private String role;
 
-        public Stats(List<Post> posts, int followers, int following) {
-            this.posts = posts;
+        public Stats(List<Post> posts, int followers, int following, String role , boolean Needposts ) {
+            this.posts = Needposts ? posts : null;
             this.followers = followers;
             this.following = following;
+            this.role = role;
         }
     }
 
-    public UserProfile(User user, List<Post> posts ,  boolean isOwned) {
+    public UserProfile(User user, List<Post> posts ,  boolean isOwned , boolean  Needposts) {
         this.id = user.getUser_id();
         this.name = user.getUsername();
         this.isOwned = isOwned;
         this.avatarUrl = "https://www.vecteezy.com/vector-art/67754607-flat-avatar-icon-man-user-profile-image-for-social-media-blogs-forums-or-online-work";
         this.bio = " We are a community of people who love to share their thoughts and ideas. We are here to help you find the information you need and to connect with others who share your interests.";
-        this.stats = new Stats(posts, 56, 99090);
+        this.stats = new Stats(posts, 56, 99090, user.getRole() , Needposts);
     }
 }

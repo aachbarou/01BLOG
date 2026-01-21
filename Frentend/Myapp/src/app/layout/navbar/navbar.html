@@ -22,12 +22,12 @@
             <div class="profile-dropdown-container">
                 <button class="profile-trigger" (click)="profileToggle()">
                     <div class="user-info">
-                        <span class="user-name">{{ username }}</span>
-                        <span class="user-role">Member</span>
+                        <span class="user-name">{{ formData.username }}</span>
+                        <span class="user-role">{{ formData.role }}</span>
                     </div>
                     
                     <div class="avatar-wrapper">
-                        <img [src]="imageUrl" alt="User" class="avatar-img">
+                        <img [src]="formData.avatarUrl" alt="User" class="avatar-img">
                         <div class="status-dot"></div>
                     </div>
                 </button>
@@ -36,7 +36,7 @@
                     <div class="dropdown-menu">
                         <div class="dropdown-header">
                             <p class="header-label">Signed in as</p>
-                            <p class="header-email">simo@example.com</p>
+                            <p class="header-email">{{ formData.email }}</p>
                         </div>
                         
                         <a (click)="navigateToProfile()" class="dropdown-item">

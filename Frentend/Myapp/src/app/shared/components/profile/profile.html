@@ -17,7 +17,7 @@
 
                     <div class="action-buttons">
                         @if (isOwnProfile) {
-                            <button class="btn-edit-canvas">Edit Profile</button>
+                            <button class="btn-edit-canvas" (click) = "editProfile()">Edit Profile</button>
                         } @else {
                             <button 
                                 class="btn-follow-canvas" 
@@ -64,12 +64,12 @@
         } @empty {
             <div class="empty-feed">
                 <p>No publications shared yet.</p>
-            </div>
+            </div>  
         }
     </main>
 </div>
 } @else {
-    <div class="loading-state">
+    <div class="loading-state">         
         <div class="pulse-loader"></div>
         <p>Fetching profile...</p>
     </div>

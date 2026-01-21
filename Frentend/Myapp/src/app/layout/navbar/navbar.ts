@@ -1,9 +1,10 @@
-import { Component, Injectable, HostListener, AfterViewChecked } from '@angular/core';
+import { Component, Injectable, HostListener, AfterViewChecked, OnInit } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { AutGuard } from '../../core/guards/auth.guard';
 import { AuthServices } from '../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
 import { setDefaultHighWaterMark } from 'node:stream';
+import { UserService } from '../../core/services/user.service';
 
 declare var lucide: any;
 
@@ -17,16 +18,36 @@ declare var lucide: any;
 @Injectable({
   providedIn: 'root'
 })
-export class Navbar implements AfterViewChecked {
-  constructor(private router: Router, private Auth: AutGuard, private Auths: AuthServices) { }
+export class Navbar implements OnInit , AfterViewChecked {
+  constructor(private router: Router, private Auth: AutGuard, private Auths: AuthServices , private User: UserService) { }
   
-  username: string = 'Simo 6';
+  formData = {
+    name: '',
+    username: '',
+    email: '',
+    role : '',
+    avatarUrl: ''
+  };
+ 
   isDropdownOpen: boolean = false;
   
-  protected imageUrl: string = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQixhzI7xr1ouPUT_f7BIIS8ErIWs3Vx8FiZA&s';
+
+  ngOnInit() {
+    this.User.loadCurrentUser();
+    this.User.currentUser$.subscribe((user) => {
+      if (user) {
+        this.formData.name = user.name;
+        this.formData.username = user.name;
+        this.formData.email = user.email;
+        this.formData.role = user.stats.role;
+        this.formData.avatarUrl = user.avatarUrl;
+      }
+    });
+  }
 
   ngAfterViewChecked() {
     lucide.createIcons();
+    
   }
 
   profileToggle(event?: Event) {

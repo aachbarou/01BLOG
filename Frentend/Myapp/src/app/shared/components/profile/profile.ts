@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { PostComponent } from '../post/post';
 import { UserService } from '../../../core/services/user.service';
 import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -18,7 +19,8 @@ export class ProfileComponent implements OnInit {
   constructor(
     private userService: UserService,
     private cdn: ChangeDetectorRef,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) { }
   fetchProfile(id?: number): void {
     this.userService.getUserProfile(id).subscribe({
@@ -59,5 +61,9 @@ export class ProfileComponent implements OnInit {
       },
       error: () => this.isLoadingFollow = false 
     });
+  }
+
+  editProfile(): void {
+    this.router.navigate(['/profile/settings']);
   }
 }

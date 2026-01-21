@@ -30,7 +30,7 @@ public class UserController {
         // get posts of user
         try {
         List<Post> posts = userService.findPostsByUserId(user.getUser_id());
-        UserProfile userProfile = new UserProfile(user, posts  , true);
+        UserProfile userProfile = new UserProfile(user, posts  , true , false );
         return ResponseEntity.ok( new  ResposeData("User profile fetched successfully", 200, userProfile));
     } catch (Exception e) {
         return ResponseEntity.status(500).body("Internal Server Error: " + e.getMessage());
@@ -41,10 +41,9 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getUserById(@PathVariable Long id) {
         try {
-            System.out.println("===================================== ?>>>>             User ID: " + id);
             User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             User user = userService.getUserProfile(id); 
-            UserProfile userProfile = new UserProfile(user , userService.findPostsByUserId(user.getUser_id()) , currentUser.getUser_id().equals(id));
+            UserProfile userProfile = new UserProfile(user , userService.findPostsByUserId(user.getUser_id()) , currentUser.getUser_id().equals(id) , true);
             return ResponseEntity.ok(new ResposeData("User fetched successfully", 200, userProfile));
         } catch ( RuntimeException e) {
             return ResponseEntity.status(404).body("User not found");
