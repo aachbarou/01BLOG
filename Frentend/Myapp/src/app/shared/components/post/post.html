@@ -1,63 +1,57 @@
 <div class="post-card-container animate-in">
-
-  <div class="post-header" >
-    <div class="author-info" >
-      <img class="clicked" [src]="'https://ui-avatars.com/api/?name=' + (post.user?.username || 'User') + '&background=random'"  (click)="serveProfile(post.user?.user_id)"
-        alt="Avatar" class="header-avatar" >
+  <div class="post-header">
+    <div class="author-info">
+      <img class="clicked header-avatar" 
+           [src]="'https://ui-avatars.com/api/?name=' + (post.user?.username || 'User')" 
+           (click)="serveProfile(post.user?.user_id)" alt="Avatar">
       <div class="author-meta">
-        <span class="author-name clicked" (click)="serveProfile(post.user?.user_id)" >{{ post.user?.username || 'Unknown' }}</span>
+        <span class="author-name clicked" (click)="serveProfile(post.user?.user_id)">
+          {{ post.user?.username || 'Unknown' }}
+        </span>
         <span class="post-timestamp">{{ post.timestamp }}</span>
       </div>
     </div>
-    <button class="more-btn">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="1" />
-        <circle cx="19" cy="12" r="1" />
-        <circle cx="5" cy="12" r="1" />
-      </svg>
-    </button>
+    
+    <div class="options-wrapper">
+        <button class="more-btn" (click)="toggleOptions($event)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1" /><circle cx="19" cy="12" r="1" /><circle cx="5" cy="12" r="1" /></svg>
+        </button>
+        
+        @if (showOptions) {
+          <div class="options-menu animate-pop">
+            @if (isOwner) {
+              <button (click)="onEdit()" class="menu-item">Edit Post</button>
+              <button (click)="onDelete()" class="menu-item delete-text" style="color: red;">Delete</button>
+            } @else {
+              <button class="menu-item">Save Bookmark</button>
+            }
+          </div>
+        }
+    </div>
   </div>
 
   @if (post.mediaUrl) {
-  <div class="post-media-area">
-    @if (post.mediaUrl.endsWith('.mp4')) {
-    <video [src]="post.mediaUrl" controls loop playsinline class="main-media"></video>
-    } @else {
-    <img [src]="post.mediaUrl" [alt]="post.title" class="main-media">
-    }
-  </div>
+    <div class="post-media-area">
+      @if (post.mediaUrl.toLowerCase().endsWith('.mp4')) {
+        <video [src]="getMediaUrl(post.mediaUrl)" controls loop playsinline class="main-media"></video>
+      } @else {
+        <img [src]="getMediaUrl(post.mediaUrl)" [alt]="post.title" class="main-media">
+      }
+    </div>
   }
 
   <div class="post-interaction-bar">
     <div class="left-actions">
       <button class="action-btn like-btn" (click)="isLiked = !isLiked" [class.liked]="isLiked">
-        <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
-          [attr.fill]="isLiked ? '#ef4444' : 'none'" [attr.stroke]="isLiked ? '#ef4444' : 'currentColor'"
-          stroke-width="2">
-          <path
-            d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
-        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" [attr.fill]="isLiked ? '#ef4444' : 'none'" [attr.stroke]="isLiked ? '#ef4444' : 'currentColor'" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" /></svg>
         <span class="count">{{ isLiked ? (post.likes || 0) + 1 : (post.likes || 0) }}</span>
       </button>
 
       <button class="action-btn comment-btn" (click)="toggleComments()">
-        <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="2">
-          <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" />
-        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z" /></svg>
         <span class="count">{{ post.comments || 0 }}</span>
       </button>
     </div>
-
-    <button class="share-btn">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
-        <polyline points="16 6 12 2 8 6" />
-        <line x1="12" x2="12" y1="2" y2="15" />
-      </svg>
-    </button>
   </div>
 
   <div class="post-text-content">
@@ -66,27 +60,21 @@
   </div>
 
   @if (showComments) {
-  <div class="expanded-comments-area animate-slide-down">
-    <div class="comments-list">
-      @for (comment of mockComments; track comment.id) {
-      <app-comment-item [comment]="comment"></app-comment-item>
-      }
-    </div>
+    <div class="expanded-comments-area animate-slide-down">
+      <div class="comments-list">
+        @for (comment of mockComments; track comment.id) {
+          <app-comment-item [comment]="comment"></app-comment-item>
+        }
+      </div>
 
-    <div class="comment-input-wrapper">
-      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQixhzI7xr1ouPUT_f7BIIS8ErIWs3Vx8FiZA&s"
-        class="user-mini-avatar" alt="me">
-      <div class="input-relative-container">
-        <input type="text" [(ngModel)]="newCommentText" placeholder="Write a comment..." class="styled-comment-input">
-        <button class="send-icon-btn">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="22" y1="2" x2="11" y2="13"></line>
-            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-          </svg>
-        </button>
+      <div class="comment-input-wrapper">
+        <div class="input-relative-container">
+          <input type="text" [(ngModel)]="newCommentText" placeholder="Write a comment..." class="styled-comment-input">
+          <button class="send-icon-btn" (click)="sendComment()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+          </button>
+        </div>
       </div>
     </div>
-  </div>
   }
 </div>

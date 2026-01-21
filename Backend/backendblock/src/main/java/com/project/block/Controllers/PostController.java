@@ -1,14 +1,19 @@
 package com.project.block.Controllers;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.block.dto.PostDTO;
 import com.project.block.dto.ResposeData;
+import com.project.block.entity.Post;
 import com.project.block.models.PostService;
 
 @RestController
@@ -54,7 +59,20 @@ public class PostController {
      */
     @GetMapping
     public ResponseEntity<?> getAllPosts() {
-        return ResponseEntity.ok(new ResposeData("Posts fetched successfully", 200, postService.getAllPosts()));
+        try {
+        List<Post> psts = postService.getAllPosts();
+        List<Post> modifiedPosts = psts.stream()
+            .peek(post -> {
+                if (post.getUser() != null) {
+                    post.getUser().setEmail(null); 
+                }
+            })
+            .toList();
+
+        return ResponseEntity.ok(new ResposeData("Posts fetched successfully", 200, modifiedPosts));
+    } catch (Exception e) {
+        return ResponseEntity.status(500).body(new ResposeData("Internal Server Error", 500, null));
+    }
     }
 
     /**
@@ -68,4 +86,31 @@ public class PostController {
         return ResponseEntity.ok(new ResposeData("Posts fetched successfully", 200, postService.getPostsByUserId(userId)));
     }
 
+    @PutMapping("/{id}")
+    public  ResponseEntity<?> updatePost(@PathVariable Long id , @org.springframework.web.bind.annotation.ModelAttribute PostDTO post){
+        try {
+            postService.updatePost(id, post);
+            return ResponseEntity.ok(new ResposeData("Post updated successfully", 200, null));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new ResposeData("Internal Server Error" + e.getMessage(), 500, null));
+        }
+    }   
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deletePost(@PathVariable Long id){
+        try {
+            postService.deletePost(id);
+            return ResponseEntity.ok(new ResposeData("Post deleted successfully", 200, null));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new ResposeData("Internal Server Error" + e.getMessage(), 500, null));
+        }
+    }   
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getPostById(@PathVariable Long id){
+        try {
+            return ResponseEntity.ok(new ResposeData("Post fetched successfully", 200, postService.getPostById(id)));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new ResposeData("Internal Server Error" + e.getMessage(), 500, null));
+        }
+    }   
 }

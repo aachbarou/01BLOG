@@ -14,8 +14,9 @@ import { Router } from '@angular/router';
 })
 export class ProfileComponent implements OnInit {
   profile?: any;
-  isOwnProfile: boolean = true;
+  isOwnProfile: boolean = false;
   isLoadingFollow: boolean = false;
+  
   constructor(
     private userService: UserService,
     private cdn: ChangeDetectorRef,
@@ -55,9 +56,9 @@ export class ProfileComponent implements OnInit {
     this.userService.toggleFollow(this.profile.id).subscribe({
       next: () => {
         this.profile.isFollowing = !this.profile.isFollowing;
-        this.profile.stats.followers += this.profile.isFollowing ? 1 : -1;
-        this.isLoadingFollow = false;
+        this.fetchProfile(this.profile.id);
         this.cdn.detectChanges();
+        this.isLoadingFollow = false;
       },
       error: () => this.isLoadingFollow = false 
     });

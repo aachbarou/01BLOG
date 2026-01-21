@@ -26,15 +26,19 @@ public class UserController {
 
     @GetMapping("/me")
     public ResponseEntity<?> getUserProfile() {
-        User user = userService.getUserProfile(null);
-        // get posts of user
         try {
-        List<Post> posts = userService.findPostsByUserId(user.getUser_id());
-        UserProfile userProfile = new UserProfile(user, posts  , true , false );
-        return ResponseEntity.ok( new  ResposeData("User profile fetched successfully", 200, userProfile));
-    } catch (Exception e) {
-        return ResponseEntity.status(500).body("Internal Server Error: " + e.getMessage());
-    }
+            User user = userService.getUserProfile(null);
+            // get posts of user
+            try {
+                List<Post> posts = userService.findPostsByUserId(user.getUser_id());
+                UserProfile userProfile = new UserProfile(user, posts, true, false, userService.getFollowersCount(user), userService.getFollowingCount(user), userService.isFollowing(user, user));
+               return ResponseEntity.ok( new  ResposeData("User profile fetched successfully", 200, userProfile));
+            } catch (Exception e) {
+                return ResponseEntity.status(500).body("Internal Server Error: " + e.getMessage());
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Internal Server Error: " + e.getMessage());
+        }
     }
 
     // Controle  to get  user  with  id 
@@ -42,9 +46,13 @@ public class UserController {
     public ResponseEntity<?> getUserById(@PathVariable Long id) {
         try {
             User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            User user = userService.getUserProfile(id); 
-            UserProfile userProfile = new UserProfile(user , userService.findPostsByUserId(user.getUser_id()) , currentUser.getUser_id().equals(id) , true);
-            return ResponseEntity.ok(new ResposeData("User fetched successfully", 200, userProfile));
+            try {
+                User user = userService.getUserProfile(id); 
+                UserProfile userProfile = new UserProfile(user , userService.findPostsByUserId(user.getUser_id()) , currentUser.getUser_id().equals(id) , true , userService.getFollowersCount(user), userService.getFollowingCount(user), userService.isFollowing(currentUser, user));
+                return ResponseEntity.ok(new ResposeData("User fetched successfully", 200, userProfile));
+            } catch (Exception e) {
+                return ResponseEntity.status(404).body("User not found");
+            }
         } catch ( RuntimeException e) {
             return ResponseEntity.status(404).body("User not found");
         }

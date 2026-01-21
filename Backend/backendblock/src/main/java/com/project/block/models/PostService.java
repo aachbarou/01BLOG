@@ -124,4 +124,20 @@ public class PostService {
 
         postRepository.save(post);
     }
+
+
+    public void updatePost(Long id, PostDTO postDto) {
+        Post post = postRepository.findById(id).orElseThrow(() -> new RuntimeException("Post not found"));
+        post.setTitle(postDto.getTitle());
+        post.setContent(postDto.getContent());
+        post.setMediaUrl(postDto.getMediaUrl());
+        postRepository.save(post);
+    }
+
+    public void deletePost(Long id) {
+        postRepository.deleteById(id);
+    }
+    public Post getPostById(Long id) {
+        return postRepository.findById(id).orElseThrow(() -> new RuntimeException("Post not found"));
+    }
 }

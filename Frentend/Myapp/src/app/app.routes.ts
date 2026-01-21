@@ -8,6 +8,8 @@ import { AutGuard } from './core/guards/auth.guard'
 import { AuthGuest } from './core/guards/auth.guest'
 import { PostCreationComponent } from './features/post-creation/post-creation';
 import { ProfileSettingsComponent } from './shared/components/edit-profile/edit-profile';
+import { ErrorPageComponent } from './shared/components/error-page-component/error-page-component';
+import { PostEditComponent } from './shared/components/post-edit-component/post-edit-component';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent, canActivate: [AutGuard] },
@@ -15,10 +17,21 @@ export const routes: Routes = [
     { path: 'home', component: HomeComponent, canActivate: [AutGuard] },
     { path: 'signup', component: RegisterComponent, canActivate: [AuthGuest] },
     { path: 'help', component: ResetPass, canActivate: [AuthGuest] },
-    { path: 'profile/settings', component: ProfileSettingsComponent, canActivate: [AutGuard] }, 
+    { path: 'profile/settings', component: ProfileSettingsComponent, canActivate: [AutGuard] },
 
-    { path: 'profile/:id', component: ProfileComponent, canActivate: [AutGuard] }, 
-    { path: 'profile', component: ProfileComponent, canActivate: [AutGuard] }, 
+    { path: 'profile/:id', component: ProfileComponent, canActivate: [AutGuard] },
+    { path: 'profile', component: ProfileComponent, canActivate: [AutGuard] },
     { path: 'create-post', component: PostCreationComponent, canActivate: [AutGuard] },
-    { path: '**', redirectTo: '' }
+    { path: 'edit-post/:id', component: PostEditComponent, canActivate: [AutGuard] },
+
+    {
+        path: 'error',
+        component: ErrorPageComponent,
+        data: { type: 'generic' }
+    },
+    {
+        path: '**',
+        component: ErrorPageComponent,
+        data: { type: '404' }
+    },
 ];

@@ -23,7 +23,7 @@
                                 class="btn-follow-canvas" 
                                 [class.following]="profile.isFollowing"
                                 (click)="toggleFollow()">
-                                @if (profile.isFollowing) {
+                                @if (profile.following) {
                                     <span class="flex-icon">✓ Following</span>
                                 } @else {
                                     <span class="flex-icon">+ Follow</span>

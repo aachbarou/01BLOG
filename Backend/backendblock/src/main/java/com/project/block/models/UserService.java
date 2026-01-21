@@ -21,6 +21,7 @@ public class UserService {
     private final PostRepository postRepository;
     private final JwtUtil JwtUtil;
     private final PasswordEncoder passwordEncoder;
+    private final SubscriptionService subscriptionService;
 
     /**
      * Constructor for UserService
@@ -30,13 +31,15 @@ public class UserService {
      * @param JwtUtil         Utility for JWT operations
      * @param postRepository  Repository for Post entity
      * @param passwordEncoder Password encoder for password operations
+     * @param subscriptionService Service for subscription operations
      */
-    public UserService(UserRepository userRepository, TokenRepository TokenRepository, JwtUtil JwtUtil , PostRepository postRepository , PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, TokenRepository TokenRepository, JwtUtil JwtUtil , PostRepository postRepository , PasswordEncoder passwordEncoder , SubscriptionService subscriptionService) {
         this.TokenRepository = TokenRepository;
         this.JwtUtil = JwtUtil;
         this.userRepository = userRepository;
         this.postRepository = postRepository;
         this.passwordEncoder = passwordEncoder;
+        this.subscriptionService = subscriptionService;
     }
 
     /**
@@ -140,7 +143,7 @@ public class UserService {
         return jwtToken.token;
     }
 
-    public User getUserProfile( Long id) {
+    public User getUserProfile( Long id)  throws Exception {
         User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
        try {
         // get user from security context
@@ -156,4 +159,22 @@ public class UserService {
     public List<Post> findPostsByUserId(Long userId) {
         return this.postRepository.findPostsByUserId(userId);
     }
+    
+
+
+    public int getFollowersCount(User user) {
+        return this.subscriptionService.getFollowersCount(user);
+    }
+
+    public int getFollowingCount(User user) {
+        return this.subscriptionService.getFollowingCount(user);
+    }
+
+    public boolean isFollowing(User follower, User followed) {
+        System.out.println("???????????????????????????>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        System.out.println("id 1 = " + follower.getUser_id());
+        System.out.println("id 2 = " + followed.getUser_id());
+      return   this.subscriptionService.isFollowing(follower, followed);
+    }
 }
+

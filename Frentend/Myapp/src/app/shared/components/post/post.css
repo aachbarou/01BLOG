@@ -4,13 +4,14 @@
     margin-bottom: 3rem;
 }
 
+/* --- بطاقة المنشور الرئيسية --- */
 .post-card-container {
     background: #ffffff;
-    border-radius: 2rem; /* Matches image rounded style */
+    border-radius: 2rem; /* حواف دائرية كبيرة تطابق التصميم العصري */
     overflow: hidden;
     border: 1px solid var(--stone-100);
     box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    transition: all 0.4s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     max-width: 44rem; 
     margin: 0 auto;
 }
@@ -20,7 +21,7 @@
     transform: translateY(-4px);
 }
 
-/* Header */
+/* --- رأس المنشور (Author Info & Options) --- */
 .post-header {
     padding: 1.25rem 1.5rem;
     display: flex;
@@ -39,7 +40,7 @@
     height: 2.5rem;
     border-radius: 50%;
     object-fit: cover;
-    background-color: var(--brand-500);
+    background-color: var(--stone-100);
 }
 
 .author-meta {
@@ -59,22 +60,66 @@
     font-weight: 500;
 }
 
+/* --- قائمة الخيارات (Edit/Delete Menu) --- */
+.options-wrapper {
+    position: relative;
+}
+
 .more-btn {
     background: none;
     border: none;
     color: var(--stone-300);
     cursor: pointer;
     padding: 0.5rem;
-    border-radius: 0.5rem;
+    border-radius: 50%;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.more-btn:hover { background: var(--stone-50); color: var(--stone-600); }
+.more-btn:hover { background: var(--stone-50); color: var(--stone-900); }
 
-/* Media */
+.options-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 0.5rem;
+    width: 12rem;
+    background: white;
+    border-radius: 1.25rem;
+    border: 1px solid var(--stone-100);
+    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+    z-index: 100;
+    padding: 0.5rem;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--stone-600);
+    border: none;
+    background: none;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+}
+
+.menu-item:hover { background-color: var(--stone-50); color: var(--stone-900); }
+.menu-item.delete-text { color: #ef4444; }
+.menu-item.delete-text:hover { background-color: #fef2f2; }
+
+/* --- منطقة الوسائط --- */
 .post-media-area {
     width: 100%;
     max-height: 600px;
-    background-color: #000;
+    background-color: var(--stone-900);
     overflow: hidden;
     display: flex;
     align-items: center;
@@ -88,7 +133,7 @@
     display: block;
 }
 
-/* Interaction Bar */
+/* --- شريط التفاعل --- */
 .post-interaction-bar {
     padding: 1rem 1.5rem 0.5rem;
     display: flex;
@@ -118,12 +163,12 @@
     color: var(--stone-900);
 }
 
-.like-btn:hover { color: #ef4444; }
-.comment-btn:hover { color: var(--brand-600); }
+.like-btn.liked { color: #ef4444; }
+.comment-btn:hover { color: var(--brand-500); }
 .share-btn { background: none; border: none; color: var(--stone-300); cursor: pointer; }
 .share-btn:hover { color: var(--stone-900); }
 
-/* Text Content */
+/* --- محتوى النص --- */
 .post-text-content {
     padding: 0.5rem 1.75rem 2rem;
 }
@@ -143,7 +188,7 @@
     line-height: 1.6;
 }
 
-/* Expanded Comments (Fixed) */
+/* --- منطقة التعليقات الموسعة --- */
 .expanded-comments-area {
     border-top: 1px solid var(--stone-50);
     background-color: rgba(250, 250, 249, 0.4);
@@ -157,20 +202,13 @@
     margin-bottom: 1.5rem;
 }
 
-/* Comment Input Fix (Solves e2cdd1) */
+/* --- حقل إدخال التعليق الدائري --- */
 .comment-input-wrapper {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    padding-top: 1rem;
+    padding-top: 1.25rem;
     border-top: 1px solid var(--stone-100);
-}
-
-.user-mini-avatar {
-    width: 2rem;
-    height: 2rem;
-    border-radius: 50%;
-    object-fit: cover;
 }
 
 .input-relative-container {
@@ -182,17 +220,18 @@
     width: 100%;
     background-color: white;
     border: 1px solid var(--stone-200);
-    border-radius: 9999px; /* Rounded pill style */
-    padding: 0.6rem 2.5rem 0.6rem 1.25rem;
+    border-radius: 9999px; /* شكل الحبة الدائري */
+    padding: 0.65rem 3rem 0.65rem 1.25rem;
     font-size: 0.85rem;
     outline: none;
     transition: all 0.2s;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    color: var(--stone-900);
 }
 
 .styled-comment-input:focus {
     border-color: var(--brand-500);
-    box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.1);
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
 }
 
 .send-icon-btn {
@@ -210,17 +249,18 @@
     transition: color 0.2s;
 }
 
-.send-icon-btn:hover { color: var(--brand-600); }
+.send-icon-btn:hover { color: var(--brand-500); }
 
-/* Animations */
-.animate-slide-down {
-    animation: slideDown 0.4s ease-out;
-}
+.clicked { cursor: pointer; }
+.clicked:hover { color: var(--brand-600); }
 
-@keyframes slideDown {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-.clicked {
-    cursor: pointer;
+.animate-in { animation: fadeIn 0.6s ease-out; }
+.animate-pop { animation: popScale 0.2s ease-out; }
+.animate-slide-down { animation: slideDown 0.4s ease-out; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes popScale { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+@keyframes slideDown { 
+    from { opacity: 0; transform: translateY(-10px); } 
+    to { opacity: 1; transform: translateY(0); } 
 }

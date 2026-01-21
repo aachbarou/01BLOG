@@ -7,25 +7,16 @@ import com.project.block.entity.User;
 
 import lombok.Data;
 
-// export  interface UserProfile {
-//     id: string;
-//     name: string;
-//     avatarUrl: string;
-//     bio: string;
-//     stats: {
-//         posts: number;
-//         followers: string;
-//         following: number;
-//     }; 
-// }
 @Data
 public class UserProfile {
     private Long id;
     private String name;
     private String avatarUrl;
+    private String email;
     private String bio;
     private Stats stats;
-    private   boolean isOwned; 
+    private boolean isOwned;
+    private boolean isFollowing;
 
     @Data
     public static class Stats {
@@ -34,20 +25,24 @@ public class UserProfile {
         private int following;
         private String role;
 
-        public Stats(List<Post> posts, int followers, int following, String role , boolean Needposts ) {
+        public Stats(List<Post> posts, int followers, int following, String role, boolean Needposts) {
             this.posts = Needposts ? posts : null;
             this.followers = followers;
             this.following = following;
             this.role = role;
+
         }
     }
 
-    public UserProfile(User user, List<Post> posts ,  boolean isOwned , boolean  Needposts) {
+    public UserProfile(User user, List<Post> posts, boolean isOwned, boolean Needposts, int followers, int following,
+            boolean isFollowing) {
         this.id = user.getUser_id();
         this.name = user.getUsername();
+        this.email = user.getEmail();
         this.isOwned = isOwned;
-        this.avatarUrl = "https://www.vecteezy.com/vector-art/67754607-flat-avatar-icon-man-user-profile-image-for-social-media-blogs-forums-or-online-work";
-        this.bio = " We are a community of people who love to share their thoughts and ideas. We are here to help you find the information you need and to connect with others who share your interests.";
-        this.stats = new Stats(posts, 56, 99090, user.getRole() , Needposts);
+        this.isFollowing = isFollowing;
+        this.avatarUrl = "https://ui-avatars.com/api/?name=" + user.getUsername();
+        this.bio = user.getStatus();
+        this.stats = new Stats(posts, followers, following, user.getRole(), Needposts);
     }
 }

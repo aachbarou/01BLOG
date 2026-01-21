@@ -1,0 +1,72 @@
+.edit-layout {
+    max-width: 64rem;
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
+}
+
+/* Header Styling */
+.edit-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4rem;
+}
+
+.header-left, .header-right { display: flex; align-items: center; gap: 1.5rem; }
+
+.btn-circle-nav {
+    width: 3rem; height: 3rem; border-radius: 50%; border: none;
+    background: transparent; color: var(--stone-900);
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+}
+.btn-circle-nav:hover { background-color: var(--stone-50); }
+
+.divider-v { width: 1px; height: 1.5rem; background-color: var(--stone-100); }
+.room-label { font-size: 10px; font-weight: 800; color: var(--stone-300); text-transform: uppercase; letter-spacing: 0.4em; }
+
+.btn-mode-toggle {
+    padding: 0.65rem 1.5rem; border-radius: 9999px; border: none;
+    background-color: var(--stone-50); color: var(--stone-400);
+    font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.1em; transition: all 0.2s;
+}
+.btn-mode-toggle.active-mode { background-color: var(--brand-500); color: white; box-shadow: 0 10px 15px rgba(245, 158, 11, 0.2); }
+
+.btn-publish-main {
+    padding: 0.65rem 2rem; background-color: var(--stone-900); color: white;
+    border-radius: 9999px; border: none; font-size: 0.75rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15); transition: transform 0.2s;
+}
+.btn-publish-main:hover { transform: translateY(-2px); }
+
+/* Form Elements */
+.title-textarea {
+    width: 100%; background: transparent; border: none;
+    font-family: var(--font-serif); font-size: 4rem; font-weight: 800;
+    color: var(--stone-900); outline: none; resize: none;
+    margin-bottom: 2.5rem;
+}
+
+.media-frame-modern {
+    width: 100%; aspect-ratio: 16 / 9; background-color: var(--stone-50);
+    border-radius: 3rem; border: 2px dashed var(--stone-100);
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden; margin-bottom: 3rem;
+}
+
+.preview-wrapper, .media-object { width: 100%; height: 100%; object-fit: cover; }
+
+.content-textarea-main {
+    width: 100%; background: transparent; border: none;
+    font-size: 1.5rem; font-weight: 300; color: var(--stone-600);
+    outline: none; resize: none; line-height: 1.7;
+}
+
+/* Animations */
+.animate-fade-in { animation: fadeIn 0.8s ease-out; }
+.animate-slide-up { animation: slideUp 0.6s ease-out; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }

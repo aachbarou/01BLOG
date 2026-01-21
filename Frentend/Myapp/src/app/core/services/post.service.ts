@@ -12,21 +12,28 @@ export class PostService {
 
   constructor(private http: HttpClient) { }
 
-  getPosts(): Observable<ApiResponse<Post[]>> {
+  private getHeaders() {
     const token = localStorage.getItem('token');
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-
-    return this.http.get<ApiResponse<Post[]>>(this.apiUrl, { headers });
+    return new HttpHeaders({ 'Authorization': `Bearer ${token}` });
   }
 
- createPost(formData: FormData): Observable<any> {
-  const token = localStorage.getItem('token');
-  const headers = new HttpHeaders({
-    'Authorization': `Bearer ${token}` 
-  });
+  getPosts(): Observable<ApiResponse<Post[]>> {
+    return this.http.get<ApiResponse<Post[]>>(this.apiUrl, { headers: this.getHeaders() });
+  }
 
-  return this.http.post(this.apiUrl, formData, { headers });
+  getPostById(id: number): Observable<ApiResponse<Post>> {
+    return this.http.get<ApiResponse<Post>>(`${this.apiUrl}/${id}`, { headers: this.getHeaders() });
+  }
+
+  createPost(formData: FormData): Observable<any> {
+    return this.http.post(this.apiUrl, formData, { headers: this.getHeaders() });
+  }
+
+  updatePost(id: number, formData: FormData): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}`, formData, { headers: this.getHeaders() });
+  }
+
+  deletePost(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`, { headers: this.getHeaders() });
+  }
 }
-}     

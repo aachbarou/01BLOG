@@ -1,62 +1,85 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { Post } from '../../../core/models/post.model';
-import { Comment } from '../../../core/models/comment.model';
-import { CommentComponent } from '../comment/comment';
+import { Component, Input, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Post } from '../../../core/models/post.model';
+import { Comment } from '../../../core/models/comment.model';
+import { CommentComponent } from '../comment/comment';
+import { UserService } from '../../../core/services/user.service';
+import { PostService } from '../../../core/services/post.service';
 
 @Component({
   selector: 'app-post',
   standalone: true,
   imports: [CommonModule, FormsModule, CommentComponent],
   templateUrl: './post.html',
-  styleUrls: ['./post.css']
+  styleUrl: './post.css'
 })
-export class PostComponent implements OnChanges {
-  constructor(private router: Router) {}
+export class PostComponent implements OnInit {
   @Input({ required: true }) post!: Post;
   
   showComments = false;
+  showOptions = false;
   isLiked = false;
+  isOwner = false;
   newCommentText = '';
-  
+
+  // بيانات وهمية للتعليقات
   mockComments: Comment[] = [
     {
       id: 'c1',
       postId: '1',
       authorName: "John Doe",
-      authorAvatar: "https://ui-avatars.com/api/?name=John+Doe&background=random",
-      content: "This is a great insight into 2024 trends! I really think AI frameworks will dominate.",
-      date: new Date()
-    },
-    {
-      id: 'c2',
-      postId: '1',
-      authorName: "Emily Chen",
-      authorAvatar: "https://ui-avatars.com/api/?name=Emily+Chen&background=random",
-      content: "Totally agree! The performance gains in server components are hard to ignore.",
+      authorAvatar: "https://ui-avatars.com/api/?name=John+Doe",
+      content: "Great technical insight!",
       date: new Date()
     }
   ];
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['post'] && this.post) {
-      this.post.mediaUrl = this.getMediaUrl(this.post.mediaUrl);
+  constructor(
+    private router: Router, 
+    private userService: UserService, 
+    private postService: PostService
+  ) {}
+
+  ngOnInit() {
+    this.userService.currentUser$.subscribe(user => {
+      if (user && this.post.user) {
+        this.isOwner = user.id === this.post.user.user_id;
+      }
+    });
+  }
+
+  // دالة المساعدة لتحويل اسم الملف لرابط كامل دون تعديل البيانات الأصلية
+  getMediaUrl(url: string | undefined): string {
+    if (!url) return '';
+    // إذا كان الرابط كاملاً بالفعل، أرجعه كما هو
+    if (url.startsWith('http')) return url;
+    // أضف مسار الخادم لأسماء الملفات المرفوعة فقط
+    return `http://localhost:8080/files/${url}`;
+  }
+
+  toggleComments() { this.showComments = !this.showComments; }
+  
+  toggleOptions(event: Event) {
+    event.stopPropagation();
+    this.showOptions = !this.showOptions;
+  }
+
+  sendComment() {
+    if (this.newCommentText.trim()) { this.newCommentText = ''; }
+  }
+
+  onEdit() { this.router.navigate(['/edit-post', this.post.id]); }
+
+  onDelete() {
+    if(confirm('Delete permanently?')) {
+      this.postService.deletePost(this.post.id).subscribe(() => window.location.reload());
     }
   }
 
-  toggleComments() {
-    this.showComments = !this.showComments;
-  }
+  serveProfile(id?: number) { this.router.navigate(['/profile', id]); }
 
-  getMediaUrl(url: string | undefined): string {
-    if (!url) return '';
-    if (url.startsWith('http')) return url;
-    return `http://localhost:8080/files/${url}`;
-  }
-  serveProfile(id?: number) {
-    this.router.navigate(['/profile', id]);
-}
-
+  @HostListener('document:click')
+  closeOptions() { this.showOptions = false; }
 }
