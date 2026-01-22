@@ -1,8 +1,7 @@
-import { CanActivate, Router, UrlTree } from '@angular/router';
+import { CanActivate, Router } from '@angular/router';
 import { AuthServices } from '../services/auth.service';
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core'; // Import Inject and PLATFORM_ID
 import { isPlatformBrowser } from '@angular/common'; // Import isPlatformBrowser
-
 @Injectable({
   providedIn: 'root'
 })
@@ -13,17 +12,21 @@ export class AutGuard implements CanActivate {
     @Inject(PLATFORM_ID) private platformId: Object 
   ) {}
 
-  canActivate(): boolean | UrlTree {
-    //  to  avoid  the  server  Side rendering 
-    if (!isPlatformBrowser(this.platformId)) {
-      return true;
-    }
-    if (this.Auth.isLoggedIn() && this.checkToken()) {
-      return true;
-    } else {
-      this.RemoveToken();
-      return this.router.createUrlTree(['/login']);
-    }
+
+  canActivate(): any {
+    if (!isPlatformBrowser(this.platformId)) return true;
+    const token = localStorage.getItem('token');
+
+    this.Auth.validateTokenOnServer().subscribe({
+        next: (response) => {
+          return true;
+        },
+        error: (err) => {
+          this.RemoveToken();
+          this.router.navigate(['/login']);
+        }
+      });
+   
   }
 
   checkToken(): boolean {

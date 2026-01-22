@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.project.block.dto.PostDTO;
 import com.project.block.dto.ResposeData;
 import com.project.block.entity.Post;
+import com.project.block.entity.User;
 import com.project.block.models.PostService;
 
 @RestController
@@ -90,10 +91,14 @@ public class PostController {
     @PutMapping("/{id}")
     public  ResponseEntity<?> updatePost(@PathVariable Long id , @org.springframework.web.bind.annotation.ModelAttribute PostDTO post){
         // The  user  must  edit  Just  own  posts
-        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(post.getUserId() != userId){
-            return ResponseEntity.status(403).body(new ResposeData("You are not allowed to edit this post", 403, null));
+        try  {
+            if (!postService.canEditPost(id)) {
+                return ResponseEntity.status(403).body(new ResposeData("You are not allowed to edit this post", 403, null));
+            }
+        }catch (Exception e) {
+            return ResponseEntity.status(404).body(new ResposeData("404 Not Found", 404, null));
         }
+       
         try {
             postService.updatePost(id, post);
             return ResponseEntity.ok(new ResposeData("Post updated successfully", 200, null));
@@ -104,9 +109,12 @@ public class PostController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletePost(@PathVariable Long id){
-        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(postService.getPostById(id).getUser().getUser_id() != userId){
-            return ResponseEntity.status(403).body(new ResposeData("You are not allowed to delete this post", 403, null));
+         try  {
+            if (!postService.canDeletePost(id)) {
+                return ResponseEntity.status(403).body(new ResposeData("You are not allowed to delete this post", 403, null));
+            }
+        }catch (Exception e) {
+            return ResponseEntity.status(404).body(new ResposeData("404 Not Found", 404, null));
         }
         try {
             postService.deletePost(id);

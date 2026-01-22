@@ -140,4 +140,14 @@ public class PostService {
     public Post getPostById(Long id) {
         return postRepository.findById(id).orElseThrow(() -> new RuntimeException("Post not found"));
     }
+    public boolean canEditPost(Long postId) {
+        Post post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("Post not found"));
+        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return post.getUser().getUser_id() == currentUser.getUser_id();
+    }
+    public boolean canDeletePost(Long postId) {
+        Post post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("Post not found"));
+        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return post.getUser().getUser_id() == currentUser.getUser_id();
+    }
 }

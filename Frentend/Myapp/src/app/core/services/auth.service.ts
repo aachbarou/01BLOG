@@ -1,7 +1,7 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { UserRegister  , UserLogin} from '../models/user.model';
 
 @Injectable({ providedIn: 'root' })
@@ -54,4 +54,10 @@ export class AuthServices {
   isLoggedIn(): boolean {
     return this.logged.value;
   }
+  validateTokenOnServer(): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    
+    return this.http.get('http://localhost:8080/token/validate', { headers });
+}
 }

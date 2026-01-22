@@ -7,6 +7,9 @@ import { Comment } from '../../../core/models/comment.model';
 import { CommentComponent } from '../comment/comment';
 import { UserService } from '../../../core/services/user.service';
 import { PostService } from '../../../core/services/post.service';
+import { Observable } from 'rxjs';
+import { ApiResponse } from '../../../core/models/api-response.model';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-post',
@@ -24,22 +27,13 @@ export class PostComponent implements OnInit {
   isOwner = false;
   newCommentText = '';
 
-  // بيانات وهمية للتعليقات
-  mockComments: Comment[] = [
-    {
-      id: 'c1',
-      postId: '1',
-      authorName: "John Doe",
-      authorAvatar: "https://ui-avatars.com/api/?name=John+Doe",
-      content: "Great technical insight!",
-      date: new Date()
-    }
-  ];
+  mockComments: Comment[] = [];
 
   constructor(
     private router: Router, 
     private userService: UserService, 
-    private postService: PostService
+    private postService: PostService ,
+    private http: HttpClient
   ) {}
 
   ngOnInit() {
@@ -50,32 +44,76 @@ export class PostComponent implements OnInit {
     });
   }
 
-  // دالة المساعدة لتحويل اسم الملف لرابط كامل دون تعديل البيانات الأصلية
+  getHeaders() {
+    const token = localStorage.getItem('token');
+    return new HttpHeaders({ 'Authorization': `Bearer ${token}` });
+  }
+
   getMediaUrl(url: string | undefined): string {
     if (!url) return '';
-    // إذا كان الرابط كاملاً بالفعل، أرجعه كما هو
     if (url.startsWith('http')) return url;
-    // أضف مسار الخادم لأسماء الملفات المرفوعة فقط
     return `http://localhost:8080/files/${url}`;
   }
 
-  toggleComments() { this.showComments = !this.showComments; }
+  isLoadingComments = false;
+
+  toggleComments() {
+    this.showComments = !this.showComments;
+
+    if (this.showComments ) {
+      this.fetchComments();
+    }
+  }
+
+  fetchComments() {
+    this.isLoadingComments = true;
+    this.getComments(this.post.id).subscribe({
+      next: (response) => {
+        this.mockComments = response.data;
+        this.isLoadingComments = false;
+      },
+      error: (err) => {
+        console.error('Error fetching comments:', err);
+        this.isLoadingComments = false;
+      }
+    });
+  }
   
   toggleOptions(event: Event) {
     event.stopPropagation();
     this.showOptions = !this.showOptions;
   }
-
+  getComments(postId: number): Observable<ApiResponse<Comment[]>> {
+    return this.http.get<ApiResponse<Comment[]>>(`http://localhost:8080/api/comments/post/${postId}`, { headers: this.getHeaders() });
+  }
   sendComment() {
-    if (this.newCommentText.trim()) { this.newCommentText = ''; }
+    if (this.newCommentText.trim()) { 
+      this.mockComments.push({
+       id: "1",
+      postId: "2",
+      authorName: "John Doe",
+      authorAvatar: "https://example.com/avatar.jpg",
+      content: this.newCommentText,
+      date: new Date(),
+      });
+      this.newCommentText = '';
+    }
   }
 
   onEdit() { this.router.navigate(['/edit-post', this.post.id]); }
 
   onDelete() {
-    if(confirm('Delete permanently?')) {
-      this.postService.deletePost(this.post.id).subscribe(() => window.location.reload());
+
+
+    if(this.isOwner){
+      if(confirm('Delete permanently?')) {
+        this.postService.deletePost(this.post.id).subscribe(() => window.location.reload());
+      }
     }
+    else{
+      alert('You are not authorized to delete this post');
+    }
+    
   }
 
   serveProfile(id?: number) { this.router.navigate(['/profile', id]); }

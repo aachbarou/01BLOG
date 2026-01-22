@@ -21,7 +21,8 @@ export class App implements OnInit{
   constructor( 
     private cdr: ChangeDetectorRef, 
     private router: Router, 
-    private  Auths : AuthServices 
+    private  Auths : AuthServices ,
+    private  userGuard : AutGuard 
   ) {
    
   }
@@ -29,8 +30,6 @@ export class App implements OnInit{
   ngOnInit(): void {
     
      this.router.events.subscribe((event : EventType) => {
-     
-      
       if  (event  instanceof  NavigationStart ) {
           this.isLoading = true  ;
           this.cdr.detectChanges()  ;
