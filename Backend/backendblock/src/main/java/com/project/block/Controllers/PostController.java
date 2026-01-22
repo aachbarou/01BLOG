@@ -3,6 +3,7 @@ package com.project.block.Controllers;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -88,6 +89,11 @@ public class PostController {
 
     @PutMapping("/{id}")
     public  ResponseEntity<?> updatePost(@PathVariable Long id , @org.springframework.web.bind.annotation.ModelAttribute PostDTO post){
+        // The  user  must  edit  Just  own  posts
+        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(post.getUserId() != userId){
+            return ResponseEntity.status(403).body(new ResposeData("You are not allowed to edit this post", 403, null));
+        }
         try {
             postService.updatePost(id, post);
             return ResponseEntity.ok(new ResposeData("Post updated successfully", 200, null));
@@ -98,6 +104,10 @@ public class PostController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletePost(@PathVariable Long id){
+        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(postService.getPostById(id).getUser().getUser_id() != userId){
+            return ResponseEntity.status(403).body(new ResposeData("You are not allowed to delete this post", 403, null));
+        }
         try {
             postService.deletePost(id);
             return ResponseEntity.ok(new ResposeData("Post deleted successfully", 200, null));

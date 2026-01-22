@@ -83,4 +83,12 @@ export class Navbar implements OnInit , AfterViewChecked {
   navigateToPostCreation() {
     this.router.navigate(['/create-post']);
   }
+  navigateToSaved() {
+    this.isDropdownOpen = false ;
+    this.router.navigate(['/saved']);
+  }
+  navigateToSettings() {
+    this.isDropdownOpen = false ;
+    this.router.navigate(['profile/settings']);
+  }
 }

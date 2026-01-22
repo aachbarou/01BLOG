@@ -171,10 +171,46 @@ public class UserService {
     }
 
     public boolean isFollowing(User follower, User followed) {
-        System.out.println("???????????????????????????>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-        System.out.println("id 1 = " + follower.getUser_id());
-        System.out.println("id 2 = " + followed.getUser_id());
       return   this.subscriptionService.isFollowing(follower, followed);
     }
+    public boolean userExists(User user) {
+    try {
+        return userRepository.findById(user.getUser_id()).isPresent();
+    } catch (Exception e) {
+        return false;
+    }
+}
+        public boolean isBanned(User user) {
+            try {
+                User existingUser = userRepository.findById(user.getUser_id())
+                        .orElseThrow(() -> new RuntimeException("User not found"));
+                return "Banned".equals(existingUser.getStatus());
+            } catch (RuntimeException e) {
+                throw e;
+            }
+        }
+
+        public void banUser(User user) {
+            try {
+                User existingUser = userRepository.findById(user.getUser_id())
+                        .orElseThrow(() -> new RuntimeException("User not found"));
+                existingUser.setStatus("Banned");
+                userRepository.save(existingUser);
+            } catch (RuntimeException e) {
+                throw e;
+            }
+        }
+
+        public void unbanUser(User user) {
+            try {
+                User existingUser = userRepository.findById(user.getUser_id())
+                        .orElseThrow(() -> new RuntimeException("User not found"));
+                existingUser.setStatus("Active");
+                userRepository.save(existingUser);
+            } catch (RuntimeException e) {
+                throw e;
+            }
+        }
+
 }
 
