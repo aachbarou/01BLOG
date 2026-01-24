@@ -34,4 +34,22 @@ public class CommentController {
             return ResponseEntity.status(500).body(new ResposeData("Error fetching comments: " + e.getMessage(), 500, null));
         }
     }
+
+
+    @PostMapping("/post/{postId}")
+public ResponseEntity<?> postComment(@PathVariable Long postId, @RequestBody String content) {
+    try {
+        String cleanContent = content.replace("\"", "").trim();
+        Comment savedComment = commentService.addComment(postId, cleanContent);
+        
+        if (savedComment.getUser() != null) {
+            savedComment.getUser().setEmail(null);
+            savedComment.getUser().setPassword(null);
+        }
+        
+        return ResponseEntity.ok(new ResposeData("Comment added successfully", 200, savedComment));
+    } catch (Exception e) {
+        return ResponseEntity.status(400).body(new ResposeData("Error: " + e.getMessage(), 400, null));
+    }
+}
 }

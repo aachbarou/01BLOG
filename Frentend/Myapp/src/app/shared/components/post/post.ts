@@ -87,18 +87,36 @@ export class PostComponent implements OnInit {
     return this.http.get<ApiResponse<Comment[]>>(`http://localhost:8080/api/comments/post/${postId}`, { headers: this.getHeaders() });
   }
   sendComment() {
-    if (this.newCommentText.trim()) { 
-      this.mockComments.push({
-       id: "1",
-      postId: "2",
-      authorName: "John Doe",
-      authorAvatar: "https://example.com/avatar.jpg",
-      content: this.newCommentText,
-      date: new Date(),
+    if (!this.newCommentText.trim()) return;
+
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const body = this.newCommentText;
+
+    this.http.post<ApiResponse<any>>(`http://localhost:8080/api/comments/post/${this.post.id}`, body, { headers })
+      .subscribe({
+        next: (response) => {
+          const newCommentFromServer = response.data;
+          
+          const mappedComment: Comment = {
+            id: newCommentFromServer.id.toString(),
+            postId: this.post.id.toString(),
+            authorName: newCommentFromServer.user.username,
+            authorAvatar: "" ,
+            content: newCommentFromServer.content,
+            date: new Date(newCommentFromServer.timestamp)
+          };
+
+          this.mockComments.unshift(mappedComment); 
+          this.newCommentText = ''; 
+          
+          if (this.post.comments !== undefined) {
+            this.post.comments++;
+          }
+        },
+        error: (err) => console.error('Failed to send comment', err)
       });
-      this.newCommentText = '';
-    }
-  }
+}
 
   onEdit() { this.router.navigate(['/edit-post', this.post.id]); }
 

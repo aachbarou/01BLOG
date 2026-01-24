@@ -1,6 +1,6 @@
 package com.project.block.repository;
 
-import java.util.List;
+import java.util.List;  
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,11 +11,6 @@ import com.project.block.entity.Subscription;
 import com.project.block.entity.User;
 
 public interface Subscrepository extends JpaRepository<Subscription, Long> {
-    // void saveSubscription(Long userId, Long followerId);
-    // void deleteSubscription(Long userId, Long followerId);
-    // boolean isSubscribed(Long userId, Long followerId);
-    // List<Subscription> getSubscribers(Long userId);
-    // List<Subscription> getSubscriptions(Long userId);
     Optional<Subscription> findByFollowerAndFollowed(User follower, User followed);
     
     int countByFollowed(User followed);
