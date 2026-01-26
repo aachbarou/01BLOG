@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, HostListener } from '@angular/core';
+import { Component, Input, OnInit, HostListener, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -33,7 +33,8 @@ export class PostComponent implements OnInit {
     private router: Router, 
     private userService: UserService, 
     private postService: PostService ,
-    private http: HttpClient
+    private http: HttpClient ,
+    private  cdn : ChangeDetectorRef 
   ) {}
 
   ngOnInit() {
@@ -71,6 +72,7 @@ export class PostComponent implements OnInit {
       next: (response) => {
         this.mockComments = response.data;
         this.isLoadingComments = false;
+        this.cdn.detectChanges();
       },
       error: (err) => {
         console.error('Error fetching comments:', err);
@@ -96,6 +98,7 @@ export class PostComponent implements OnInit {
     this.http.post<ApiResponse<any>>(`http://localhost:8080/api/comments/post/${this.post.id}`, body, { headers })
       .subscribe({
         next: (response) => {
+          alert(this.post.comments);
           const newCommentFromServer = response.data;
           
           const mappedComment: Comment = {
@@ -111,8 +114,10 @@ export class PostComponent implements OnInit {
           this.newCommentText = ''; 
           
           if (this.post.comments !== undefined) {
+            alert('Comment added successfully');
             this.post.comments++;
           }
+          this.cdn.detectChanges();
         },
         error: (err) => console.error('Failed to send comment', err)
       });

@@ -3,7 +3,6 @@ package com.project.block.Controllers;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.project.block.dto.PostDTO;
 import com.project.block.dto.ResposeData;
 import com.project.block.entity.Post;
-import com.project.block.entity.User;
 import com.project.block.models.PostService;
 
 @RestController
@@ -65,6 +63,7 @@ public class PostController {
         List<Post> psts = postService.getAllPosts();
         List<Post> modifiedPosts = psts.stream()
             .peek(post -> {
+                post.comments = this.postService.getHowmanyComments(post.getId());
                 if (post.getUser() != null) {
                     post.getUser().setEmail(null); 
                 }

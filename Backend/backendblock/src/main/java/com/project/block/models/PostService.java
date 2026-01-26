@@ -1,12 +1,12 @@
 package com.project.block.models;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,13 +16,14 @@ import org.springframework.web.multipart.MultipartFile;
 import com.project.block.dto.PostDTO;
 import com.project.block.entity.Post;
 import com.project.block.entity.User;
+import com.project.block.repository.CommentRepository;
 import com.project.block.repository.PostRepository;
 
 @Service
 public class PostService {
 
     private final PostRepository postRepository;
-
+    private final CommentRepository CommentRepository;
     @Value("${file.upload-dir}")
     private String uploadDir;
 
@@ -31,8 +32,9 @@ public class PostService {
      * 
      * @param postRepository Repository for Post entity
      */
-    public PostService(PostRepository postRepository) {
+    public PostService(PostRepository postRepository , CommentRepository CommentRepository) {
         this.postRepository = postRepository;
+        this.CommentRepository = CommentRepository;
     }
 
     /**
@@ -124,7 +126,11 @@ public class PostService {
 
         postRepository.save(post);
     }
-
+    public  int   getHowmanyComments (Long postId) {
+        
+        int commentsCount = CommentRepository.findByPostIdOrderByTimestampDesc(postId).size();
+        return commentsCount;
+    }
 
     public void updatePost(Long id, PostDTO postDto) {
         Post post = postRepository.findById(id).orElseThrow(() -> new RuntimeException("Post not found"));
