@@ -40,7 +40,7 @@ export class Navbar implements OnInit , AfterViewChecked {
         this.formData.username = user.name;
         this.formData.email = user.email;
         this.formData.role = user.stats.role;
-        this.formData.avatarUrl = user.avatarUrl;
+        this.formData.avatarUrl = user.avatarUrl ;
       }
     });
   }

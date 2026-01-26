@@ -32,7 +32,7 @@ export class PostComponent implements OnInit {
   constructor(
     private router: Router, 
     private userService: UserService, 
-    private postService: PostService ,
+    public  postService: PostService ,
     private http: HttpClient ,
     private  cdn : ChangeDetectorRef 
   ) {}
@@ -50,12 +50,7 @@ export class PostComponent implements OnInit {
     return new HttpHeaders({ 'Authorization': `Bearer ${token}` });
   }
 
-  getMediaUrl(url: string | undefined): string {
-    if (!url) return '';
-    if (url.startsWith('http')) return url;
-    return `http://localhost:8080/files/${url}`;
-  }
-
+  
   isLoadingComments = false;
 
   toggleComments() {
@@ -112,6 +107,7 @@ export class PostComponent implements OnInit {
               id: newCommentFromServer.user.id,
               username: newCommentFromServer.user.username,
               email: newCommentFromServer.user.email
+              , userAvatar : newCommentFromServer.user.userAvatar
             }
           };
 

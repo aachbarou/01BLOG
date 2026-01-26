@@ -15,19 +15,15 @@ import { Router } from '@angular/router';
 export class HomeComponent implements OnInit {
   posts: Post[] = [];
 
-  constructor(private postService: PostService, private router: Router, private cdn: ChangeDetectorRef) { }
+  constructor(private postService: PostService, private router: Router, private cdn: ChangeDetectorRef ) { }
 
   ngOnInit(): void {
     this.postService.getPosts().subscribe({
       next: (response) => {
-        // alert(response.data)
         this.posts = response.data
-        // for (post)
-
         this.cdn.detectChanges();
       },
       error: (error) => {
-        // chec
         if (error.status === 401) {
           this.router.navigate(['/login']);
         }

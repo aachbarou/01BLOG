@@ -1,5 +1,5 @@
 <div class="comment-wrapper animate-in">
-  <img [src]="comment.authorAvatar" class="comment-avatar">
+  <img [src]="this.postservice.getAvatarUrl(comment.user.userAvatar , comment.authorName)" class="comment-avatar">
   <div class="comment-bubble">
     <div class="comment-header">
       <span class="author-name">{{ comment.user.username }}</span>

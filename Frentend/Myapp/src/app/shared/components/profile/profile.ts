@@ -27,6 +27,7 @@ export class ProfileComponent implements OnInit {
     this.userService.getUserProfile(id).subscribe({
       next: (response) => {
         this.profile = response.data;
+        this.profile.avatarUrl = this.profile.avatarUrl ;
         this.isOwnProfile = this.profile.owned;
         this.cdn.detectChanges();
       }

@@ -10,6 +10,7 @@ export interface Post {
         email: string;
         role: string;
         status: string;
+        userAvatar: string;
     };
     likes?: number;
     comments?: number;

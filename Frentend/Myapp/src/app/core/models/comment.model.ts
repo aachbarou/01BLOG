@@ -9,6 +9,7 @@ export interface Comment {
         role : string;
         id: number;
         username: string;
+        userAvatar : string;
         email: string;
     };
 }

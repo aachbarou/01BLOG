@@ -2,7 +2,7 @@
   <div class="post-header">
     <div class="author-info">
       <img class="clicked header-avatar" 
-           [src]="'https://ui-avatars.com/api/?name=' + (post.user?.username || 'User')" 
+           [src]= 'this.postService.getAvatarUrl(post.user?.userAvatar, post.user?.username || "User")'
            (click)="serveProfile(post.user?.user_id)" alt="Avatar">
       <div class="author-meta">
         <span class="author-name clicked" (click)="serveProfile(post.user?.user_id)">
@@ -37,9 +37,9 @@
   @if (post.mediaUrl) {
     <div class="post-media-area">
       @if (post.mediaUrl.toLowerCase().endsWith('.mp4')) {
-        <video [src]="getMediaUrl(post.mediaUrl)" controls loop playsinline class="main-media"></video>
+        <video [src]="this.postService.getMediaUrl(post.mediaUrl)" controls loop playsinline class="main-media"></video>
       } @else {
-        <img [src]="getMediaUrl(post.mediaUrl)" [alt]="post.title" class="main-media">
+        <img [src]="this.postService.getMediaUrl(post.mediaUrl)" [alt]="post.title" class="main-media">
       }
     </div>
   }

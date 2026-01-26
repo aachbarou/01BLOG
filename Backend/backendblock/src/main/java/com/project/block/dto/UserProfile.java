@@ -41,7 +41,10 @@ public class UserProfile {
         this.email = user.getEmail();
         this.isOwned = isOwned;
         this.isFollowing = isFollowing;
-        this.avatarUrl = "https://ui-avatars.com/api/?name=" + user.getUsername();
+        this.avatarUrl = user.getUserAvatar() != null && !user.getUserAvatar().isEmpty()
+        ? "http://localhost:8080/files/" + user.getUserAvatar()
+        : "https://ui-avatars.com/api/?name=" + user.getUsername();
+
         this.bio = user.getStatus();
         this.stats = new Stats(posts, followers, following, user.getRole(), Needposts);
     }

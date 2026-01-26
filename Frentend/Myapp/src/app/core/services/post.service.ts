@@ -36,4 +36,14 @@ export class PostService {
   deletePost(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`, { headers: this.getHeaders() });
   }
+  getMediaUrl(url: string | undefined): string {
+    if (!url) return '';
+    if (url.startsWith('http')) return url;
+    return `http://localhost:8080/files/${url}`;
+  }
+  getAvatarUrl(url: string | undefined , username : string ): string {
+    if (!url) return  `https://ui-avatars.com/api/?name=${username}`;
+    if (url.startsWith('http')) return url;
+    return `http://localhost:8080/files/${url}`;
+  }
 }
