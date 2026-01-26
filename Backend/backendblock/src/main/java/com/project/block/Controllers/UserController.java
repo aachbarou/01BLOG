@@ -6,8 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.project.block.dto.ResposeData;
 import com.project.block.dto.UserProfile;
@@ -55,6 +58,23 @@ public class UserController {
             }
         } catch ( RuntimeException e) {
             return ResponseEntity.status(404).body("User not found");
+        }
+    }
+
+
+    @PutMapping("/update")
+    public ResponseEntity<?> updateProfile(
+            @RequestParam("username") String username,
+            @RequestParam("bio") String bio,
+            @RequestParam(value = "file", required = false) MultipartFile file) {
+        try {
+            User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            
+            userService.updateUserProfile(currentUser, username, bio, file);
+            
+            return ResponseEntity.ok(new ResposeData("Profile updated successfully", 200, null));
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(new ResposeData("Update failed: " + e.getMessage(), 400, null));
         }
     }
 }

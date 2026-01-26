@@ -9,6 +9,5 @@ import com.project.block.entity.Comment;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-    List<Comment> findByPostIdOrderByTimestampDesc(Long postId);
-    
+    List<Comment> findByPostIdOrderByTimestampDesc(Long postID);
 }

@@ -3,19 +3,28 @@ package com.project.block.Controllers;
 import com.project.block.dto.ResposeData;
 import com.project.block.entity.Comment;
 import com.project.block.models.CommentService;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import com.project.block.models.PostService;
+
+import lombok.Data;
+
 @RestController
 @RequestMapping("/api/comments")
+@Data
 public class CommentController {
     private final CommentService commentService;
+    private final PostService postService;
 
-    public CommentController(CommentService commentService) {
-        this.commentService = commentService;
-    }
+    // public CommentController(CommentService commentService , PostService postService) {
+    //     this.postService = postService;
+    //     this.commentService = commentService;
+
+    // }
 
     @GetMapping("/post/{postId}")
     public ResponseEntity<?> getCommentsForPost(@PathVariable Long postId) {
@@ -40,6 +49,16 @@ public class CommentController {
 public ResponseEntity<?> postComment(@PathVariable Long postId, @RequestBody String content) {
     try {
         String cleanContent = content.replace("\"", "").trim();
+        // we  must  Check  the  Post  Exits  in  the  postRepository  before  adding  a  comment
+        if ( !this.postService.ifPostExists(postId)) {
+            return ResponseEntity.status(404).body(new ResposeData("Post not found", 404, null));
+        }
+        if ( cleanContent.isEmpty() ) {
+            return ResponseEntity.status(400).body(new ResposeData("Comment content cannot be empty", 400, null));
+        }
+        
+
+
         Comment savedComment = commentService.addComment(postId, cleanContent);
         
         if (savedComment.getUser() != null) {

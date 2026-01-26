@@ -1,7 +1,7 @@
 <div class="settings-page-root animate-fade-in">
   <div class="settings-nav-header">
     <button (click)="goBack()" class="back-navigation-btn">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
     </button>
     <div class="header-text-container">
       <h1 class="settings-title">Profile Settings</h1>
@@ -11,15 +11,19 @@
 
   <form (ngSubmit)="handleSave()" class="modern-settings-form">
     <div class="identity-photo-card">
-      <div class="avatar-edit-wrapper">
+      <div class="avatar-edit-wrapper" (click)="fileInput.click()">
         <div class="avatar-frame">
-          <img [src]="formData.avatarUrl" alt="User Photo">
+          <img [src]="imagePreview" alt="User Photo">
+          <div class="avatar-overlay">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          </div>
         </div>
         <div class="orange-edit-badge">
-           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
         </div>
+        <input #fileInput type="file" (change)="onFileSelected($event)" accept="image/*" style="display: none;">
       </div>
-      <div class="photo-labels">
+      <div class="photo-labels text-center">
         <h3 class="photo-title">Your Photo</h3>
         <p class="photo-action-text">UPDATE YOUR IMAGE</p>
       </div>
@@ -44,18 +48,9 @@
         <label class="field-label">BIO</label>
         <textarea [(ngModel)]="formData.bio" name="bio" rows="5" class="styled-textarea" placeholder="Tell us about yourself..."></textarea>
       </div>
-
-      <div class="input-stack">
-        <label class="field-label">PERSONAL WEBSITE</label>
-        <div class="icon-input-box">
-          <svg class="globe-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
-          <input type="url" [(ngModel)]="formData.website" name="website" class="styled-text-input has-icon" placeholder="https://yourwebsite.com">
-        </div>
-      </div>
     </div>
 
     <div class="settings-footer-actions">
-      <button type="button" (click)="goBack()" class="btn-discard-action">DISCARD</button>
       <button type="submit" [disabled]="isSaving" class="btn-save-confirm">
         {{ isSaving ? 'SAVING...' : 'SAVE CHANGES' }}
       </button>

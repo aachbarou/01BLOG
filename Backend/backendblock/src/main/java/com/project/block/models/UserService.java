@@ -1,10 +1,15 @@
 package com.project.block.models;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.project.block.entity.Post;
 import com.project.block.entity.Token;
@@ -14,6 +19,11 @@ import com.project.block.repository.TokenRepository;
 import com.project.block.repository.UserRepository;
 import com.project.block.service.JwtUtil;
 
+
+import java.io.IOException;
+import java.nio.file.*;
+
+
 @Service
 public class UserService {
     private final UserRepository userRepository;
@@ -22,6 +32,8 @@ public class UserService {
     private final JwtUtil JwtUtil;
     private final PasswordEncoder passwordEncoder;
     private final SubscriptionService subscriptionService;
+    @org.springframework.beans.factory.annotation.Value("${file.upload-dir}")
+    private String uploadDir;
 
     /**
      * Constructor for UserService
@@ -41,6 +53,7 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
         this.subscriptionService = subscriptionService;
     }
+   
 
     /**
      * Create a new user with validation
@@ -145,6 +158,7 @@ public class UserService {
 
     public User getUserProfile( Long id)  throws Exception {
         User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        
        try {
         // get user from security context
         if  (id  == null ) {
@@ -211,6 +225,22 @@ public class UserService {
                 throw e;
             }
         }
+
+
+
+        public void updateUserProfile(User currentUser, String username, String bio, MultipartFile file) throws IOException {
+        currentUser.setUsername(username);
+        currentUser.setStatus(bio);
+
+        if (file != null && !file.isEmpty()) {
+            String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+            Path path = Paths.get(uploadDir).resolve(fileName);
+            Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+            currentUser.setUserAvatar(fileName); 
+        }
+
+        userRepository.save(currentUser);
+    }
 
 }
 

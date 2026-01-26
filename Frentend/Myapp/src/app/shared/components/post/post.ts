@@ -98,7 +98,6 @@ export class PostComponent implements OnInit {
     this.http.post<ApiResponse<any>>(`http://localhost:8080/api/comments/post/${this.post.id}`, body, { headers })
       .subscribe({
         next: (response) => {
-          alert(this.post.comments);
           const newCommentFromServer = response.data;
           
           const mappedComment: Comment = {
@@ -107,14 +106,18 @@ export class PostComponent implements OnInit {
             authorName: newCommentFromServer.user.username,
             authorAvatar: "" ,
             content: newCommentFromServer.content,
-            date: new Date(newCommentFromServer.timestamp)
+            timestamp: new Date(newCommentFromServer.timestamp),
+            user : {
+              role : newCommentFromServer.user.role,
+              id: newCommentFromServer.user.id,
+              username: newCommentFromServer.user.username,
+              email: newCommentFromServer.user.email
+            }
           };
 
-          this.mockComments.unshift(mappedComment); 
           this.newCommentText = ''; 
-          
+          this.mockComments.push(mappedComment);
           if (this.post.comments !== undefined) {
-            alert('Comment added successfully');
             this.post.comments++;
           }
           this.cdn.detectChanges();

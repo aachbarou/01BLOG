@@ -2,7 +2,6 @@ package com.project.block.Controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.project.block.dto.ErrorResponse;
 import com.project.block.dto.LoginSeccess;
-import com.project.block.dto.ResposeData;
 import com.project.block.entity.User;
 import com.project.block.models.UserService;
 

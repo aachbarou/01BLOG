@@ -18,6 +18,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long user_id;
     
+    private  String UserAvatar;
+
     private String username;
 
     @Column(unique = true)

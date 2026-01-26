@@ -156,4 +156,8 @@ public class PostService {
         User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return post.getUser().getUser_id() == currentUser.getUser_id();
     }
+    public  boolean ifPostExists (Long postId) {
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> : "+postId);
+        return postRepository.existsById(postId);
+    }
 }
