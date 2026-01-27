@@ -1,9 +1,9 @@
 export interface Post {
     id: number;
     title: string;
-    content: string; // Note: 'Content' in Java, but likely serialized to 'content'
-    mediaUrl?: string; // Corresponds to mediaUrl in Java
-    timestamp: string; // LocalDateTime is typically serialized as a string
+    content: string; 
+    mediaUrl?: string; 
+    timestamp: string; 
     user?: {
         user_id: number;
         username: string;
@@ -12,6 +12,7 @@ export interface Post {
         status: string;
         userAvatar: string;
     };
+    isLiked?: boolean;
     likes?: number;
     comments?: number;
 }

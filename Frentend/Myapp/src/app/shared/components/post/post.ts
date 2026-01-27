@@ -38,12 +38,13 @@ export class PostComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.userService.currentUser$.subscribe(user => {
-      if (user && this.post.user) {
-        this.isOwner = user.id === this.post.user.user_id;
-      }
-    });
-  }
+  this.isLiked = !!this.post.isLiked;
+  this.userService.currentUser$.subscribe(user => {
+    if (user && this.post.user) {
+      this.isOwner = user.id === this.post.user.user_id;
+    }
+  });
+}
 
   getHeaders() {
     const token = localStorage.getItem('token');
@@ -138,7 +139,21 @@ export class PostComponent implements OnInit {
     }
     
   }
-
+toggleLike() {
+    this.postService.toggleLike(this.post.id).subscribe({
+      next: (response: ApiResponse<boolean>) => {
+        const newLikeStatus = response.data;
+        this.isLiked = newLikeStatus;
+        this.post.isLiked = newLikeStatus;
+        
+        if (this.post.likes !== undefined) {
+          this.post.likes = newLikeStatus ? (this.post.likes + 1) : Math.max(0, this.post.likes - 1);
+        }
+        this.cdn.detectChanges();
+      },
+      error: (err) => console.error('Error toggling like', err)
+    });
+  }
   serveProfile(id?: number) { this.router.navigate(['/profile', id]); }
 
   @HostListener('document:click')

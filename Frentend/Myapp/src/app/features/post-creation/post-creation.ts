@@ -1,10 +1,8 @@
-import { Component, OnInit, AfterViewChecked, ElementRef, ViewChild, Inject, PLATFORM_ID, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, Inject, PLATFORM_ID, ChangeDetectorRef } from '@angular/core';
 import { PostService } from '../../core/services/post.service';
 import { Router } from '@angular/router';
 import { FormsModule, NgForm } from '@angular/forms';
-import { CommonModule, isPlatformBrowser } from '@angular/common'; // استيراد isPlatformBrowser
-
-declare var lucide: any;
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-post-creation',
@@ -27,18 +25,11 @@ export class PostCreationComponent implements OnInit {
     private postService: PostService,
     private router: Router,
     private el: ElementRef,
-    @Inject(PLATFORM_ID) private platformId: Object
-    , private cdr: ChangeDetectorRef) { }
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private cdr: ChangeDetectorRef
+  ) { }
 
-  ngOnInit(): void {
-
-  }
-
-  // ngAfterViewChecked(): void {
-  //   if (isPlatformBrowser(this.platformId) && typeof lucide !== 'undefined') {
-  //     console.log('Initializing lucide icons');
-  //   }
-  // }
+  ngOnInit(): void {}
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -68,11 +59,35 @@ export class PostCreationComponent implements OnInit {
     const uploadPrompt = this.el.nativeElement.querySelector('#upload-prompt');
     const filePreview = this.el.nativeElement.querySelector('#file-preview');
     const fileNameElement = this.el.nativeElement.querySelector('#file-name');
+    
+    const imgRender = this.el.nativeElement.querySelector('#image-render');
+    const videoRender = this.el.nativeElement.querySelector('#video-render');
 
     if (this.mediaFile) {
       if (uploadPrompt) uploadPrompt.classList.add('hidden');
       if (filePreview) filePreview.classList.remove('hidden');
       if (fileNameElement) fileNameElement.textContent = this.mediaFile.name;
+
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        const result = e.target.result;
+        
+        if (this.mediaFile?.type.startsWith('image/')) {
+          if (imgRender) {
+            imgRender.src = result;
+            imgRender.classList.remove('hidden');
+          }
+          if (videoRender) videoRender.classList.add('hidden');
+        } else if (this.mediaFile?.type.startsWith('video/')) {
+          if (videoRender) {
+            videoRender.src = result;
+            videoRender.classList.remove('hidden');
+          }
+          if (imgRender) imgRender.classList.add('hidden');
+        }
+      };
+      reader.readAsDataURL(this.mediaFile);
+
       if (dropZone) {
         dropZone.classList.add('border-brand-500', 'bg-brand-50/10');
         dropZone.classList.remove('border-stone-200');
@@ -80,6 +95,9 @@ export class PostCreationComponent implements OnInit {
     } else {
       if (uploadPrompt) uploadPrompt.classList.remove('hidden');
       if (filePreview) filePreview.classList.add('hidden');
+      if (imgRender) imgRender.classList.add('hidden');
+      if (videoRender) videoRender.classList.add('hidden');
+      
       if (dropZone) {
         dropZone.classList.remove('border-brand-500', 'bg-brand-50/10');
         dropZone.classList.add('border-stone-200');
@@ -90,10 +108,6 @@ export class PostCreationComponent implements OnInit {
   createPost(): void {
     if (this.postForm.form.invalid) {
       this.errorMessage = 'Please fill in all required fields.';
-      this.isLoading = false;
-      if (isPlatformBrowser(this.platformId)) {
-        this.cdr.detectChanges();
-      }
       return;
     }
 
@@ -109,26 +123,14 @@ export class PostCreationComponent implements OnInit {
     }
 
     this.postService.createPost(formData).subscribe({
-
-      next: (response) => {
+      next: () => {
         this.isLoading = false;
-        if (isPlatformBrowser(this.platformId)) {
-          setTimeout(() => {
-            this.cdr.detectChanges();
-          }, 500);
-        }
         this.router.navigate(['/home']);
       },
       error: (error) => {
         this.isLoading = false;
-        this.errorMessage = error.error;
-        console.log(error);
-        if (isPlatformBrowser(this.platformId)) {
-          setTimeout(() => {
-            this.cdr.detectChanges();
-          }, 500);
-        }
-
+        this.errorMessage = error.error.message || 'An error occurred while creating the post.';
+        this.cdr.detectChanges();
       }
     });
   }

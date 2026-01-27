@@ -1,12 +1,10 @@
 <main class="post-creation-container">
-  
   <div class="header-section">
       <h1 class="main-title">Create a New Post</h1>
       <p class="subtitle">Share your ideas with the community.</p>
   </div>
 
   <form (ngSubmit)="createPost()" #postForm="ngForm" class="post-form-card">
-      
       <div class="form-group">
           <label for="title" class="form-label">Title</label>
           <input type="text" id="title" name="title" [(ngModel)]="title" required 
@@ -18,7 +16,7 @@
           <label for="description" class="form-label">Summary</label>
           <textarea id="description" name="description" [(ngModel)]="description" required rows="2" 
               class="text-input textarea-input" 
-              placeholder="What is this post about? (Displayed in the feed)"></textarea>
+              placeholder="What is this post about?"></textarea>
       </div>
 
       <div class="form-group">
@@ -28,19 +26,21 @@
               <div id="drop-zone" class="drop-zone-content">
                   <div id="upload-prompt" class="upload-prompt-content">
                       <div class="upload-icon-wrapper">
-                          <i data-lucide="image-plus" class="upload-icon"></i>
+                          <i class="upload-icon">📁</i>
                       </div>
                       <p class="upload-text"><span class="font-bold">Click to upload</span> or drag and drop</p>
-                      <p class="upload-hint">SVG, PNG, JPG or MP4 (MAX. 10MB)</p>
+                      <p class="upload-hint">Images or MP4 (MAX. 100MB)</p>
                   </div>
                   
                   <div id="file-preview" class="file-preview hidden">
                       <div class="preview-content">
+                          <img id="image-render" class="preview-media hidden" alt="Image preview">
+                          <video id="video-render" class="preview-media hidden" controls></video>
                           <p id="file-name" class="preview-file-name"></p>
                       </div>
                       
-                    <button type="button" (click)="clearFile($event)" class="clear-file-btn">
-                          <i data-lucide="x" class="clear-icon"></i>
+                      <button type="button" (click)="clearFile($event)" class="clear-file-btn">
+                          <span>✕</span>
                       </button>
                   </div>
               </div>
@@ -49,41 +49,23 @@
 
       <div class="form-group">
           <label for="content" class="form-label">Story</label>
-          <div class="textarea-wrapper">
-              <textarea id="content" name="content" [(ngModel)]="content" required rows="12" 
-                  class="text-input textarea-input large-textarea" 
-                  placeholder="Tell your story..."></textarea>
-              
-              <div class="formatting-hint">
-                  <i data-lucide="bold" class="format-icon"></i>
-                  <i data-lucide="italic" class="format-icon"></i>
-                  <i data-lucide="list" class="format-icon"></i>
-              </div>
-          </div>
+          <textarea id="content" name="content" [(ngModel)]="content" required rows="10" 
+              class="text-input textarea-input large-textarea" 
+              placeholder="Tell your story..."></textarea>
       </div>
 
       <div class="action-buttons-group">
-          <button type="button" class="draft-btn">
-              Save Draft
-          </button>
-          
+          <button type="button" class="draft-btn">Save Draft</button>
           <button type="submit" class="publish-btn" [disabled]="!postForm.form.valid || isLoading">
               @if (!isLoading) {
                 <span>Publish</span>
               } @else {
-                <span class="spinner-container">
-                    <svg class="spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                </span>
+                <span class="spinner"></span>
               }
           </button>
       </div>
       @if (errorMessage) {
-        <div class="error-message">
-          {{ errorMessage }}
-        </div>
+        <div class="error-message">{{ errorMessage }}</div>
       }
   </form>
 </main>

@@ -46,4 +46,7 @@ export class PostService {
     if (url.startsWith('http')) return url;
     return `http://localhost:8080/files/${url}`;
   }
+  toggleLike(postId: number): Observable<ApiResponse<boolean>> {
+  return this.http.post<ApiResponse<boolean>>(`${this.apiUrl}/${postId}/like`, {}, { headers: this.getHeaders() });
+  }
 }

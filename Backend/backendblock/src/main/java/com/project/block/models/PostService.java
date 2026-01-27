@@ -6,17 +6,21 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.project.block.dto.PostDTO;
+import com.project.block.entity.Like;
 import com.project.block.entity.Post;
 import com.project.block.entity.User;
 import com.project.block.repository.CommentRepository;
+import com.project.block.repository.LikeRepository;
 import com.project.block.repository.PostRepository;
 
 @Service
@@ -26,15 +30,17 @@ public class PostService {
     private final CommentRepository CommentRepository;
     @Value("${file.upload-dir}")
     private String uploadDir;
+    private final LikeRepository likeRepository;
 
     /**
      * Constructor for PostService
      * 
      * @param postRepository Repository for Post entity
      */
-    public PostService(PostRepository postRepository , CommentRepository CommentRepository) {
+    public PostService(PostRepository postRepository , CommentRepository CommentRepository , LikeRepository likeRepository) {
         this.postRepository = postRepository;
         this.CommentRepository = CommentRepository;
+        this.likeRepository = likeRepository;
     }
 
     /**
@@ -44,7 +50,14 @@ public class PostService {
      * @return List of Posts
      */
     public List<Post> getPostsByUserId(Long userId) {
-        return postRepository.findPostsByUserId(userId);
+        List<Post> posts = postRepository.findPostsByUserId(userId);
+        //  add  isLiked  property
+        // User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        // for (Post post : posts) {
+        //     boolean isLiked = likeRepository.existsByUserAndPost(currentUser, post);
+        //     post.setLiked(isLiked);
+        // }
+        return posts ; 
     }
 
     /**
@@ -140,9 +153,14 @@ public class PostService {
         postRepository.save(post);
     }
 
-    public void deletePost(Long id) {
-        postRepository.deleteById(id);
-    }
+     @Transactional
+        public void deletePost(Long id) {
+            if (postRepository.existsById(id)) {
+                postRepository.deleteById(id);
+            } else {
+                throw new RuntimeException("Post not found");
+            }
+     }
     public Post getPostById(Long id) {
         return postRepository.findById(id).orElseThrow(() -> new RuntimeException("Post not found"));
     }
@@ -160,4 +178,35 @@ public class PostService {
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> : "+postId);
         return postRepository.existsById(postId);
     }
+
+
+
+@Transactional
+public boolean toggleLike(Long postId) {
+    User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    Post post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("Post not found"));
+    
+    Optional<Like> existingLike = likeRepository.findByUserAndPost(currentUser, post);
+    
+    if (existingLike.isPresent()) {
+        likeRepository.delete(existingLike.get());
+        post.setLikes(Math.max(0, (post.getLikes() != null ? post.getLikes() : 0) - 1));
+        postRepository.save(post);
+        return false; // Unliked
+    } else {
+        likeRepository.save(new Like(currentUser, post));
+        post.setLikes((post.getLikes() != null ? post.getLikes() : 0) + 1);
+        postRepository.save(post);
+        return true; // Liked
+    }
+}
+
+public boolean isLikedByCurrentUser(Long postId) {
+    User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    Post post = postRepository.findById(postId).orElse(null);
+    return post != null && likeRepository.existsByUserAndPost(currentUser, post);
+}
+
+
+       
 }
