@@ -7,7 +7,7 @@ export interface Comment {
     timestamp: Date;
     user: {
         role : string;
-        id: number;
+        user_id: number; 
         username: string;
         userAvatar : string;
         email: string;

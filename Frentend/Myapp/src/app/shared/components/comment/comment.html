@@ -1,8 +1,8 @@
 <div class="comment-wrapper animate-in">
-  <img [src]="this.postservice.getAvatarUrl(comment.user.userAvatar , comment.authorName)" class="comment-avatar">
+  <img [src]="this.postservice.getAvatarUrl(comment.user.userAvatar , comment.authorName)" class="comment-avatar" (click)="serveProfile(comment.user.user_id)" alt="User Avatar" />
   <div class="comment-bubble">
     <div class="comment-header">
-      <span class="author-name">{{ comment.user.username }}</span>
+      <span  (click)="serveProfile(comment.user.user_id)" class="author-name">{{ comment.user.username }}</span>
       <span class="comment-date">{{comment.timestamp}}</span>
     </div>
     <p class="comment-text">{{ comment.content }}</p>

@@ -1,6 +1,8 @@
 package com.project.block.models;
 
+import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
@@ -18,10 +20,6 @@ import com.project.block.repository.PostRepository;
 import com.project.block.repository.TokenRepository;
 import com.project.block.repository.UserRepository;
 import com.project.block.service.JwtUtil;
-
-
-import java.io.IOException;
-import java.nio.file.*;
 
 
 @Service
@@ -228,19 +226,26 @@ public class UserService {
 
 
 
-        public void updateUserProfile(User currentUser, String username, String bio, MultipartFile file) throws IOException {
-        currentUser.setUsername(username);
-        currentUser.setStatus(bio);
+        public String updateUserProfile(User currentUser, String username, String bio, MultipartFile file) throws IOException {
+                    currentUser.setUsername(username);
+                    currentUser.setStatus(bio);
 
-        if (file != null && !file.isEmpty()) {
-            String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-            Path path = Paths.get(uploadDir).resolve(fileName);
-            Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-            currentUser.setUserAvatar(fileName); 
-        }
+                    if (file != null && !file.isEmpty()) {
+                        String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+                        Path path = Paths.get(uploadDir).resolve(fileName);
+                        Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+                        currentUser.setUserAvatar(fileName); 
+                    }
 
-        userRepository.save(currentUser);
-    }
+                    userRepository.save(currentUser);
 
+                    Token newTokenEntity = JwtUtil.generateToken(currentUser);
+                    
+                    TokenRepository.deleteByUser(currentUser);
+
+                    TokenRepository.save(newTokenEntity);
+                    return newTokenEntity.token;
+}
+    
 }
 

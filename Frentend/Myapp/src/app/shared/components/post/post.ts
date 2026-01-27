@@ -67,6 +67,7 @@ export class PostComponent implements OnInit {
       next: (response) => {
         this.mockComments = response.data;
         this.isLoadingComments = false;
+        this.post.comments = this.mockComments.length;
         this.cdn.detectChanges();
       },
       error: (err) => {
@@ -104,7 +105,7 @@ export class PostComponent implements OnInit {
             timestamp: new Date(newCommentFromServer.timestamp),
             user : {
               role : newCommentFromServer.user.role,
-              id: newCommentFromServer.user.id,
+              user_id: newCommentFromServer.user.id,
               username: newCommentFromServer.user.username,
               email: newCommentFromServer.user.email
               , userAvatar : newCommentFromServer.user.userAvatar

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from '../../../core/services/user.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { ApiResponse } from '../../../core/models/api-response.model';
 
 @Component({
   selector: 'app-profile-settings',
@@ -17,7 +18,6 @@ export class ProfileSettingsComponent implements OnInit {
     name: '',
     username: '',
     bio: '',
-    website: '',
     avatarUrl: ''
   };
   
@@ -62,7 +62,7 @@ export class ProfileSettingsComponent implements OnInit {
     const token = localStorage.getItem('token');
     
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    
+
     const uploadData = new FormData();
     uploadData.append('username', this.formData.username);
     uploadData.append('bio', this.formData.bio);
@@ -71,9 +71,13 @@ export class ProfileSettingsComponent implements OnInit {
       uploadData.append('file', this.selectedFile, this.selectedFile.name);
     }
 
-    this.http.put('http://localhost:8080/api/users/update', uploadData, { headers }).subscribe({
-      next: () => {
+    this.http.put<ApiResponse<any>>('http://localhost:8080/api/users/update', uploadData, { headers }).subscribe({
+      next: (res) => {
         this.isSaving = false;
+       if (res.data) {
+        localStorage.setItem('token', res.data.token);
+      }
+       // localStorage.setItem('token', res.data.token);
         this.userService.loadCurrentUser(); 
         this.router.navigate(['/profile']);
       },
