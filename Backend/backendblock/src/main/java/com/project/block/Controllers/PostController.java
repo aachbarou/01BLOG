@@ -72,7 +72,7 @@ public class PostController {
         List<Post> modifiedPosts = psts.stream()
             .peek(post -> {
                 post.setLiked(postService.isLikedByCurrentUser(post.getId())) ;
-                post.comments = this.postService.getHowmanyComments(post.getId());
+                post.setComments(this.postService.getHowmanyComments(post.getId()));
                 if (post.getUser() != null) {
                     post.getUser().setEmail(null); 
                 }

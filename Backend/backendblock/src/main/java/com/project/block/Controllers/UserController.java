@@ -68,8 +68,8 @@ public class UserController {
                 List<Post> posts = userService.findPostsByUserId(user.getUser_id());
                 List<Post> modifiedPosts = posts.stream()
                 .peek(post -> {
-                    post.comments = this.postService.getHowmanyComments(post.getId());
-                    post.isLiked = this.postService.isLikedByCurrentUser(post.getId()) ;
+                    post.setComments(this.postService.getHowmanyComments(post.getId()));
+                    post.setLiked(this.postService.isLikedByCurrentUser(post.getId()));
                     if (post.getUser() != null) {
                         post.getUser().setEmail(null); 
                     }

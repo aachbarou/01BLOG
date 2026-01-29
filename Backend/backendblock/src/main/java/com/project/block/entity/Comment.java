@@ -20,8 +20,10 @@ public class Comment {
     private Long id;
     private String content;
     private LocalDateTime timestamp;
-    
-    private Long postId;
+
+    @ManyToOne
+    @JoinColumn(name = "post_id")
+    private Post post;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
