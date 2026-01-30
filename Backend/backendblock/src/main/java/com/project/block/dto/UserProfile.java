@@ -1,10 +1,6 @@
 package com.project.block.dto;
 
 import java.util.List;
-
-import com.project.block.entity.Post;
-import com.project.block.entity.User;
-
 import lombok.Data;
 
 @Data
@@ -20,21 +16,20 @@ public class UserProfile {
 
     @Data
     public static class Stats {
-        private List<Post> posts;
+        private List<PostDTO> posts;
         private int followers;
         private int following;
         private String role;
 
-        public Stats(List<Post> posts, int followers, int following, String role, boolean Needposts) {
+        public Stats(List<PostDTO> posts, int followers, int following, String role, boolean Needposts) {
             this.posts = Needposts ? posts : null;
             this.followers = followers;
             this.following = following;
             this.role = role;
-
         }
     }
 
-    public UserProfile(User user, List<Post> posts, boolean isOwned, boolean Needposts, int followers, int following,
+    public UserProfile(com.project.block.entity.User user, List<PostDTO> posts, boolean isOwned, boolean Needposts, int followers, int following,
             boolean isFollowing) {
         this.id = user.getUser_id();
         this.name = user.getUsername();

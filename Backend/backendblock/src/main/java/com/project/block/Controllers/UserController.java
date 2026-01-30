@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.project.block.dto.PostDTO;
 import com.project.block.dto.ResposeData;
 import com.project.block.dto.UserProfile;
 import com.project.block.entity.Post;
@@ -31,59 +32,65 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<?> getUserProfile() {
-        try {
-            User user = userService.getUserProfile(null);
-            // get posts of user
-            try {
-                List<Post> posts = userService.findPostsByUserId(user.getUser_id());
-            //     List<Post> modifiedPosts = posts.stream()
-            // .peek(post -> {
-            //     post.comments = this.postService.getHowmanyComments(post.getId());
-            //     if (post.getUser() != null) {
-            //         post.getUser().setEmail(null); 
-            //     }
-            // })
-            // .toList();
-            // for (Post post : modifiedPosts) {
-            //     System.out.println("Post ID: " + post.getId() + ", Comments Count: " + post.comments);
-            // }
-                UserProfile userProfile = new UserProfile(user, posts, true, false  , userService.getFollowersCount(user), userService.getFollowingCount(user), userService.isFollowing(user, user));
-               return ResponseEntity.ok( new  ResposeData("User profile fetched successfully", 200, userProfile));
-            } catch (Exception e) {
-                return ResponseEntity.status(500).body("Internal Server Error: " + e.getMessage());
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Internal Server Error: " + e.getMessage());
+public ResponseEntity<?> getUserProfile() {
+    try {
+        User currentUser = userService.getUserProfile(null);
+        if (currentUser == null) {
+            return ResponseEntity.status(401).body(new ResposeData("Unauthorized", 401, null));
         }
-    }
 
-    // Controle  to get  user  with  id 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getUserById(@PathVariable Long id) {
-        try {
-            User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            try {
-                User user = userService.getUserProfile(id); 
-                List<Post> posts = userService.findPostsByUserId(user.getUser_id());
-                List<Post> modifiedPosts = posts.stream()
-                .peek(post -> {
-                    post.setComments(this.postService.getHowmanyComments(post.getId()));
-                    post.setLiked(this.postService.isLikedByCurrentUser(post.getId()));
-                    if (post.getUser() != null) {
-                        post.getUser().setEmail(null); 
-                    }
-                })
-                .toList();
-                UserProfile userProfile = new UserProfile(user ,  modifiedPosts , currentUser.getUser_id().equals(id) , true , userService.getFollowersCount(user), userService.getFollowingCount(user), userService.isFollowing(currentUser, user));
-                return ResponseEntity.ok(new ResposeData("User fetched successfully", 200, userProfile));
-            } catch (Exception e) {
-                return ResponseEntity.status(404).body("User not found");
-            }
-        } catch ( RuntimeException e) {
-            return ResponseEntity.status(404).body("User not found");
-        }
+        List<PostDTO> postDTOs = userService.findPostsByUserId(currentUser.getUser_id())
+            .stream()
+            .map(postService::mapToDTO)
+            .toList();
+
+        UserProfile userProfile = new UserProfile(
+            currentUser, 
+            postDTOs, 
+            true,  
+            true, 
+            userService.getFollowersCount(currentUser), 
+            userService.getFollowingCount(currentUser), 
+            false 
+        );
+
+        return ResponseEntity.ok(new ResposeData("User profile fetched successfully", 200, userProfile));
+
+    } catch (Exception e) {
+        return ResponseEntity.status(500).body(new ResposeData("Internal Server Error: " + e.getMessage(), 500, null));
     }
+}
+
+    @GetMapping("/{id}")
+public ResponseEntity<?> getUserById(@PathVariable Long id) {
+    try {
+        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        
+        User targetUser = userService.getUserProfile(id); 
+        if (targetUser == null) {
+            return ResponseEntity.status(404).body(new ResposeData("User not found", 404, null));
+        }
+
+        List<PostDTO> postDTOs = userService.findPostsByUserId(targetUser.getUser_id())
+            .stream()
+            .map(postService::mapToDTO)
+            .toList();
+        UserProfile userProfile = new UserProfile(
+            targetUser, 
+            postDTOs, 
+            currentUser.getUser_id().equals(id), 
+            true, 
+            userService.getFollowersCount(targetUser), 
+            userService.getFollowingCount(targetUser), 
+            userService.isFollowing(currentUser, targetUser)
+        );
+
+        return ResponseEntity.ok(new ResposeData("User fetched successfully", 200, userProfile));
+
+    } catch (Exception e) {
+        return ResponseEntity.status(404).body(new ResposeData("Error: " + e.getMessage(), 404, null));
+    }
+}
 
 
     @PutMapping("/update")

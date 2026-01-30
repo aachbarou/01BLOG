@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.project.block.dto.PostDTO;
+import com.project.block.dto.UserDTO;
 import com.project.block.entity.Like;
 import com.project.block.entity.Post;
 import com.project.block.entity.User;
@@ -207,6 +208,32 @@ public boolean isLikedByCurrentUser(Long postId) {
     return post != null && likeRepository.existsByUserAndPost(currentUser, post);
 }
 
+public PostDTO mapToDTO(Post post) {
+        PostDTO dto = new PostDTO();
+        dto.setId(post.getId());
+        dto.setTitle(post.getTitle());
+        dto.setContent(post.getContent());
+        dto.setMediaUrl(post.getMediaUrl());
+        dto.setTimestamp(post.getTimestamp());
+        dto.setLikes(post.getLikes() != null ? post.getLikes() : 0);
+        dto.setComments(getHowmanyComments(post.getId()));
+        dto.setLiked(isLikedByCurrentUser(post.getId()));
 
+        if (post.getUser() != null) {
+            dto.setUser(new UserDTO(
+                post.getUser().getUser_id(),
+                post.getUser().getUsername(),
+                post.getUser().getUserAvatar(),
+                post.getUser().getRole()
+            ));
+        }
+        return dto;
+    }
+
+    public List<PostDTO> getAllPostsDTO() {
+        return postRepository.findAllByOrderByTimestampDesc().stream()
+                .map(this::mapToDTO)
+                .toList();
+    }
        
 }

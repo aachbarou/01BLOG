@@ -1,13 +1,14 @@
 package com.project.block.entity;
 
 import jakarta.persistence.*;
-
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Entity
 @Table(name = "users")
-@Data
+@Getter @Setter @NoArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

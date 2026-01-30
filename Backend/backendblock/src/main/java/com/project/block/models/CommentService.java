@@ -6,6 +6,9 @@ import java.util.List;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.project.block.dto.CommentDTO;
+import com.project.block.dto.PostDTO;
+import com.project.block.dto.UserDTO;
 import com.project.block.entity.Comment;
 import com.project.block.entity.Post;
 import com.project.block.entity.User;
@@ -37,5 +40,28 @@ public class CommentService {
 
     public List<Comment> getCommentsByPostId(Long postId) {
         return commentRepository.findByPostIdOrderByTimestampDesc(postId);
+    }
+
+    public CommentDTO mapToDTO(Comment comment) {
+        CommentDTO dto = new CommentDTO();
+        dto.setId(comment.getId());
+        dto.setContent(comment.getContent());
+        dto.setTimestamp(comment.getTimestamp());
+        
+        if (comment.getUser() != null) {
+            dto.setUser(new UserDTO(
+                comment.getUser().getUser_id(),
+                comment.getUser().getUsername(),
+                comment.getUser().getUserAvatar(),
+                comment.getUser().getRole()
+            ));
+        }
+        return dto;
+    }
+
+    public List<CommentDTO> getCommentsDTO(Long postId) {
+        return commentRepository.findByPostIdOrderByTimestampDesc(postId).stream()
+                .map(this::mapToDTO)
+                .toList();
     }
 }

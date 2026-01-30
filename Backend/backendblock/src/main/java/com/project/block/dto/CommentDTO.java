@@ -4,14 +4,9 @@ import java.time.LocalDateTime;
 import lombok.Data;
 
 @Data
-public class PostDTO {
+public class CommentDTO {
     private Long id;
-    private String title;
     private String content;
-    private String mediaUrl;
     private LocalDateTime timestamp;
-    private Integer likes;
-    private Integer comments;
-    private boolean isLiked;
     private UserDTO user; 
 }

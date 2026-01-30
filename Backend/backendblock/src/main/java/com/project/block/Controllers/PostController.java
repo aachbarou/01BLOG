@@ -65,24 +65,14 @@ public class PostController {
      * 
      * @return ResponseEntity containing all posts
      */
-    @GetMapping
+   @GetMapping
     public ResponseEntity<?> getAllPosts() {
         try {
-        List<Post> psts = postService.getAllPosts();
-        List<Post> modifiedPosts = psts.stream()
-            .peek(post -> {
-                post.setLiked(postService.isLikedByCurrentUser(post.getId())) ;
-                post.setComments(this.postService.getHowmanyComments(post.getId()));
-                if (post.getUser() != null) {
-                    post.getUser().setEmail(null); 
-                }
-            })
-            .toList();
-
-        return ResponseEntity.ok(new ResposeData("Posts fetched successfully", 200, modifiedPosts));
-    } catch (Exception e) {
-        return ResponseEntity.status(500).body(new ResposeData("Internal Server Error", 500, null));
-    }
+            List<PostDTO> posts = postService.getAllPostsDTO();
+            return ResponseEntity.ok(new ResposeData("Posts fetched successfully", 200, posts));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new ResposeData("Error", 500, null));
+        }
     }
 
     /**
