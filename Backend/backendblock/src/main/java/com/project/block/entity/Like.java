@@ -9,11 +9,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "post_likes")
-@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Like {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

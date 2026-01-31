@@ -38,7 +38,7 @@ export class PostComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-  this.isLiked = !!this.post.isLiked;
+  this.isLiked = !!this.post.liked;
   this.userService.currentUser$.subscribe(user => {
     if (user && this.post.user) {
       this.isOwner = user.id === this.post.user.user_id;
@@ -144,7 +144,7 @@ toggleLike() {
       next: (response: ApiResponse<boolean>) => {
         const newLikeStatus = response.data;
         this.isLiked = newLikeStatus;
-        this.post.isLiked = newLikeStatus;
+        this.post.liked = newLikeStatus;
         
         if (this.post.likes !== undefined) {
           this.post.likes = newLikeStatus ? (this.post.likes + 1) : Math.max(0, this.post.likes - 1);

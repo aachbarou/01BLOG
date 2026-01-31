@@ -12,7 +12,7 @@ export interface Post {
         status: string;
         userAvatar: string;
     };
-    isLiked?: boolean;
+    liked?: boolean;
     likes?: number;
     comments?: number;
 }
