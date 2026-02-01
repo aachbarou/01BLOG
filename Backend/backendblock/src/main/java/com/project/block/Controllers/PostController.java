@@ -88,23 +88,22 @@ public class PostController {
     }
 
     @PutMapping("/{id}")
-    public  ResponseEntity<?> updatePost(@PathVariable Long id , @org.springframework.web.bind.annotation.ModelAttribute PostDTO post){
-        // The  user  must  edit  Just  own  posts
-        try  {
-            if (!postService.canEditPost(id)) {
-                return ResponseEntity.status(403).body(new ResposeData("You are not allowed to edit this post", 403, null));
-            }
-        }catch (Exception e) {
-            return ResponseEntity.status(404).body(new ResposeData("404 Not Found", 404, null));
+    public ResponseEntity<?> updatePost(
+        @PathVariable Long id, 
+        @org.springframework.web.bind.annotation.ModelAttribute PostDTO post,
+        @org.springframework.web.bind.annotation.RequestParam(value = "file", required = false) org.springframework.web.multipart.MultipartFile file) {
+    
+    try {
+        if (!postService.canEditPost(id)) {
+            return ResponseEntity.status(403).body(new ResposeData("Unauthorized", 403, null));
         }
-       
-        try {
-            postService.updatePost(id, post);
-            return ResponseEntity.ok(new ResposeData("Post updated successfully", 200, null));
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(new ResposeData("Internal Server Error" + e.getMessage(), 500, null));
-        }
-    }   
+        
+        this.postService.updatePost(id, post, file); 
+        return ResponseEntity.ok(new ResposeData("Post updated successfully", 200, null));
+    } catch (Exception e) {
+        return ResponseEntity.status(500).body(new ResposeData("Error: " + e.getMessage(), 500, null));
+    }
+}   
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deletePost(@PathVariable Long id){

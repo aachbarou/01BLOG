@@ -146,13 +146,23 @@ public class PostService {
         return commentsCount;
     }
 
-    public void updatePost(Long id, PostDTO postDto) {
-        Post post = postRepository.findById(id).orElseThrow(() -> new RuntimeException("Post not found"));
-        post.setTitle(postDto.getTitle());
-        post.setContent(postDto.getContent());
+    public void updatePost(Long id, PostDTO postDto, org.springframework.web.multipart.MultipartFile file) throws java.io.IOException {
+    Post post = postRepository.findById(id).orElseThrow(() -> new RuntimeException("Post not found"));
+    post.setTitle(postDto.getTitle());
+    post.setContent(postDto.getContent());
+
+    if (file != null && !file.isEmpty()) {
+        // رفع ملف جديد
+        String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+        Path path = Paths.get(uploadDir).resolve(fileName);
+        Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+        post.setMediaUrl(fileName);
+    } else if (postDto.getMediaUrl() != null && !postDto.getMediaUrl().isEmpty()) {
         post.setMediaUrl(postDto.getMediaUrl());
-        postRepository.save(post);
     }
+    
+    postRepository.save(post);
+}
 
      @Transactional
         public void deletePost(Long id) {

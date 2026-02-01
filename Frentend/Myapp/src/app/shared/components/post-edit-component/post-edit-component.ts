@@ -15,12 +15,9 @@ import { AuthServices } from '../../../core/services/auth.service';
 })
 export class PostEditComponent implements OnInit {
   postId!: number;
-  postData = {
-    title: '',
-    content: '',
-    mediaUrl: '',
-    userId: 0,
-  };
+  postData = { title: '', content: '', mediaUrl: '', userId: 0 };
+  selectedFile: File | null = null; 
+  imagePreview: string | null = null; 
   isLoading = false;
   isPreview = false;
 
@@ -39,23 +36,28 @@ export class PostEditComponent implements OnInit {
 
   loadPost() {
     this.postService.getPostById(this.postId).subscribe({
-
       next: (res) => {
-        const postOwnerId = res.data.user?.user_id;
-        this.userService.currentUser$.subscribe(currentUser => {
-          if (currentUser && postOwnerId !== currentUser.id) {
-            this.router.navigate(['/home']);
-            return;
-          }
-        });
-
         this.postData.title = res.data.title;
         this.postData.content = res.data.content;
         this.postData.mediaUrl = res.data.mediaUrl || '';
-        this.postData.userId = res.data.user?.user_id || 0;
+        this.imagePreview = this.postService.getMediaUrl(this.postData.mediaUrl);
         this.cdr.detectChanges();
       }
     });
+  }
+
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreview = reader.result as string; 
+        this.cdr.detectChanges();
+      };
+      reader.readAsDataURL(file);
+    }
   }
 
   getMediaUrl(url: string | undefined): string {
@@ -73,8 +75,12 @@ export class PostEditComponent implements OnInit {
     const formData = new FormData();
     formData.append('title', this.postData.title);
     formData.append('content', this.postData.content);
-    formData.append('mediaUrl', this.postData.mediaUrl);
-    formData.append('userId', this.postData.userId.toString());
+    
+    if (this.selectedFile) {
+      formData.append('file', this.selectedFile, this.selectedFile.name);
+    } else {
+      formData.append('mediaUrl', this.postData.mediaUrl);
+    }
 
     this.postService.updatePost(this.postId, formData).subscribe({
       next: () => this.router.navigate(['/home']),
