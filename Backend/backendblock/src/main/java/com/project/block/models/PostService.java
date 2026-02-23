@@ -242,7 +242,7 @@ public class PostService {
                     post.getUser().getUserAvatar(),
                     post.getUser().getRole(),
                     post.getUser().getEmail(),
-                    post.getUser().getStatus()));
+                    post.getUser().isBanned()));
         }
         return dto;
     }

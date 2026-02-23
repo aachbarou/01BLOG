@@ -3,7 +3,7 @@ export interface AdminUser {
     username: string;
     email: string;
     role: string;
-    status: string;
+    banned: boolean;
     userAvatar: string;
 }
 

@@ -56,7 +56,7 @@ public class CommentService {
                     comment.getUser().getUserAvatar(),
                     comment.getUser().getRole(),
                     comment.getUser().getEmail(),
-                    comment.getUser().getStatus()));
+                    comment.getUser().isBanned()));
         }
         return dto;
     }

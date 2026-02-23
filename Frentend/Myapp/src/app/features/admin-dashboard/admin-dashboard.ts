@@ -62,9 +62,9 @@ export class AdminDashboardComponent implements OnInit {
         this.errorMessage = '';
         this.adminService.banUser(id).subscribe({
             next: (res) => {
-                const newStatus = res.data || 'Banned';
+                const isBanned = res.data === 'Banned';
                 this.users = this.users.map(u =>
-                    u.user_id === id ? { ...u, status: newStatus } : u
+                    u.user_id === id ? { ...u, banned: isBanned } : u
                 );
                 this.cdn.detectChanges();
             },
@@ -116,7 +116,10 @@ export class AdminDashboardComponent implements OnInit {
     }
 
     getAvatarUrl(user: AdminUser): string {
-        return "http://localhost:8080/files/" + user.userAvatar || `https://ui-avatars.com/api/?name=${user.username}&background=e7e5e4&color=1c1917`;
+        if (user.userAvatar !== undefined && user.userAvatar !== null) {
+            return "http://localhost:8080/files/" + user.userAvatar;
+        }
+        return `https://ui-avatars.com/api/?name=${user.username}&background=e7e5e4&color=1c1917`;
     }
 
     goBack(): void {

@@ -112,17 +112,14 @@
                         <span class="role-badge" [class.admin]="user.role === 'admin'">{{ user.role }}</span>
                     </td>
                     <td>
-                        <span class="status-badge" [class.active]="user.status?.toLowerCase() === 'active'"
-                            [class.banned]="user.status?.toLowerCase() === 'banned'"
-                            [class.flagged]="user.status?.toLowerCase() === 'flagged'">
-                            {{ user.status }}
+                        <span class="status-badge" [class.active]="!user.banned" [class.banned]="user.banned">
+                            {{ user.banned ? 'Banned' : 'Active' }}
                         </span>
                     </td>
                     <td class="td-actions">
-                        <button class="action-btn" [class.ban]="user.status?.toLowerCase() !== 'banned'"
-                            [class.unban]="user.status?.toLowerCase() === 'banned'" (click)="toggleBan(user.user_id)"
-                            [title]="user.status?.toLowerCase() === 'banned' ? 'Unban user' : 'Ban user'">
-                            @if (user.status?.toLowerCase() === 'banned') {
+                        <button class="action-btn" [class.ban]="!user.banned" [class.unban]="user.banned"
+                            (click)="toggleBan(user.user_id)" [title]="user.banned ? 'Unban user' : 'Ban user'">
+                            @if (user.banned) {
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M20 6 9 17l-5-5" />

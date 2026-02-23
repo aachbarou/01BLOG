@@ -196,7 +196,7 @@ public class UserService {
         try {
             User existingUser = userRepository.findById(user.getUser_id())
                     .orElseThrow(() -> new RuntimeException("User not found"));
-            return "Banned".equals(existingUser.getStatus());
+            return existingUser.isBanned();
         } catch (RuntimeException e) {
             throw e;
         }
@@ -206,7 +206,7 @@ public class UserService {
         try {
             User existingUser = userRepository.findById(user.getUser_id())
                     .orElseThrow(() -> new RuntimeException("User not found"));
-            existingUser.setStatus("Banned");
+            existingUser.setBanned(true);
             userRepository.save(existingUser);
         } catch (RuntimeException e) {
             throw e;
@@ -217,7 +217,7 @@ public class UserService {
         try {
             User existingUser = userRepository.findById(user.getUser_id())
                     .orElseThrow(() -> new RuntimeException("User not found"));
-            existingUser.setStatus("Active");
+            existingUser.setBanned(false);
             userRepository.save(existingUser);
         } catch (RuntimeException e) {
             throw e;
@@ -254,7 +254,7 @@ public class UserService {
             dto.setUserAvatar(u.getUserAvatar());
             dto.setRole(u.getRole());
             dto.setEmail(u.getEmail());
-            dto.setStatus(u.getStatus());
+            dto.setBanned(u.isBanned());
             return dto;
         }).toList();
     }

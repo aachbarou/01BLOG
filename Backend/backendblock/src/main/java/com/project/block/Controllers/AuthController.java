@@ -55,9 +55,9 @@ public class AuthController {
     public ResponseEntity<?> loginUser(@RequestBody User user) {
         try {
             var curentuser = this.Userservice.loginUser(user);
-            if (!curentuser.getStatus().equals("Active")) {
+            if (curentuser.isBanned()) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
-                        new ErrorResponse("User account is not active", 403));
+                        new ErrorResponse("User account is banned", 403));
             }
 
             var response = new LoginSeccess(Userservice.GenerateNewToken(curentuser));
@@ -71,5 +71,5 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
         }
     }
-  
+
 }

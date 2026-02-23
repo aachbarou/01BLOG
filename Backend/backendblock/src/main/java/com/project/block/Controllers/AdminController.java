@@ -53,7 +53,7 @@ public class AdminController {
         }
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        if ("Banned".equals(user.getStatus())) {
+        if (user.isBanned()) {
             userService.unbanUser(user);
             return ResponseEntity.ok(new ResposeData("User unbanned successfully", 200, "Active"));
         } else {
