@@ -18,19 +18,19 @@ declare var lucide: any;
 @Injectable({
   providedIn: 'root'
 })
-export class Navbar implements OnInit , AfterViewChecked {
-  constructor(private router: Router, private Auth: AutGuard, private Auths: AuthServices , private User: UserService) { }
-  
+export class Navbar implements OnInit, AfterViewChecked {
+  constructor(private router: Router, private Auth: AutGuard, private Auths: AuthServices, private User: UserService) { }
+
   formData = {
     name: '',
     username: '',
     email: '',
-    role : '',
+    role: '',
     avatarUrl: ''
   };
- 
+
   isDropdownOpen: boolean = false;
-  
+
 
   ngOnInit() {
     this.User.loadCurrentUser();
@@ -40,14 +40,14 @@ export class Navbar implements OnInit , AfterViewChecked {
         this.formData.username = user.name;
         this.formData.email = user.email;
         this.formData.role = user.stats.role;
-        this.formData.avatarUrl = user.avatarUrl ;
+        this.formData.avatarUrl = user.avatarUrl;
       }
     });
   }
 
   ngAfterViewChecked() {
     lucide.createIcons();
-    
+
   }
 
   profileToggle(event?: Event) {
@@ -75,7 +75,7 @@ export class Navbar implements OnInit , AfterViewChecked {
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
-    
+
     if (!target.closest('.profile-dropdown-container')) {
       this.isDropdownOpen = false;
     }
@@ -84,11 +84,14 @@ export class Navbar implements OnInit , AfterViewChecked {
     this.router.navigate(['/create-post']);
   }
   navigateToSaved() {
-    this.isDropdownOpen = false ;
+    this.isDropdownOpen = false;
     this.router.navigate(['/saved']);
   }
   navigateToSettings() {
-    this.isDropdownOpen = false ;
+    this.isDropdownOpen = false;
     this.router.navigate(['profile/settings']);
+  }
+  navigateToAdmin() {
+    this.router.navigate(['/admin']);
   }
 }

@@ -29,15 +29,14 @@ public class SubscriptionService {
         }
 
         subscrepository.findByFollowerAndFollowed(currentUser, targetUser)
-            .ifPresentOrElse(
-                subscrepository::delete, 
-                () -> {
-                    Subscription sub = new Subscription();
-                    sub.setFollower(currentUser);
-                    sub.setFollowed(targetUser);
-                    subscrepository.save(sub); 
-                }
-            );
+                .ifPresentOrElse(
+                        subscrepository::delete,
+                        () -> {
+                            Subscription sub = new Subscription();
+                            sub.setFollower(currentUser);
+                            sub.setFollowed(targetUser);
+                            subscrepository.save(sub);
+                        });
     }
 
     public int getFollowersCount(User user) {
@@ -50,5 +49,11 @@ public class SubscriptionService {
 
     public boolean isFollowing(User follower, User followed) {
         return subscrepository.existsByFollowerIdAndFollowedId(follower.getUser_id(), followed.getUser_id());
+    }
+
+    @Transactional
+    public void deleteAllByUser(User user) {
+        subscrepository.deleteByFollower(user);
+        subscrepository.deleteByFollowed(user);
     }
 }

@@ -18,8 +18,12 @@
                         name="name" 
                         [(ngModel)]="name" 
                         class="input-field" 
+                        [class.input-error]="errors.name"
                         placeholder="Full Name" 
                         required>
+                    @if (errors.name) {
+                        <span class="field-error">{{ errors.name }}</span>
+                    }
                 </div>
 
                 <div>
@@ -28,8 +32,12 @@
                         name="email" 
                         [(ngModel)]="email" 
                         class="input-field" 
+                        [class.input-error]="errors.email"
                         placeholder="Email address" 
                         required>
+                    @if (errors.email) {
+                        <span class="field-error">{{ errors.email }}</span>
+                    }
                 </div>
 
                 <div>
@@ -38,8 +46,12 @@
                         name="password" 
                         [(ngModel)]="password" 
                         class="input-field" 
+                        [class.input-error]="errors.password"
                         placeholder="Password" 
                         required>
+                    @if (errors.password) {
+                        <span class="field-error">{{ errors.password }}</span>
+                    }
                 </div>
 
                 <div>
@@ -48,14 +60,17 @@
                         name="confirmPassword" 
                         [(ngModel)]="confirmPassword" 
                         class="input-field" 
+                        [class.input-error]="errors.confirmPassword"
                         placeholder="Confirm Password" 
                         required>
+                    @if (errors.confirmPassword) {
+                        <span class="field-error">{{ errors.confirmPassword }}</span>
+                    }
                 </div>
             </div>
 
             <button type="submit" class="btn-submit">
                 <span>Create Account</span>
-                
                 </button>
 
             @if (error) {

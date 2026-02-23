@@ -21,7 +21,6 @@ import com.project.block.repository.TokenRepository;
 import com.project.block.repository.UserRepository;
 import com.project.block.service.JwtUtil;
 
-
 @Service
 public class UserService {
     private final UserRepository userRepository;
@@ -36,14 +35,15 @@ public class UserService {
     /**
      * Constructor for UserService
      * 
-     * @param userRepository  Repository for User entity
-     * @param TokenRepository Repository for Token entity
-     * @param JwtUtil         Utility for JWT operations
-     * @param postRepository  Repository for Post entity
-     * @param passwordEncoder Password encoder for password operations
+     * @param userRepository      Repository for User entity
+     * @param TokenRepository     Repository for Token entity
+     * @param JwtUtil             Utility for JWT operations
+     * @param postRepository      Repository for Post entity
+     * @param passwordEncoder     Password encoder for password operations
      * @param subscriptionService Service for subscription operations
      */
-    public UserService(UserRepository userRepository, TokenRepository TokenRepository, JwtUtil JwtUtil , PostRepository postRepository , PasswordEncoder passwordEncoder , SubscriptionService subscriptionService) {
+    public UserService(UserRepository userRepository, TokenRepository TokenRepository, JwtUtil JwtUtil,
+            PostRepository postRepository, PasswordEncoder passwordEncoder, SubscriptionService subscriptionService) {
         this.TokenRepository = TokenRepository;
         this.JwtUtil = JwtUtil;
         this.userRepository = userRepository;
@@ -51,7 +51,6 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
         this.subscriptionService = subscriptionService;
     }
-   
 
     /**
      * Create a new user with validation
@@ -77,11 +76,11 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole("USER");
         user.setStatus("Active");
-        try  {
+        try {
             userRepository.save(user);
         } catch (Exception e) {
             System.out.println("Failed to create user: " + e.getMessage());
-        throw new RuntimeException("An internal error occurred while creating the account.");
+            throw new RuntimeException("An internal error occurred while creating the account.");
         }
     }
 
@@ -93,7 +92,7 @@ public class UserService {
      */
     public User loginUser(User user) {
         String inputEmailOrUsername = user.getEmail() != null ? user.getEmail().trim() : "";
-        String inputPassword = user.getPassword() != null ? user.getPassword() : "";        
+        String inputPassword = user.getPassword() != null ? user.getPassword() : "";
 
         System.out.println("Login Attempt:");
         System.out.println("Input Identity: '" + inputEmailOrUsername + "'");
@@ -154,25 +153,24 @@ public class UserService {
         return jwtToken.token;
     }
 
-    public User getUserProfile( Long id)  throws Exception {
+    public User getUserProfile(Long id) throws Exception {
         User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        
-       try {
-        // get user from security context
-        if  (id  == null ) {
-            return currentUser;
+
+        try {
+            // get user from security context
+            if (id == null) {
+                return currentUser;
+            }
+
+            return this.userRepository.findById(id).orElse(null);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to get user profile: " + e.getMessage(), e);
         }
-        
-        return this.userRepository.findById(id).orElse(null);
-    } catch (Exception e) {
-        throw new RuntimeException("Failed to get user profile: " + e.getMessage(), e);
     }
-    }
+
     public List<Post> findPostsByUserId(Long userId) {
         return this.postRepository.findPostsByUserId(userId);
     }
-    
-
 
     public int getFollowersCount(User user) {
         return this.subscriptionService.getFollowersCount(user);
@@ -183,69 +181,94 @@ public class UserService {
     }
 
     public boolean isFollowing(User follower, User followed) {
-      return   this.subscriptionService.isFollowing(follower, followed);
+        return this.subscriptionService.isFollowing(follower, followed);
     }
+
     public boolean userExists(User user) {
-    try {
-        return userRepository.findById(user.getUser_id()).isPresent();
-    } catch (Exception e) {
-        return false;
+        try {
+            return userRepository.findById(user.getUser_id()).isPresent();
+        } catch (Exception e) {
+            return false;
+        }
     }
-}
-        public boolean isBanned(User user) {
-            try {
-                User existingUser = userRepository.findById(user.getUser_id())
-                        .orElseThrow(() -> new RuntimeException("User not found"));
-                return "Banned".equals(existingUser.getStatus());
-            } catch (RuntimeException e) {
-                throw e;
-            }
+
+    public boolean isBanned(User user) {
+        try {
+            User existingUser = userRepository.findById(user.getUser_id())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            return "Banned".equals(existingUser.getStatus());
+        } catch (RuntimeException e) {
+            throw e;
+        }
+    }
+
+    public void banUser(User user) {
+        try {
+            User existingUser = userRepository.findById(user.getUser_id())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            existingUser.setStatus("Banned");
+            userRepository.save(existingUser);
+        } catch (RuntimeException e) {
+            throw e;
+        }
+    }
+
+    public void unbanUser(User user) {
+        try {
+            User existingUser = userRepository.findById(user.getUser_id())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            existingUser.setStatus("Active");
+            userRepository.save(existingUser);
+        } catch (RuntimeException e) {
+            throw e;
+        }
+    }
+
+    public String updateUserProfile(User currentUser, String username, String bio, MultipartFile file)
+            throws IOException {
+        currentUser.setUsername(username);
+        currentUser.setStatus(bio);
+
+        if (file != null && !file.isEmpty()) {
+            String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+            Path path = Paths.get(uploadDir).resolve(fileName);
+            Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+            currentUser.setUserAvatar(fileName);
         }
 
-        public void banUser(User user) {
-            try {
-                User existingUser = userRepository.findById(user.getUser_id())
-                        .orElseThrow(() -> new RuntimeException("User not found"));
-                existingUser.setStatus("Banned");
-                userRepository.save(existingUser);
-            } catch (RuntimeException e) {
-                throw e;
-            }
-        }
+        userRepository.save(currentUser);
 
-        public void unbanUser(User user) {
-            try {
-                User existingUser = userRepository.findById(user.getUser_id())
-                        .orElseThrow(() -> new RuntimeException("User not found"));
-                existingUser.setStatus("Active");
-                userRepository.save(existingUser);
-            } catch (RuntimeException e) {
-                throw e;
-            }
-        }
+        Token newTokenEntity = JwtUtil.generateToken(currentUser);
 
+        TokenRepository.deleteByUser(currentUser);
 
+        TokenRepository.save(newTokenEntity);
+        return newTokenEntity.token;
+    }
 
-        public String updateUserProfile(User currentUser, String username, String bio, MultipartFile file) throws IOException {
-                    currentUser.setUsername(username);
-                    currentUser.setStatus(bio);
+    public List<com.project.block.dto.UserDTO> getAllUsers() {
+        return userRepository.findAll().stream().map(u -> {
+            com.project.block.dto.UserDTO dto = new com.project.block.dto.UserDTO();
+            dto.setUser_id(u.getUser_id());
+            dto.setUsername(u.getUsername());
+            dto.setUserAvatar(u.getUserAvatar());
+            dto.setRole(u.getRole());
+            dto.setEmail(u.getEmail());
+            dto.setStatus(u.getStatus());
+            return dto;
+        }).toList();
+    }
 
-                    if (file != null && !file.isEmpty()) {
-                        String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-                        Path path = Paths.get(uploadDir).resolve(fileName);
-                        Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-                        currentUser.setUserAvatar(fileName); 
-                    }
+    @org.springframework.transaction.annotation.Transactional
+    public void deleteUser(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        // Clean up tokens
+        TokenRepository.deleteByUser(user);
+        // Clean up subscriptions (both directions)
+        subscriptionService.deleteAllByUser(user);
+        // Now delete user (cascades to posts, comments, likes)
+        userRepository.delete(user);
+    }
 
-                    userRepository.save(currentUser);
-
-                    Token newTokenEntity = JwtUtil.generateToken(currentUser);
-                    
-                    TokenRepository.deleteByUser(currentUser);
-
-                    TokenRepository.save(newTokenEntity);
-                    return newTokenEntity.token;
 }
-    
-}
-

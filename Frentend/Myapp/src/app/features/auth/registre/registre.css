@@ -5,13 +5,15 @@
     height: 100vh;
     background-color: var(--stone-50);
     font-family: var(--font-sans);
-    overflow: hidden; /* Prevent body scroll, handle in wrapper */
+    overflow: hidden;
+    /* Prevent body scroll, handle in wrapper */
 }
 
 /* Navbar Placeholder (Visual Context) */
 .nav-placeholder {
     width: 100%;
-    height: 4rem; /* h-16 */
+    height: 4rem;
+    /* h-16 */
     background-color: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid rgba(231, 229, 228, 0.6);
@@ -28,7 +30,8 @@
     align-items: center;
     justify-content: center;
     padding: 3rem 1rem;
-    margin-top: 4rem; /* Offset for fixed navbar */
+    margin-top: 4rem;
+    /* Offset for fixed navbar */
     overflow-y: auto;
     position: relative;
     z-index: 20;
@@ -37,14 +40,18 @@
 /* --- Card Design --- */
 .register-card {
     width: 100%;
-    max-width: 28rem; /* max-w-md */
+    max-width: 28rem;
+    /* max-w-md */
     background-color: white;
-    padding: 2.5rem; /* p-10 */
-    border-radius: 1.5rem; /* rounded-3xl */
+    padding: 2.5rem;
+    /* p-10 */
+    border-radius: 1.5rem;
+    /* rounded-3xl */
     border: 1px solid var(--stone-100);
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     transition: transform 0.5s ease, box-shadow 0.5s ease;
-    margin: auto; /* Center vertically if height is sufficient */
+    margin: auto;
+    /* Center vertically if height is sufficient */
 }
 
 .register-card:hover {
@@ -62,7 +69,8 @@
     height: 3rem;
     background-color: var(--stone-900);
     color: white;
-    border-radius: 0.75rem; /* rounded-xl */
+    border-radius: 0.75rem;
+    /* rounded-xl */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -74,7 +82,8 @@
 
 .join-title {
     font-family: var(--font-serif);
-    font-size: 1.875rem; /* text-3xl */
+    font-size: 1.875rem;
+    /* text-3xl */
     font-weight: 700;
     color: var(--stone-900);
     margin-bottom: 0.5rem;
@@ -91,7 +100,8 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    margin-bottom: 1.5rem; /* space before button */
+    margin-bottom: 1.5rem;
+    /* space before button */
 }
 
 .input-field {
@@ -100,15 +110,20 @@
     padding: 0.75rem 1rem;
     background-color: var(--stone-50);
     border: 1px solid var(--stone-200);
-    border-radius: 0.75rem; /* rounded-xl */
+    border-radius: 0.75rem;
+    /* rounded-xl */
     color: var(--stone-900);
     font-size: 0.875rem;
     transition: all 0.2s;
 }
 
-.input-field::placeholder { color: var(--stone-400); }
+.input-field::placeholder {
+    color: var(--stone-400);
+}
 
-.input-field:hover { background-color: var(--stone-100); }
+.input-field:hover {
+    background-color: var(--stone-100);
+}
 
 .input-field:focus {
     outline: none;
@@ -145,17 +160,30 @@
 
 /* Spinner */
 .spinner-overlay {
-    position: absolute; inset: 0;
-    display: flex; align-items: center; justify-content: center;
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background-color: var(--stone-900);
 }
 
 .spinner-icon {
-    width: 1.25rem; height: 1.25rem;
+    width: 1.25rem;
+    height: 1.25rem;
     color: white;
     animation: spin 1s linear infinite;
 }
-@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
 
 
 /* --- Social Section --- */
@@ -166,8 +194,11 @@
 }
 
 .divider-line {
-    position: absolute; top: 50%; left: 0;
-    width: 100%; height: 1px;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 1px;
     background-color: var(--stone-200);
 }
 
@@ -189,8 +220,10 @@
 
 /* Circular Buttons (Specific to Register Design) */
 .social-btn-circle {
-    width: 3rem; /* w-12 */
-    height: 3rem; /* h-12 */
+    width: 3rem;
+    /* w-12 */
+    height: 3rem;
+    /* h-12 */
     border-radius: 50%;
     border: 1px solid var(--stone-200);
     background: white;
@@ -227,11 +260,33 @@
     transition: color 0.2s;
 }
 
-.signin-link:hover { color: var(--brand-600); }
+.signin-link:hover {
+    color: var(--brand-600);
+}
 
 .error-msg {
     color: #ef4444;
     text-align: center;
     font-size: 0.875rem;
     margin-top: 0.5rem;
+}
+
+/* --- Inline Validation Errors --- */
+.input-error {
+    border-color: #ef4444 !important;
+    background-color: #fef2f2 !important;
+}
+
+.input-error:focus {
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.25) !important;
+    border-color: #ef4444 !important;
+}
+
+.field-error {
+    display: block;
+    margin-top: 0.35rem;
+    font-size: 0.78rem;
+    color: #dc2626;
+    font-weight: 500;
+    padding-left: 0.25rem;
 }

@@ -38,7 +38,8 @@ public class PostService {
      * 
      * @param postRepository Repository for Post entity
      */
-    public PostService(PostRepository postRepository , CommentRepository CommentRepository , LikeRepository likeRepository) {
+    public PostService(PostRepository postRepository, CommentRepository CommentRepository,
+            LikeRepository likeRepository) {
         this.postRepository = postRepository;
         this.CommentRepository = CommentRepository;
         this.likeRepository = likeRepository;
@@ -52,13 +53,14 @@ public class PostService {
      */
     public List<Post> getPostsByUserId(Long userId) {
         List<Post> posts = postRepository.findPostsByUserId(userId);
-        //  add  isLiked  property
-        // User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        // add isLiked property
+        // User currentUser = (User)
+        // SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         // for (Post post : posts) {
-        //     boolean isLiked = likeRepository.existsByUserAndPost(currentUser, post);
-        //     post.setLiked(isLiked);
+        // boolean isLiked = likeRepository.existsByUserAndPost(currentUser, post);
+        // post.setLiked(isLiked);
         // }
-        return posts ; 
+        return posts;
     }
 
     /**
@@ -140,85 +142,89 @@ public class PostService {
 
         postRepository.save(post);
     }
-    public  int   getHowmanyComments (Long postId) {
-        
+
+    public int getHowmanyComments(Long postId) {
+
         int commentsCount = CommentRepository.findByPostIdOrderByTimestampDesc(postId).size();
         return commentsCount;
     }
 
-    public void updatePost(Long id, PostDTO postDto, org.springframework.web.multipart.MultipartFile file) throws java.io.IOException {
-    Post post = postRepository.findById(id).orElseThrow(() -> new RuntimeException("Post not found"));
-    post.setTitle(postDto.getTitle());
-    post.setContent(postDto.getContent());
+    public void updatePost(Long id, PostDTO postDto, org.springframework.web.multipart.MultipartFile file)
+            throws java.io.IOException {
+        Post post = postRepository.findById(id).orElseThrow(() -> new RuntimeException("Post not found"));
+        post.setTitle(postDto.getTitle());
+        post.setContent(postDto.getContent());
 
-    if (file != null && !file.isEmpty()) {
-        // رفع ملف جديد
-        String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-        Path path = Paths.get(uploadDir).resolve(fileName);
-        Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-        post.setMediaUrl(fileName);
-    } else if (postDto.getMediaUrl() != null && !postDto.getMediaUrl().isEmpty()) {
-        post.setMediaUrl(postDto.getMediaUrl());
+        if (file != null && !file.isEmpty()) {
+            // رفع ملف جديد
+            String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+            Path path = Paths.get(uploadDir).resolve(fileName);
+            Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+            post.setMediaUrl(fileName);
+        } else if (postDto.getMediaUrl() != null && !postDto.getMediaUrl().isEmpty()) {
+            post.setMediaUrl(postDto.getMediaUrl());
+        }
+
+        postRepository.save(post);
     }
-    
-    postRepository.save(post);
-}
 
-     @Transactional
-        public void deletePost(Long id) {
-            if (postRepository.existsById(id)) {
-                postRepository.deleteById(id);
-            } else {
-                throw new RuntimeException("Post not found");
-            }
-     }
+    @Transactional
+    public void deletePost(Long id) {
+        if (postRepository.existsById(id)) {
+            postRepository.deleteById(id);
+        } else {
+            throw new RuntimeException("Post not found");
+        }
+    }
+
     public Post getPostById(Long id) {
         return postRepository.findById(id).orElseThrow(() -> new RuntimeException("Post not found"));
     }
+
     public boolean canEditPost(Long postId) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("Post not found"));
         User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return post.getUser().getUser_id() == currentUser.getUser_id();
     }
+
     public boolean canDeletePost(Long postId) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("Post not found"));
         User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return post.getUser().getUser_id() == currentUser.getUser_id();
     }
-    public  boolean ifPostExists (Long postId) {
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> : "+postId);
+
+    public boolean ifPostExists(Long postId) {
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> : " + postId);
         return postRepository.existsById(postId);
     }
 
+    @Transactional
+    public boolean toggleLike(Long postId) {
+        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Post post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("Post not found"));
 
+        Optional<Like> existingLike = likeRepository.findByUserAndPost(currentUser, post);
 
-@Transactional
-public boolean toggleLike(Long postId) {
-    User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    Post post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("Post not found"));
-    
-    Optional<Like> existingLike = likeRepository.findByUserAndPost(currentUser, post);
-    
-    if (existingLike.isPresent()) {
-        likeRepository.delete(existingLike.get());
-        post.setLikes(Math.max(0, (post.getLikes() != null ? post.getLikes() : 0) - 1));
-        postRepository.save(post);
-        return false; // Unliked
-    } else {
-        likeRepository.save(new Like(currentUser, post));
-        post.setLikes((post.getLikes() != null ? post.getLikes() : 0) + 1);
-        postRepository.save(post);
-        return true; // Liked
+        if (existingLike.isPresent()) {
+            likeRepository.delete(existingLike.get());
+            post.setLikes(Math.max(0, (post.getLikes() != null ? post.getLikes() : 0) - 1));
+            postRepository.save(post);
+            return false; // Unliked
+        } else {
+            likeRepository.save(new Like(currentUser, post));
+            post.setLikes((post.getLikes() != null ? post.getLikes() : 0) + 1);
+            postRepository.save(post);
+            return true; // Liked
+        }
     }
-}
 
-public boolean isLikedByCurrentUser(Long postId) {
-    User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    Post post = postRepository.findById(postId).orElse(null);
-    return post != null && likeRepository.existsByUserAndPost(currentUser, post);
-}
+    public boolean isLikedByCurrentUser(Long postId) {
+        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Post post = postRepository.findById(postId).orElse(null);
+        return post != null && likeRepository.existsByUserAndPost(currentUser, post);
+    }
 
-public PostDTO mapToDTO(Post post) {
+    public PostDTO mapToDTO(Post post) {
         PostDTO dto = new PostDTO();
         dto.setId(post.getId());
         dto.setTitle(post.getTitle());
@@ -231,11 +237,12 @@ public PostDTO mapToDTO(Post post) {
 
         if (post.getUser() != null) {
             dto.setUser(new UserDTO(
-                post.getUser().getUser_id(),
-                post.getUser().getUsername(),
-                post.getUser().getUserAvatar(),
-                post.getUser().getRole()
-            ));
+                    post.getUser().getUser_id(),
+                    post.getUser().getUsername(),
+                    post.getUser().getUserAvatar(),
+                    post.getUser().getRole(),
+                    post.getUser().getEmail(),
+                    post.getUser().getStatus()));
         }
         return dto;
     }
@@ -245,5 +252,12 @@ public PostDTO mapToDTO(Post post) {
                 .map(this::mapToDTO)
                 .toList();
     }
-       
+
+    public void updatePostStatus(Long id, String status) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Post not found"));
+        // Store status as-is (could be "visible", "hidden", etc.)
+        // Post entity doesn't have a status field yet, so we skip for now
+        postRepository.save(post);
+    }
 }

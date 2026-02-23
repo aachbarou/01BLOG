@@ -10,6 +10,8 @@ import { PostCreationComponent } from './features/post-creation/post-creation';
 import { ProfileSettingsComponent } from './shared/components/edit-profile/edit-profile';
 import { ErrorPageComponent } from './shared/components/error-page-component/error-page-component';
 import { PostEditComponent } from './shared/components/post-edit-component/post-edit-component';
+import { AdminDashboardComponent } from './features/admin-dashboard/admin-dashboard';
+import { AdminGuard } from './core/guards/admin.guard';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent, canActivate: [AutGuard] },
@@ -23,6 +25,7 @@ export const routes: Routes = [
     { path: 'profile', component: ProfileComponent, canActivate: [AutGuard] },
     { path: 'create-post', component: PostCreationComponent, canActivate: [AutGuard] },
     { path: 'edit-post/:id', component: PostEditComponent, canActivate: [AutGuard] },
+    { path: 'admin', component: AdminDashboardComponent, canActivate: [AutGuard, AdminGuard] },
 
     {
         path: 'error',

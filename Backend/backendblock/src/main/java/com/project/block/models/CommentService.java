@@ -19,24 +19,25 @@ import com.project.block.repository.PostRepository;
 public class CommentService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
-    public CommentService(CommentRepository commentRepository , PostRepository postRepository) {
+
+    public CommentService(CommentRepository commentRepository, PostRepository postRepository) {
         this.commentRepository = commentRepository;
         this.postRepository = postRepository;
     }
 
     public Comment addComment(Long postId, String content) {
-    User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    
-    Post post =  this.postRepository.findById(postId).orElse(null);
+        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-    Comment comment = new Comment();
-    comment.setContent(content);
-    comment.setTimestamp(LocalDateTime.now());
-    comment.setUser(currentUser);
-    comment.setPost(post);
+        Post post = this.postRepository.findById(postId).orElse(null);
 
-    return commentRepository.save(comment);
-}
+        Comment comment = new Comment();
+        comment.setContent(content);
+        comment.setTimestamp(LocalDateTime.now());
+        comment.setUser(currentUser);
+        comment.setPost(post);
+
+        return commentRepository.save(comment);
+    }
 
     public List<Comment> getCommentsByPostId(Long postId) {
         return commentRepository.findByPostIdOrderByTimestampDesc(postId);
@@ -47,14 +48,15 @@ public class CommentService {
         dto.setId(comment.getId());
         dto.setContent(comment.getContent());
         dto.setTimestamp(comment.getTimestamp());
-        
+
         if (comment.getUser() != null) {
             dto.setUser(new UserDTO(
-                comment.getUser().getUser_id(),
-                comment.getUser().getUsername(),
-                comment.getUser().getUserAvatar(),
-                comment.getUser().getRole()
-            ));
+                    comment.getUser().getUser_id(),
+                    comment.getUser().getUsername(),
+                    comment.getUser().getUserAvatar(),
+                    comment.getUser().getRole(),
+                    comment.getUser().getEmail(),
+                    comment.getUser().getStatus()));
         }
         return dto;
     }

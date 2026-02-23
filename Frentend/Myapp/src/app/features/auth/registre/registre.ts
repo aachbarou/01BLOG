@@ -2,7 +2,8 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthServices } from '../../../core/services/auth.service';
-import {  UserRegister } from '../../../core/models/user.model';
+import { UserRegister } from '../../../core/models/user.model';
+import { AuthFieldErrors, validateAuthFields, isValid } from '../../../shared/utils/auth-validators';
 
 @Component({
   selector: 'app-registre',
@@ -12,23 +13,33 @@ import {  UserRegister } from '../../../core/models/user.model';
   styleUrl: './registre.css'
 })
 export class RegisterComponent {
-  constructor(private router: Router, private authService: AuthServices , private cdn  : ChangeDetectorRef) {}
-  name: string = '';
-  email: string = '';
-  password: string = '';
-  confirmPassword: string = '';
-  error: string = '';
+  constructor(private router: Router, private authService: AuthServices, private cdn: ChangeDetectorRef) { }
+
+  name = '';
+  email = '';
+  password = '';
+  confirmPassword = '';
+  error = '';
+  errors: AuthFieldErrors = {};
+
   register() {
-    if (this.password !== this.confirmPassword) {
-      console.error('Passwords do not match');
-      return;
+    // Run shared validation
+    this.errors = validateAuthFields('register', {
+      email: this.email,
+      password: this.password,
+      confirmPassword: this.confirmPassword,
+      name: this.name
+    });
+
+    if (!isValid(this.errors)) {
+      return; // stop – template will show per-field errors
     }
 
     const user: UserRegister = {
       username: this.name,
       email: this.email,
       password: this.password,
-      confirmPassword  : this.confirmPassword ,
+      confirmPassword: this.confirmPassword,
     };
 
     this.authService.register(user).subscribe({
@@ -36,7 +47,7 @@ export class RegisterComponent {
         this.router.navigate(['/login']);
       },
       error: (err) => {
-        this.error = err.error.message || 'Registration failed';
+        this.error = err.error?.message || 'Registration failed';
         this.cdn.detectChanges();
       }
     });

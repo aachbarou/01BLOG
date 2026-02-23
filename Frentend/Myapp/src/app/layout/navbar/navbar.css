@@ -93,6 +93,29 @@
     color: var(--stone-600);
 }
 
+/* Admin Button */
+.btn-admin {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1.25rem;
+    background-color: rgba(245, 158, 11, 0.1);
+    color: var(--brand-600);
+    border: none;
+    border-radius: 9999px;
+    font-size: 0.625rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-admin:hover {
+    background-color: var(--brand-500);
+    color: white;
+}
+
 /* --- Actions Section (Right Side) --- */
 .nav-actions {
     display: flex;
