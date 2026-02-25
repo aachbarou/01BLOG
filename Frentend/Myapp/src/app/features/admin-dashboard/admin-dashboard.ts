@@ -1,13 +1,13 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AdminService } from '../../core/services/admin.service';
 import { AdminUser, AdminPost, Report } from '../../core/models/admin.model';
 
 @Component({
     selector: 'app-admin-dashboard',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, RouterModule],
     templateUrl: './admin-dashboard.html',
     styleUrl: './admin-dashboard.css'
 })
@@ -29,32 +29,63 @@ export class AdminDashboardComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.loadAll();
+        this.loadTabData('overview');
+    }
+
+    loadTabData(tab: 'overview' | 'users' | 'posts' | 'reports'): void {
+        this.activeTab = tab;
+        this.isLoading = true;
+        this.errorMessage = '';
+
+        if (tab === 'overview') {
+            this.loadAll();
+        } else if (tab === 'users') {
+            this.loadUsers(() => { this.isLoading = false; this.cdn.detectChanges(); });
+        } else if (tab === 'posts') {
+            this.loadPosts(() => { this.isLoading = false; this.cdn.detectChanges(); });
+        } else if (tab === 'reports') {
+            this.loadReports(() => { this.isLoading = false; this.cdn.detectChanges(); });
+        }
     }
 
     loadAll(): void {
-        this.isLoading = true;
         let completed = 0;
-        const done = () => { completed++; if (completed >= 3) { this.isLoading = false; this.cdn.detectChanges(); } };
+        const checkDone = () => {
+            completed++;
+            if (completed >= 3) {
+                this.isLoading = false;
+                this.cdn.detectChanges();
+            }
+        };
 
+        this.loadUsers(checkDone);
+        this.loadPosts(checkDone);
+        this.loadReports(checkDone);
+    }
+
+    loadUsers(callback?: () => void): void {
         this.adminService.getUsers().subscribe({
-            next: (res) => { this.users = res.data || []; done(); },
-            error: () => { done(); }
+            next: (res) => { this.users = res.data || []; if (callback) callback(); },
+            error: () => { if (callback) callback(); }
         });
+    }
 
+    loadPosts(callback?: () => void): void {
         this.adminService.getPosts().subscribe({
-            next: (res) => { this.posts = res.data || []; done(); },
-            error: () => { done(); }
+            next: (res) => { this.posts = res.data || []; if (callback) callback(); },
+            error: () => { if (callback) callback(); }
         });
+    }
 
+    loadReports(callback?: () => void): void {
         this.adminService.getReports().subscribe({
-            next: (res) => { this.reports = res.data || []; done(); },
-            error: () => { done(); }
+            next: (res) => { this.reports = res.data || []; if (callback) callback(); },
+            error: () => { if (callback) callback(); }
         });
     }
 
     setTab(tab: 'overview' | 'users' | 'posts' | 'reports'): void {
-        this.activeTab = tab;
+        this.loadTabData(tab);
     }
 
     // ── User Actions ──

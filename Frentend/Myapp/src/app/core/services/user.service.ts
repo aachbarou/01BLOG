@@ -30,11 +30,11 @@ export class UserService {
   private currentUserSubject = new BehaviorSubject<any>(null);
   currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   private getHeaders(): HttpHeaders {
     const token = localStorage.getItem('token');
-    return new HttpHeaders().set('Authorization', `Bearer ${token}` ).set('Content-Type', 'application/json');
+    return new HttpHeaders().set('Authorization', `Bearer ${token}`).set('Content-Type', 'application/json');
   }
 
   loadCurrentUser(): void {
@@ -48,14 +48,14 @@ export class UserService {
   }
 
   getUserProfile(id?: number): Observable<ApiResponse<any>> {
-    if  (!id &&  this.currentUserSubject.value) {
+    if (!id && this.currentUserSubject.value) {
       id = this.currentUserSubject.value.id;
     }
-    const url =   `${this.baseUrl}/${id}`  ;
+    const url = `${this.baseUrl}/${id}`;
     return this.http.get<ApiResponse<any>>(url, { headers: this.getHeaders() }).pipe(
       tap(res => {
         if (!id || res.data.isOwnProfile) {
-            this.currentUserSubject.next(res.data);
+          this.currentUserSubject.next(res.data);
         }
       })
     );
@@ -71,6 +71,11 @@ export class UserService {
         this.loadCurrentUser();
       })
     );
+  }
+
+  report(type: 'user' | 'post', targetId: number, reason: string): Observable<any> {
+    const reportData = { type, targetId, reason };
+    return this.http.post('http://localhost:8080/api/reports', reportData, { headers: this.getHeaders() });
   }
 
   clearState(): void {

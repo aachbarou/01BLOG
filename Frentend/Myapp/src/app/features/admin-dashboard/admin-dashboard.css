@@ -223,6 +223,21 @@
     gap: 1rem;
 }
 
+.clickable-user {
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.clickable-user:hover .user-avatar {
+    transform: scale(1.05);
+    transition: transform 0.2s ease;
+}
+
+.clickable-user:hover .user-name {
+    color: var(--stone-500);
+    transition: color 0.2s;
+}
+
 .user-avatar {
     width: 2.5rem;
     height: 2.5rem;
@@ -547,6 +562,33 @@
 .btn-resolve:hover {
     background-color: #b91c1c;
     transform: translateY(-2px);
+}
+
+.report-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-end;
+}
+
+.btn-action-report {
+    padding: 0.5rem 1.5rem;
+    background-color: var(--stone-100);
+    color: var(--stone-600);
+    border: none;
+    border-radius: 0.75rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.btn-action-report:hover {
+    background-color: var(--stone-200);
+    color: var(--stone-900);
 }
 
 /* ── Error Toast ── */

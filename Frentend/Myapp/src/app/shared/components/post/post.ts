@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { Post } from '../../../core/models/post.model';
 import { Comment } from '../../../core/models/comment.model';
 import { CommentComponent } from '../comment/comment';
+import { ReportModalComponent } from '../report-modal/report-modal';
 import { UserService } from '../../../core/services/user.service';
 import { PostService } from '../../../core/services/post.service';
 import { Observable } from 'rxjs';
@@ -14,15 +15,16 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 @Component({
   selector: 'app-post',
   standalone: true,
-  imports: [CommonModule, FormsModule, CommentComponent],
+  imports: [CommonModule, FormsModule, CommentComponent, ReportModalComponent],
   templateUrl: './post.html',
   styleUrl: './post.css'
 })
 export class PostComponent implements OnInit {
   @Input({ required: true }) post!: Post;
-  
+
   showComments = false;
   showOptions = false;
+  showReportModal = false;
   isLiked = false;
   isOwner = false;
   newCommentText = '';
@@ -30,34 +32,34 @@ export class PostComponent implements OnInit {
   mockComments: Comment[] = [];
 
   constructor(
-    private router: Router, 
-    private userService: UserService, 
-    public  postService: PostService ,
-    private http: HttpClient ,
-    private  cdn : ChangeDetectorRef 
-  ) {}
+    private router: Router,
+    private userService: UserService,
+    public postService: PostService,
+    private http: HttpClient,
+    private cdn: ChangeDetectorRef
+  ) { }
 
   ngOnInit() {
-  this.isLiked = !!this.post.liked;
-  this.userService.currentUser$.subscribe(user => {
-    if (user && this.post.user) {
-      this.isOwner = user.id === this.post.user.user_id;
-    }
-  });
-}
+    this.isLiked = !!this.post.liked;
+    this.userService.currentUser$.subscribe(user => {
+      if (user && this.post.user) {
+        this.isOwner = user.id === this.post.user.user_id;
+      }
+    });
+  }
 
   getHeaders() {
     const token = localStorage.getItem('token');
     return new HttpHeaders({ 'Authorization': `Bearer ${token}` });
   }
 
-  
+
   isLoadingComments = false;
 
   toggleComments() {
     this.showComments = !this.showComments;
 
-    if (this.showComments ) {
+    if (this.showComments) {
       this.fetchComments();
     }
   }
@@ -77,7 +79,7 @@ export class PostComponent implements OnInit {
       }
     });
   }
-  
+
   toggleOptions(event: Event) {
     event.stopPropagation();
     this.showOptions = !this.showOptions;
@@ -96,24 +98,24 @@ export class PostComponent implements OnInit {
       .subscribe({
         next: (response) => {
           const newCommentFromServer = response.data;
-          
+
           const mappedComment: Comment = {
             id: newCommentFromServer.id.toString(),
             postId: this.post.id.toString(),
             authorName: newCommentFromServer.user.username,
-            authorAvatar: "" ,
+            authorAvatar: "",
             content: newCommentFromServer.content,
             timestamp: new Date(newCommentFromServer.timestamp),
-            user : {
-              role : newCommentFromServer.user.role,
+            user: {
+              role: newCommentFromServer.user.role,
               user_id: newCommentFromServer.user.id,
               username: newCommentFromServer.user.username,
               email: newCommentFromServer.user.email
-              , userAvatar : newCommentFromServer.user.userAvatar
+              , userAvatar: newCommentFromServer.user.userAvatar
             }
           };
 
-          this.newCommentText = ''; 
+          this.newCommentText = '';
           this.mockComments.push(mappedComment);
           if (this.post.comments !== undefined) {
             this.post.comments++;
@@ -122,30 +124,30 @@ export class PostComponent implements OnInit {
         },
         error: (err) => console.error('Failed to send comment', err)
       });
-}
+  }
 
   onEdit() { this.router.navigate(['/edit-post', this.post.id]); }
 
   onDelete() {
 
 
-    if(this.isOwner){
-      if(confirm('Delete permanently?')) {
+    if (this.isOwner) {
+      if (confirm('Delete permanently?')) {
         this.postService.deletePost(this.post.id).subscribe(() => window.location.reload());
       }
     }
-    else{
+    else {
       alert('You are not authorized to delete this post');
     }
-    
+
   }
-toggleLike() {
+  toggleLike() {
     this.postService.toggleLike(this.post.id).subscribe({
       next: (response: ApiResponse<boolean>) => {
         const newLikeStatus = response.data;
         this.isLiked = newLikeStatus;
         this.post.liked = newLikeStatus;
-        
+
         if (this.post.likes !== undefined) {
           this.post.likes = newLikeStatus ? (this.post.likes + 1) : Math.max(0, this.post.likes - 1);
         }
@@ -155,6 +157,19 @@ toggleLike() {
     });
   }
   serveProfile(id?: number) { this.router.navigate(['/profile', id]); }
+
+  openReportModal() {
+    this.showOptions = false;
+    this.showReportModal = true;
+  }
+
+  closeReportModal() {
+    this.showReportModal = false;
+  }
+
+  onReportSubmitted() {
+    alert('Thank you, the post has been reported.');
+  }
 
   @HostListener('document:click')
   closeOptions() { this.showOptions = false; }

@@ -101,9 +101,10 @@
             <tbody>
                 @for (user of users; track user.user_id) {
                 <tr class="table-row">
-                    <td class="td-user">
-                        <img [src]="getAvatarUrl(user)" alt="avatar" class="user-avatar">
-                        <div>
+                    <td class="td-user cursor-pointer group" [routerLink]="['/profile', user.user_id]">
+                        <img [src]="getAvatarUrl(user)" alt="avatar"
+                            class="user-avatar transition-transform group-hover:scale-105">
+                        <div class="group-hover:text-stone-600 transition-colors">
                             <p class="user-name">{{ user.username }}</p>
                             <p class="user-email">{{ user.email }}</p>
                         </div>
@@ -220,7 +221,14 @@
                     <p class="report-reason">{{ report.reason }}</p>
                 </div>
             </div>
-            <button class="btn-resolve" (click)="resolveReport(report.id)">Resolve</button>
+            <div class="report-actions">
+                @if (report.type === 'user') {
+                <button class="btn-action-report" (click)="toggleBan(report.targetId)">Ban User</button>
+                } @else if (report.type === 'post') {
+                <button class="btn-action-report" (click)="deletePost(report.targetId)">Delete Post</button>
+                }
+                <button class="btn-resolve" (click)="resolveReport(report.id)">Resolve</button>
+            </div>
         </div>
         } @empty {
         <div class="empty-state-admin">

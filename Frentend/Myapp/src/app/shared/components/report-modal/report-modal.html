@@ -1,0 +1,49 @@
+<div class="modal-overlay" (click)="closeModal()">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+
+        <!-- Header -->
+        <header class="modal-header">
+            <h3>Report {{ type === 'user' ? 'User' : 'Post' }}</h3>
+            <button class="close-btn" (click)="closeModal()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </header>
+
+        <!-- Body -->
+        <div class="modal-body">
+            <p class="helper-text">Please help us understand what is wrong with this {{ type }}. Your report is
+                anonymous.</p>
+
+            <div class="reasons-list">
+                @for (reason of reasons; track reason) {
+                <label class="reason-radio">
+                    <input type="radio" name="reportReason" [value]="reason" [checked]="selectedReason === reason"
+                        (change)="selectReason(reason)">
+                    <span class="radio-custom"></span>
+                    <span class="reason-text">{{ reason }}</span>
+                </label>
+                }
+            </div>
+
+            @if (selectedReason === 'Other') {
+            <div class="other-reason-input">
+                <textarea [(ngModel)]="otherReasonText" placeholder="Please provide more details..." rows="3"
+                    class="form-textarea">
+                    </textarea>
+            </div>
+            }
+        </div>
+
+        <!-- Footer -->
+        <footer class="modal-footer">
+            <button class="btn-cancel" (click)="closeModal()" [disabled]="isSubmitting">Cancel</button>
+            <button class="btn-submit" (click)="submitReport()" [disabled]="!selectedReason || isSubmitting">
+                {{ isSubmitting ? 'Submitting...' : 'Submit Report' }}
+            </button>
+        </footer>
+    </div>
+</div>

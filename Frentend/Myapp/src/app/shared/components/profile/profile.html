@@ -7,7 +7,7 @@
                     <img [src]="profile.avatarUrl" [alt]="profile.name" class="avatar-img-large">
                 </div>
             </div>
-            
+
             <div class="user-info-main">
                 <div class="title-action-row">
                     <div class="name-stack">
@@ -15,26 +15,33 @@
                         <p class="handle-text">@{{ profile.name.split(' ')[0].toLowerCase() }}_dev</p>
                     </div>
 
-                    <div class="action-buttons">
+                    <div class="action-buttons flex gap-3">
                         @if (isOwnProfile) {
-                            <button class="btn-edit-canvas" (click) = "editProfile()">Edit Profile</button>
+                        <button class="btn-edit-canvas" (click)="editProfile()">Edit Profile</button>
                         } @else {
-                            <button 
-                                class="btn-follow-canvas" 
-                                [class.following]="profile.isFollowing"
-                                (click)="toggleFollow()">
-                                @if (profile.following) {
-                                    <span class="flex-icon">✓ Following</span>
-                                } @else {
-                                    <span class="flex-icon">+ Follow</span>
-                                }
-                            </button>
+                        <button class="btn-follow-canvas" [class.following]="profile.isFollowing"
+                            (click)="toggleFollow()">
+                            @if (profile.following) {
+                            <span class="flex-icon">✓ Following</span>
+                            } @else {
+                            <span class="flex-icon">+ Follow</span>
+                            }
+                        </button>
+                        <!-- Report User Button -->
+                        <button class="btn-report-canvas" (click)="openReportModal()" title="Report User">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
+                                <line x1="4" y1="22" x2="4" y2="15"></line>
+                            </svg>
+                        </button>
                         }
                     </div>
                 </div>
-                
+
                 <p class="bio-canvas">{{ profile.bio || 'Sharing creative technical insights with the community.' }}</p>
-                
+
                 <div class="stats-row-canvas">
                     <div class="stat-item-canvas">
                         <span class="stat-num">{{ profile.stats.posts?.length || 0 }}</span>
@@ -60,17 +67,23 @@
 
     <main class="profile-feed-grid">
         @for (post of profile.stats.posts; track post.id) {
-            <app-post [post]="post"></app-post>
+        <app-post [post]="post"></app-post>
         } @empty {
-            <div class="empty-feed">
-                <p>No publications shared yet.</p>
-            </div>  
+        <app-empty-state title="No publications yet" message="This user hasn't shared any post."
+            [showButton]="isOwnProfile" buttonText="Create Publication"
+            (actionClicked)="goCreatePost()"></app-empty-state>
         }
     </main>
 </div>
 } @else {
-    <div class="loading-state">         
-        <div class="pulse-loader"></div>
-        <p>Fetching profile...</p>
-    </div>
+<div class="loading-state">
+    <div class="pulse-loader"></div>
+    <p>Fetching profile...</p>
+</div>
+}
+
+@if (showReportModal && profile) {
+<app-report-modal type="user" [targetId]="profile.user_id || profile.id" (close)="closeReportModal()"
+    (submitted)="onReportSubmitted()">
+</app-report-modal>
 }

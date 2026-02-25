@@ -1,6 +1,8 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PostComponent } from '../post/post';
+import { EmptyStateComponent } from '../empty-state/empty-state';
+import { ReportModalComponent } from '../report-modal/report-modal';
 import { UserService } from '../../../core/services/user.service';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
@@ -8,7 +10,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, PostComponent],
+  imports: [CommonModule, PostComponent, EmptyStateComponent, ReportModalComponent],
   templateUrl: './profile.html',
   styleUrl: './profile.css'
 })
@@ -16,7 +18,7 @@ export class ProfileComponent implements OnInit {
   profile?: any;
   isOwnProfile: boolean = false;
   isLoadingFollow: boolean = false;
-  
+
   constructor(
     private userService: UserService,
     private cdn: ChangeDetectorRef,
@@ -27,7 +29,7 @@ export class ProfileComponent implements OnInit {
     this.userService.getUserProfile(id).subscribe({
       next: (response) => {
         this.profile = response.data;
-        this.profile.avatarUrl = this.profile.avatarUrl ;
+        this.profile.avatarUrl = this.profile.avatarUrl;
         this.isOwnProfile = this.profile.owned;
         this.cdn.detectChanges();
       }
@@ -46,9 +48,9 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  
 
-  
+
+
 
   toggleFollow(): void {
     if (!this.profile || this.isOwnProfile || this.isLoadingFollow) return;
@@ -61,11 +63,29 @@ export class ProfileComponent implements OnInit {
         this.cdn.detectChanges();
         this.isLoadingFollow = false;
       },
-      error: () => this.isLoadingFollow = false 
+      error: () => this.isLoadingFollow = false
     });
   }
 
   editProfile(): void {
     this.router.navigate(['/profile/settings']);
+  }
+
+  goCreatePost(): void {
+    this.router.navigate(['/create-post']);
+  }
+
+  showReportModal = false;
+
+  openReportModal(): void {
+    this.showReportModal = true;
+  }
+
+  closeReportModal(): void {
+    this.showReportModal = false;
+  }
+
+  onReportSubmitted(): void {
+    alert('Thank you, the user has been reported.');
   }
 }
