@@ -29,16 +29,17 @@ public class UserProfile {
         }
     }
 
-    public UserProfile(com.project.block.entity.User user, List<PostDTO> posts, boolean isOwned, boolean Needposts, int followers, int following,
-            boolean isFollowing) {
+    public UserProfile(com.project.block.entity.User user, List<PostDTO> posts, boolean isOwned, boolean Needposts,
+            int followers, int following,
+            boolean isFollowing, String fileBaseUrl) {
         this.id = user.getUser_id();
         this.name = user.getUsername();
         this.email = user.getEmail();
         this.isOwned = isOwned;
         this.isFollowing = isFollowing;
         this.avatarUrl = user.getUserAvatar() != null && !user.getUserAvatar().isEmpty()
-        ? "http://localhost:8080/files/" + user.getUserAvatar()
-        : "https://ui-avatars.com/api/?name=" + user.getUsername();
+                ? fileBaseUrl + user.getUserAvatar()
+                : "https://ui-avatars.com/api/?name=" + user.getUsername();
 
         this.bio = user.getStatus();
         this.stats = new Stats(posts, followers, following, user.getRole(), Needposts);

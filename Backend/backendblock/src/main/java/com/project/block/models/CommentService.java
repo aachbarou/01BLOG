@@ -19,10 +19,13 @@ import com.project.block.repository.PostRepository;
 public class CommentService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
+    private final NotificationService notificationService;
 
-    public CommentService(CommentRepository commentRepository, PostRepository postRepository) {
+    public CommentService(CommentRepository commentRepository, PostRepository postRepository,
+            NotificationService notificationService) {
         this.commentRepository = commentRepository;
         this.postRepository = postRepository;
+        this.notificationService = notificationService;
     }
 
     public Comment addComment(Long postId, String content) {
@@ -36,7 +39,14 @@ public class CommentService {
         comment.setUser(currentUser);
         comment.setPost(post);
 
-        return commentRepository.save(comment);
+        Comment savedComment = commentRepository.save(comment);
+
+        if (!post.getUser().getUser_id().equals(currentUser.getUser_id())) {
+            notificationService.createNotification(post.getUser(), currentUser, "comment",
+                    "commented on your post \"" + post.getTitle() + "\"");
+        }
+
+        return savedComment;
     }
 
     public List<Comment> getCommentsByPostId(Long postId) {

@@ -12,10 +12,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class SubscriptionService {
     private final Subscrepository subscrepository;
     private final UserRepository userRepository;
+    private final NotificationService notificationService;
 
-    public SubscriptionService(Subscrepository subscrepository, UserRepository userRepository) {
+    public SubscriptionService(Subscrepository subscrepository, UserRepository userRepository,
+            NotificationService notificationService) {
         this.subscrepository = subscrepository;
         this.userRepository = userRepository;
+        this.notificationService = notificationService;
     }
 
     @Transactional
@@ -36,6 +39,9 @@ public class SubscriptionService {
                             sub.setFollower(currentUser);
                             sub.setFollowed(targetUser);
                             subscrepository.save(sub);
+
+                            notificationService.createNotification(targetUser, currentUser, "follow",
+                                    "started following you");
                         });
     }
 

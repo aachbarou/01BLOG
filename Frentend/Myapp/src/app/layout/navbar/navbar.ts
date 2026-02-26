@@ -5,6 +5,7 @@ import { AuthServices } from '../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
 import { setDefaultHighWaterMark } from 'node:stream';
 import { UserService } from '../../core/services/user.service';
+import { NotificationService } from '../../core/services/notification.service';
 
 declare var lucide: any;
 
@@ -19,7 +20,7 @@ declare var lucide: any;
   providedIn: 'root'
 })
 export class Navbar implements OnInit, AfterViewChecked {
-  constructor(private router: Router, private Auth: AutGuard, private Auths: AuthServices, private User: UserService) { }
+  constructor(private router: Router, private Auth: AutGuard, private Auths: AuthServices, private User: UserService, private notificationService: NotificationService) { }
 
   formData = {
     name: '',
@@ -30,6 +31,26 @@ export class Navbar implements OnInit, AfterViewChecked {
   };
 
   isDropdownOpen: boolean = false;
+  isNotifOpen: boolean = false;
+
+  notifications: any[] = [];
+
+  get unreadCount(): number {
+    return this.notifications.filter(n => !n.isRead).length;
+  }
+
+  loadNotifications() {
+    this.notificationService.getNotifications().subscribe({
+      next: (res) => {
+        if (res && res.data) {
+          this.notifications = res.data;
+          console.log(this.notifications);
+        }
+      },
+      error: (err) => console.error('Failed to load notifications', err)
+    });
+  }
+
 
 
   ngOnInit() {
@@ -41,13 +62,13 @@ export class Navbar implements OnInit, AfterViewChecked {
         this.formData.email = user.email;
         this.formData.role = user.stats.role;
         this.formData.avatarUrl = user.avatarUrl;
+        this.loadNotifications();
       }
     });
   }
 
   ngAfterViewChecked() {
     lucide.createIcons();
-
   }
 
   profileToggle(event?: Event) {
@@ -55,6 +76,34 @@ export class Navbar implements OnInit, AfterViewChecked {
       event.stopPropagation();
     }
     this.isDropdownOpen = !this.isDropdownOpen;
+    this.isNotifOpen = false;
+  }
+
+  notifToggle(event?: Event) {
+    if (event) {
+      event.stopPropagation();
+    }
+    this.isNotifOpen = !this.isNotifOpen;
+    this.isDropdownOpen = false;
+  }
+
+  onMarkRead(id: number, event?: Event) {
+    if (event) {
+      event.stopPropagation();
+    }
+    this.notificationService.markAsRead(id).subscribe({
+      next: () => {
+        this.notifications = this.notifications.map(n => n.id === id ? { ...n, isRead: true } : n);
+      }
+    });
+  }
+
+  onMarkAllRead() {
+    this.notificationService.markAllAsRead().subscribe({
+      next: () => {
+        this.notifications = this.notifications.map(n => ({ ...n, isRead: true }));
+      }
+    });
   }
 
   navigateToProfile() {
@@ -76,8 +125,9 @@ export class Navbar implements OnInit, AfterViewChecked {
   onDocumentClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
 
-    if (!target.closest('.profile-dropdown-container')) {
+    if (!target.closest('.profile-dropdown-container') && !target.closest('.notif-dropdown-container')) {
       this.isDropdownOpen = false;
+      this.isNotifOpen = false;
     }
   }
   navigateToPostCreation() {

@@ -32,6 +32,7 @@ public class PostService {
     @Value("${file.upload-dir}")
     private String uploadDir;
     private final LikeRepository likeRepository;
+    private final NotificationService notificationService;
 
     /**
      * Constructor for PostService
@@ -39,10 +40,11 @@ public class PostService {
      * @param postRepository Repository for Post entity
      */
     public PostService(PostRepository postRepository, CommentRepository CommentRepository,
-            LikeRepository likeRepository) {
+            LikeRepository likeRepository, NotificationService notificationService) {
         this.postRepository = postRepository;
         this.CommentRepository = CommentRepository;
         this.likeRepository = likeRepository;
+        this.notificationService = notificationService;
     }
 
     /**
@@ -214,6 +216,12 @@ public class PostService {
             likeRepository.save(new Like(currentUser, post));
             post.setLikes((post.getLikes() != null ? post.getLikes() : 0) + 1);
             postRepository.save(post);
+
+            if (!post.getUser().getUser_id().equals(currentUser.getUser_id())) {
+                notificationService.createNotification(post.getUser(), currentUser, "like",
+                        "liked your post \"" + post.getTitle() + "\"");
+            }
+
             return true; // Liked
         }
     }
