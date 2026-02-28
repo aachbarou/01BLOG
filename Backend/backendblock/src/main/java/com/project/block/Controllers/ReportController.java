@@ -1,6 +1,7 @@
 package com.project.block.Controllers;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,11 +25,12 @@ public class ReportController {
     public ResponseEntity<?> submitReport(@RequestBody ReportRequest request) {
         try {
             Report report = reportService.createReport(request.getType(), request.getTargetId(), request.getReason());
-            return ResponseEntity.status(201).body(new ResposeData("Report submitted successfully", 201, report));
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(new ResposeData("Report submitted successfully", 201, report));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(new ResposeData(e.getMessage(), 400, null));
         } catch (Exception e) {
-            return ResponseEntity.status(500)
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ResposeData("Failed to submit report: " + e.getMessage(), 500, null));
         }
     }

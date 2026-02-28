@@ -3,6 +3,7 @@ package com.project.block.Controllers;
 import com.project.block.dto.ResposeData;
 import com.project.block.models.SubscriptionService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,7 +21,7 @@ public class FolowController {
             subscriptionService.toggleFollow(id);
             return ResponseEntity.ok(new ResposeData("Follow status updated", 200, null));
         } catch (Exception e) {
-            return ResponseEntity.status(400).body(new ResposeData(e.getMessage(), 400, null));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResposeData(e.getMessage(), 400, null));
         }
     }
 }

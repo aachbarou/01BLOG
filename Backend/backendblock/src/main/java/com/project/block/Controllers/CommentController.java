@@ -6,6 +6,7 @@ import com.project.block.entity.Comment;
 import com.project.block.models.CommentService;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public class CommentController {
             List<CommentDTO> comments = commentService.getCommentsDTO(postId);
             return ResponseEntity.ok(new ResposeData("Comments fetched successfully", 200, comments));
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new ResposeData("Error", 500, null));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResposeData("Error", 500, null));
         }
     }
 
@@ -44,10 +45,11 @@ public class CommentController {
             String cleanContent = content.replace("\"", "").trim();
             // we must Check the Post Exits in the postRepository before adding a comment
             if (!this.postService.ifPostExists(postId)) {
-                return ResponseEntity.status(404).body(new ResposeData("Post not found", 404, null));
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResposeData("Post not found", 404, null));
             }
             if (cleanContent.isEmpty()) {
-                return ResponseEntity.status(400).body(new ResposeData("Comment content cannot be empty", 400, null));
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(new ResposeData("Comment content cannot be empty", 400, null));
             }
 
             Comment savedComment = commentService.addComment(postId, cleanContent);
@@ -55,7 +57,8 @@ public class CommentController {
 
             return ResponseEntity.ok(new ResposeData("Comment added successfully", 200, savedCommentDTO));
         } catch (Exception e) {
-            return ResponseEntity.status(400).body(new ResposeData("Error: " + e.getMessage(), 400, null));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ResposeData("Error: " + e.getMessage(), 400, null));
         }
     }
 }

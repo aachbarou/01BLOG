@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
 
 import com.project.block.dto.PostDTO;
 import com.project.block.dto.ResposeData;
@@ -54,9 +55,10 @@ public class PostController {
             postService.createPost(post, file);
             return ResponseEntity.ok(new ResposeData("Post  Created  Seccess...", 200, null));
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(400).body("hada  hwa  error " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("hada  hwa  error " + e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Internal Server Error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Internal Server Error: " + e.getMessage());
         }
 
     }
@@ -72,7 +74,7 @@ public class PostController {
             List<PostDTO> posts = postService.getAllVisiblePostsDTO();
             return ResponseEntity.ok(new ResposeData("Posts fetched successfully", 200, posts));
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new ResposeData("Error", 500, null));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResposeData("Error", 500, null));
         }
     }
 
@@ -97,13 +99,17 @@ public class PostController {
 
         try {
             if (!postService.canEditPost(id)) {
-                return ResponseEntity.status(403).body(new ResposeData("Unauthorized", 403, null));
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ResposeData("Unauthorized", 403, null));
             }
 
             this.postService.updatePost(id, post, file);
             return ResponseEntity.ok(new ResposeData("Post updated successfully", 200, null));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ResposeData("Error: " + e.getMessage(), 400, null));
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new ResposeData("Error: " + e.getMessage(), 500, null));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResposeData("Error: " + e.getMessage(), 500, null));
         }
     }
 
@@ -111,17 +117,17 @@ public class PostController {
     public ResponseEntity<?> deletePost(@PathVariable Long id) {
         try {
             if (!postService.canDeletePost(id)) {
-                return ResponseEntity.status(403)
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
                         .body(new ResposeData("You are not allowed to delete this post", 403, null));
             }
         } catch (Exception e) {
-            return ResponseEntity.status(404).body(new ResposeData("404 Not Found", 404, null));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResposeData("404 Not Found", 404, null));
         }
         try {
             postService.deletePost(id);
             return ResponseEntity.ok(new ResposeData("Post deleted successfully", 200, null));
         } catch (Exception e) {
-            return ResponseEntity.status(500)
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ResposeData("Internal Server Error" + e.getMessage(), 500, null));
         }
     }
@@ -131,7 +137,7 @@ public class PostController {
         try {
             return ResponseEntity.ok(new ResposeData("Post fetched successfully", 200, postService.getPostById(id)));
         } catch (Exception e) {
-            return ResponseEntity.status(500)
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ResposeData("Internal Server Error" + e.getMessage(), 500, null));
         }
     }
@@ -142,7 +148,7 @@ public class PostController {
             boolean liked = postService.toggleLike(id);
             return ResponseEntity.ok(new ResposeData(liked ? "Liked" : "Unliked", 200, liked));
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
