@@ -150,6 +150,21 @@ public class PostService {
 
     public void updatePost(Long id, PostDTO postDto, org.springframework.web.multipart.MultipartFile file)
             throws java.io.IOException {
+
+        if (postDto.getTitle() == null || postDto.getTitle().trim().isEmpty()) {
+            throw new IllegalArgumentException("Title is required.");
+        }
+        if (postDto.getTitle().length() < 5 || postDto.getTitle().length() > 40) {
+            throw new IllegalArgumentException("Title must be between 5 and 40 characters.");
+        }
+
+        if (postDto.getContent() == null || postDto.getContent().trim().isEmpty()) {
+            throw new IllegalArgumentException("Content cannot be empty.");
+        }
+        if (postDto.getContent().length() > 1000) {
+            throw new IllegalArgumentException("Content is too long (limit is 1000 characters).");
+        }
+
         Post post = postRepository.findById(id).orElseThrow(() -> new RuntimeException("Post not found"));
         post.setTitle(postDto.getTitle());
         post.setContent(postDto.getContent());

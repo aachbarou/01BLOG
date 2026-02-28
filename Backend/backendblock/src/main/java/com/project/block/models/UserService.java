@@ -29,27 +29,31 @@ public class UserService {
     private final JwtUtil JwtUtil;
     private final PasswordEncoder passwordEncoder;
     private final SubscriptionService subscriptionService;
+    private final com.project.block.repository.NotificationRepository notificationRepository;
     @org.springframework.beans.factory.annotation.Value("${file.upload-dir}")
     private String uploadDir;
 
     /**
      * Constructor for UserService
      * 
-     * @param userRepository      Repository for User entity
-     * @param TokenRepository     Repository for Token entity
-     * @param JwtUtil             Utility for JWT operations
-     * @param postRepository      Repository for Post entity
-     * @param passwordEncoder     Password encoder for password operations
-     * @param subscriptionService Service for subscription operations
+     * @param userRepository         Repository for User entity
+     * @param TokenRepository        Repository for Token entity
+     * @param JwtUtil                Utility for JWT operations
+     * @param postRepository         Repository for Post entity
+     * @param passwordEncoder        Password encoder for password operations
+     * @param subscriptionService    Service for subscription operations
+     * @param notificationRepository Repository for Notification entity
      */
     public UserService(UserRepository userRepository, TokenRepository TokenRepository, JwtUtil JwtUtil,
-            PostRepository postRepository, PasswordEncoder passwordEncoder, SubscriptionService subscriptionService) {
+            PostRepository postRepository, PasswordEncoder passwordEncoder, SubscriptionService subscriptionService,
+            com.project.block.repository.NotificationRepository notificationRepository) {
         this.TokenRepository = TokenRepository;
         this.JwtUtil = JwtUtil;
         this.userRepository = userRepository;
         this.postRepository = postRepository;
         this.passwordEncoder = passwordEncoder;
         this.subscriptionService = subscriptionService;
+        this.notificationRepository = notificationRepository;
     }
 
     /**
@@ -226,6 +230,11 @@ public class UserService {
 
     public String updateUserProfile(User currentUser, String username, String bio, MultipartFile file)
             throws IOException {
+
+        if (username == null || username.trim().isEmpty()) {
+            throw new IllegalArgumentException("Username cannot be empty.");
+        }
+
         currentUser.setUsername(username);
         currentUser.setStatus(bio);
 
@@ -267,6 +276,8 @@ public class UserService {
         TokenRepository.deleteByUser(user);
         // Clean up subscriptions (both directions)
         subscriptionService.deleteAllByUser(user);
+        // Clean up notifications
+        notificationRepository.deleteByRecipientOrSender(user, user);
         // Now delete user (cascades to posts, comments, likes)
         userRepository.delete(user);
     }

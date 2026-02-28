@@ -23,6 +23,10 @@ public class NotificationService {
         if (recipient.getUser_id().equals(sender.getUser_id())) {
             return null; // Don't notify yourself
         }
+
+        if ("like".equals(type) || "follow".equals(type)) {
+            notificationRepository.deleteByRecipientAndSenderAndType(recipient, sender, type);
+        }
         Notification notification = new Notification();
         notification.setRecipient(recipient);
         notification.setSender(sender);
