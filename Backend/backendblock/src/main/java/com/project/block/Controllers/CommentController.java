@@ -21,9 +21,10 @@ public class CommentController {
     private final CommentService commentService;
     private final PostService postService;
 
-    // public CommentController(CommentService commentService , PostService postService) {
-    //     this.postService = postService;
-    //     this.commentService = commentService;
+    // public CommentController(CommentService commentService , PostService
+    // postService) {
+    // this.postService = postService;
+    // this.commentService = commentService;
 
     // }
 
@@ -37,31 +38,24 @@ public class CommentController {
         }
     }
 
-
     @PostMapping("/post/{postId}")
-public ResponseEntity<?> postComment(@PathVariable Long postId, @RequestBody String content) {
-    try {
-        String cleanContent = content.replace("\"", "").trim();
-        // we  must  Check  the  Post  Exits  in  the  postRepository  before  adding  a  comment
-        if ( !this.postService.ifPostExists(postId)) {
-            return ResponseEntity.status(404).body(new ResposeData("Post not found", 404, null));
-        }
-        if ( cleanContent.isEmpty() ) {
-            return ResponseEntity.status(400).body(new ResposeData("Comment content cannot be empty", 400, null));
-        }
-        
+    public ResponseEntity<?> postComment(@PathVariable Long postId, @RequestBody String content) {
+        try {
+            String cleanContent = content.replace("\"", "").trim();
+            // we must Check the Post Exits in the postRepository before adding a comment
+            if (!this.postService.ifPostExists(postId)) {
+                return ResponseEntity.status(404).body(new ResposeData("Post not found", 404, null));
+            }
+            if (cleanContent.isEmpty()) {
+                return ResponseEntity.status(400).body(new ResposeData("Comment content cannot be empty", 400, null));
+            }
 
+            Comment savedComment = commentService.addComment(postId, cleanContent);
+            CommentDTO savedCommentDTO = commentService.mapToDTO(savedComment);
 
-        Comment savedComment = commentService.addComment(postId, cleanContent);
-        
-        if (savedComment.getUser() != null) {
-            savedComment.getUser().setEmail(null);
-            savedComment.getUser().setPassword(null);
+            return ResponseEntity.ok(new ResposeData("Comment added successfully", 200, savedCommentDTO));
+        } catch (Exception e) {
+            return ResponseEntity.status(400).body(new ResposeData("Error: " + e.getMessage(), 400, null));
         }
-        
-        return ResponseEntity.ok(new ResposeData("Comment added successfully", 200, savedComment));
-    } catch (Exception e) {
-        return ResponseEntity.status(400).body(new ResposeData("Error: " + e.getMessage(), 400, null));
     }
-}
 }

@@ -4,12 +4,12 @@ export interface Comment {
     authorName: string;
     authorAvatar: string;
     content: string;
-    timestamp: Date;
+    timestamp: string;
     user: {
-        role : string;
-        user_id: number; 
+        role: string;
+        user_id: number;
         username: string;
-        userAvatar : string;
+        userAvatar: string;
         email: string;
     };
 }

@@ -50,6 +50,12 @@ export class AdminService {
         );
     }
 
+    changePostStatus(id: number, status: string): Observable<ApiResponse<any>> {
+        return this.http.put<ApiResponse<any>>(
+            `${this.apiUrl}/posts/${id}/status?status=${status}`, {}, { headers: this.getHeaders() }
+        );
+    }
+
     // ── Reports ──
     getReports(): Observable<ApiResponse<Report[]>> {
         return this.http.get<ApiResponse<Report[]>>(

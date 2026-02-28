@@ -12,13 +12,20 @@ import { Router } from '@angular/router';
   styleUrl: './comment.css'
 })
 export class CommentComponent {
-  @Input({ required: true })  comment!: Comment;
-  public postservice : PostService ;
-  private router : Router ; 
-  constructor( postservice : PostService , private rrouter : Router ) {
-    this.postservice = postservice ;
-    this.router = rrouter ;
+  @Input({ required: true }) comment!: Comment;
+  public postservice: PostService;
+  private router: Router;
+  constructor(postservice: PostService, private rrouter: Router) {
+    this.postservice = postservice;
+    this.router = rrouter;
 
   }
   serveProfile(id?: number) { this.router.navigate(['/profile', id]); }
+
+  isContentExpanded = false;
+  contentLimit = 150;
+
+  toggleContent() {
+    this.isContentExpanded = !this.isContentExpanded;
+  }
 }

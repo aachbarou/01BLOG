@@ -169,7 +169,7 @@ public class UserService {
     }
 
     public List<Post> findPostsByUserId(Long userId) {
-        return this.postRepository.findPostsByUserId(userId);
+        return this.postRepository.findPostsByUserIdAndStatus(userId, "visible");
     }
 
     public int getFollowersCount(User user) {

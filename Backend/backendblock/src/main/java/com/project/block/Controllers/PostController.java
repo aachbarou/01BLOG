@@ -27,12 +27,13 @@ public class PostController {
     private final PostService postService;
     private final PostRepository postRepository;
     private final LikeRepository likeRepository;
+
     /**
      * Constructor for PostController
      * 
      * @param postService Service for handling post operations
      */
-    public PostController(PostService postService , PostRepository postRepository , LikeRepository likeRepository) {
+    public PostController(PostService postService, PostRepository postRepository, LikeRepository likeRepository) {
         this.postService = postService;
         this.postRepository = postRepository;
         this.likeRepository = likeRepository;
@@ -65,10 +66,10 @@ public class PostController {
      * 
      * @return ResponseEntity containing all posts
      */
-   @GetMapping
+    @GetMapping
     public ResponseEntity<?> getAllPosts() {
         try {
-            List<PostDTO> posts = postService.getAllPostsDTO();
+            List<PostDTO> posts = postService.getAllVisiblePostsDTO();
             return ResponseEntity.ok(new ResposeData("Posts fetched successfully", 200, posts));
         } catch (Exception e) {
             return ResponseEntity.status(500).body(new ResposeData("Error", 500, null));
@@ -83,53 +84,57 @@ public class PostController {
      */
     @GetMapping("/User/{userId}")
     public ResponseEntity<?> getUserPosts(@PathVariable Long userId) {
-        
-        return ResponseEntity.ok(new ResposeData("Posts fetched successfully", 200, postService.getPostsByUserId(userId)));
+
+        return ResponseEntity
+                .ok(new ResposeData("Posts fetched successfully", 200, postService.getVisiblePostsByUserId(userId)));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updatePost(
-        @PathVariable Long id, 
-        @org.springframework.web.bind.annotation.ModelAttribute PostDTO post,
-        @org.springframework.web.bind.annotation.RequestParam(value = "file", required = false) org.springframework.web.multipart.MultipartFile file) {
-    
-    try {
-        if (!postService.canEditPost(id)) {
-            return ResponseEntity.status(403).body(new ResposeData("Unauthorized", 403, null));
+            @PathVariable Long id,
+            @org.springframework.web.bind.annotation.ModelAttribute PostDTO post,
+            @org.springframework.web.bind.annotation.RequestParam(value = "file", required = false) org.springframework.web.multipart.MultipartFile file) {
+
+        try {
+            if (!postService.canEditPost(id)) {
+                return ResponseEntity.status(403).body(new ResposeData("Unauthorized", 403, null));
+            }
+
+            this.postService.updatePost(id, post, file);
+            return ResponseEntity.ok(new ResposeData("Post updated successfully", 200, null));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new ResposeData("Error: " + e.getMessage(), 500, null));
         }
-        
-        this.postService.updatePost(id, post, file); 
-        return ResponseEntity.ok(new ResposeData("Post updated successfully", 200, null));
-    } catch (Exception e) {
-        return ResponseEntity.status(500).body(new ResposeData("Error: " + e.getMessage(), 500, null));
     }
-}   
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletePost(@PathVariable Long id){
-         try  {
+    public ResponseEntity<?> deletePost(@PathVariable Long id) {
+        try {
             if (!postService.canDeletePost(id)) {
-                return ResponseEntity.status(403).body(new ResposeData("You are not allowed to delete this post", 403, null));
+                return ResponseEntity.status(403)
+                        .body(new ResposeData("You are not allowed to delete this post", 403, null));
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.status(404).body(new ResposeData("404 Not Found", 404, null));
         }
         try {
             postService.deletePost(id);
             return ResponseEntity.ok(new ResposeData("Post deleted successfully", 200, null));
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new ResposeData("Internal Server Error" + e.getMessage(), 500, null));
+            return ResponseEntity.status(500)
+                    .body(new ResposeData("Internal Server Error" + e.getMessage(), 500, null));
         }
-    }   
+    }
+
     @GetMapping("/{id}")
-    public ResponseEntity<?> getPostById(@PathVariable Long id){
+    public ResponseEntity<?> getPostById(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(new ResposeData("Post fetched successfully", 200, postService.getPostById(id)));
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(new ResposeData("Internal Server Error" + e.getMessage(), 500, null));
+            return ResponseEntity.status(500)
+                    .body(new ResposeData("Internal Server Error" + e.getMessage(), 500, null));
         }
-    }   
-
+    }
 
     @PostMapping("/{id}/like")
     public ResponseEntity<?> toggleLike(@PathVariable Long id) {
@@ -140,9 +145,10 @@ public class PostController {
             return ResponseEntity.status(500).body(e.getMessage());
         }
     }
-        public boolean isLikedByCurrentUser(Long postId) {
+
+    public boolean isLikedByCurrentUser(Long postId) {
         User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Post post = postRepository.findById(postId).orElse(null);
         return post != null && likeRepository.existsByUserAndPost(currentUser, post);
-        }
+    }
 }

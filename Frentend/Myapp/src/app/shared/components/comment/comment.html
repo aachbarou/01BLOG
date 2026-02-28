@@ -1,10 +1,20 @@
 <div class="comment-wrapper animate-in">
-  <img [src]="this.postservice.getAvatarUrl(comment.user.userAvatar , comment.authorName)" class="comment-avatar" (click)="serveProfile(comment.user.user_id)" alt="User Avatar" />
+  <img [src]="this.postservice.getAvatarUrl(comment.user.userAvatar , comment.authorName)" class="comment-avatar"
+    (click)="serveProfile(comment.user.user_id)" alt="User Avatar" />
   <div class="comment-bubble">
     <div class="comment-header">
-      <span  (click)="serveProfile(comment.user.user_id)" class="author-name">{{ comment.user.username }}</span>
+      <span (click)="serveProfile(comment.user.user_id)" class="author-name">{{ comment.user.username }}</span>
       <span class="comment-date">{{comment.timestamp}}</span>
     </div>
-    <p class="comment-text">{{ comment.content }}</p>
+    <p class="comment-text" style="white-space: pre-wrap;">
+      {{ isContentExpanded || comment.content.length <= contentLimit ? comment.content : (comment.content |
+        slice:0:contentLimit) + '...' }} @if (comment.content.length> contentLimit) {
+        <button class="show-more-btn"
+          style="background: none; border: none; font-size: 0.85em; cursor: pointer; color: #6b7280; padding: 0; margin-left: 4px;"
+          (click)="toggleContent()">
+          {{ isContentExpanded ? 'show less' : 'show more' }}
+        </button>
+        }
+    </p>
   </div>
 </div>

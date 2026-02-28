@@ -132,6 +132,39 @@ export class AdminDashboardComponent implements OnInit {
         });
     }
 
+    togglePostStatus(id: number, currentStatus: string | undefined): void {
+        const newStatus = currentStatus === 'hidden' ? 'visible' : 'hidden';
+        this.adminService.changePostStatus(id, newStatus).subscribe({
+            next: () => {
+                this.posts = this.posts.map(p =>
+                    p.id === id ? { ...p, status: newStatus } : p
+                );
+                this.cdn.detectChanges();
+            },
+            error: (err) => {
+                this.errorMessage = err.error?.message || 'Failed to update post status';
+                this.cdn.detectChanges();
+                setTimeout(() => { this.errorMessage = ''; this.cdn.detectChanges(); }, 4000);
+            }
+        });
+    }
+
+    hidePostFromReport(targetId: number): void {
+        this.adminService.changePostStatus(targetId, 'hidden').subscribe({
+            next: () => {
+                this.posts = this.posts.map(p =>
+                    p.id === targetId ? { ...p, status: 'hidden' } : p
+                );
+                this.cdn.detectChanges();
+            },
+            error: (err) => {
+                this.errorMessage = err.error?.message || 'Failed to hide post';
+                this.cdn.detectChanges();
+                setTimeout(() => { this.errorMessage = ''; this.cdn.detectChanges(); }, 4000);
+            }
+        });
+    }
+
     // ── Report Actions ──
     resolveReport(id: number): void {
         this.adminService.resolveReport(id).subscribe({

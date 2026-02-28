@@ -57,7 +57,7 @@ public class CommentService {
         CommentDTO dto = new CommentDTO();
         dto.setId(comment.getId());
         dto.setContent(comment.getContent());
-        dto.setTimestamp(comment.getTimestamp());
+        dto.setTimestamp(com.project.block.util.TimeFormatterUtil.getTimeAgo(comment.getTimestamp()));
 
         if (comment.getUser() != null) {
             dto.setUser(new UserDTO(

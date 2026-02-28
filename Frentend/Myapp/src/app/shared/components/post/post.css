@@ -7,12 +7,13 @@
 /* --- بطاقة المنشور الرئيسية --- */
 .post-card-container {
     background: #ffffff;
-    border-radius: 2rem; /* حواف دائرية كبيرة تطابق التصميم العصري */
+    border-radius: 2rem;
+    /* حواف دائرية كبيرة تطابق التصميم العصري */
     overflow: hidden;
     border: 1px solid var(--stone-100);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    max-width: 44rem; 
+    max-width: 44rem;
     margin: 0 auto;
 }
 
@@ -78,7 +79,10 @@
     justify-content: center;
 }
 
-.more-btn:hover { background: var(--stone-50); color: var(--stone-900); }
+.more-btn:hover {
+    background: var(--stone-50);
+    color: var(--stone-900);
+}
 
 .options-menu {
     position: absolute;
@@ -89,7 +93,7 @@
     background: white;
     border-radius: 1.25rem;
     border: 1px solid var(--stone-100);
-    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
     z-index: 100;
     padding: 0.5rem;
 }
@@ -111,9 +115,18 @@
     text-align: left;
 }
 
-.menu-item:hover { background-color: var(--stone-50); color: var(--stone-900); }
-.menu-item.delete-text { color: #ef4444; }
-.menu-item.delete-text:hover { background-color: #fef2f2; }
+.menu-item:hover {
+    background-color: var(--stone-50);
+    color: var(--stone-900);
+}
+
+.menu-item.delete-text {
+    color: #ef4444;
+}
+
+.menu-item.delete-text:hover {
+    background-color: #fef2f2;
+}
 
 /* --- منطقة الوسائط --- */
 .post-media-area {
@@ -163,10 +176,24 @@
     color: var(--stone-900);
 }
 
-.like-btn.liked { color: #ef4444; }
-.comment-btn:hover { color: var(--brand-500); }
-.share-btn { background: none; border: none; color: var(--stone-300); cursor: pointer; }
-.share-btn:hover { color: var(--stone-900); }
+.like-btn.liked {
+    color: #ef4444;
+}
+
+.comment-btn:hover {
+    color: var(--brand-500);
+}
+
+.share-btn {
+    background: none;
+    border: none;
+    color: var(--stone-300);
+    cursor: pointer;
+}
+
+.share-btn:hover {
+    color: var(--stone-900);
+}
 
 /* --- محتوى النص --- */
 .post-text-content {
@@ -180,12 +207,16 @@
     color: var(--stone-900);
     margin-bottom: 0.5rem;
     line-height: 1.2;
+    word-break: break-word;
+    overflow-wrap: anywhere;
 }
 
 .post-description {
     font-size: 0.875rem;
     color: var(--stone-500);
     line-height: 1.6;
+    word-break: break-word;
+    overflow-wrap: anywhere;
 }
 
 /* --- منطقة التعليقات الموسعة --- */
@@ -220,7 +251,8 @@
     width: 100%;
     background-color: white;
     border: 1px solid var(--stone-200);
-    border-radius: 9999px; /* شكل الحبة الدائري */
+    border-radius: 9999px;
+    /* شكل الحبة الدائري */
     padding: 0.65rem 3rem 0.65rem 1.25rem;
     font-size: 0.85rem;
     outline: none;
@@ -249,18 +281,60 @@
     transition: color 0.2s;
 }
 
-.send-icon-btn:hover { color: var(--brand-500); }
+.send-icon-btn:hover {
+    color: var(--brand-500);
+}
 
-.clicked { cursor: pointer; }
-.clicked:hover { color: var(--brand-600); }
+.clicked {
+    cursor: pointer;
+}
 
-.animate-in { animation: fadeIn 0.6s ease-out; }
-.animate-pop { animation: popScale 0.2s ease-out; }
-.animate-slide-down { animation: slideDown 0.4s ease-out; }
+.clicked:hover {
+    color: var(--brand-600);
+}
 
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes popScale { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-@keyframes slideDown { 
-    from { opacity: 0; transform: translateY(-10px); } 
-    to { opacity: 1; transform: translateY(0); } 
+.animate-in {
+    animation: fadeIn 0.6s ease-out;
+}
+
+.animate-pop {
+    animation: popScale 0.2s ease-out;
+}
+
+.animate-slide-down {
+    animation: slideDown 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes popScale {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

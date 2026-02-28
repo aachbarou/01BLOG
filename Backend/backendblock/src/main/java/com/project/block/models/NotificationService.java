@@ -7,8 +7,6 @@ import com.project.block.repository.NotificationRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -68,22 +66,8 @@ public class NotificationService {
         dto.setFrom(notif.getSender() != null ? notif.getSender().getUsername() : "System");
         dto.setText(notif.getText());
         dto.setRead(notif.isRead());
-        dto.setTime(getTimeAgo(notif.getCreatedAt()));
+        dto.setTime(com.project.block.util.TimeFormatterUtil.getTimeAgo(notif.getCreatedAt()));
         return dto;
     }
 
-    private String getTimeAgo(LocalDateTime past) {
-        Duration duration = Duration.between(past, LocalDateTime.now());
-        long seconds = duration.getSeconds();
-        if (seconds < 60)
-            return seconds + "s ago";
-        long minutes = seconds / 60;
-        if (minutes < 60)
-            return minutes + "m ago";
-        long hours = minutes / 60;
-        if (hours < 24)
-            return hours + "h ago";
-        long days = hours / 24;
-        return days + "d ago";
-    }
 }

@@ -21,10 +21,15 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("SELECT p FROM Post p WHERE p.user.id = :userId ORDER BY p.timestamp DESC")
     List<Post> findPostsByUserId(@Param("userId") Long userId);
 
+    @Query("SELECT p FROM Post p WHERE p.user.id = :userId AND p.status = :status ORDER BY p.timestamp DESC")
+    List<Post> findPostsByUserIdAndStatus(@Param("userId") Long userId, @Param("status") String status);
+
     /**
      * Find all posts ordered by timestamp descending
      * 
      * @return List of Posts
      */
     List<Post> findAllByOrderByTimestampDesc();
+
+    List<Post> findByStatusOrderByTimestampDesc(String status);
 }

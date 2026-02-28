@@ -29,6 +29,13 @@ export class PostComponent implements OnInit {
   isOwner = false;
   newCommentText = '';
 
+  isContentExpanded = false;
+  contentLimit = 200;
+
+  toggleContent() {
+    this.isContentExpanded = !this.isContentExpanded;
+  }
+
   mockComments: Comment[] = [];
 
   constructor(
@@ -105,10 +112,10 @@ export class PostComponent implements OnInit {
             authorName: newCommentFromServer.user.username,
             authorAvatar: "",
             content: newCommentFromServer.content,
-            timestamp: new Date(newCommentFromServer.timestamp),
+            timestamp: newCommentFromServer.timestamp,
             user: {
               role: newCommentFromServer.user.role,
-              user_id: newCommentFromServer.user.id,
+              user_id: newCommentFromServer.user.user_id,
               username: newCommentFromServer.user.username,
               email: newCommentFromServer.user.email
               , userAvatar: newCommentFromServer.user.userAvatar

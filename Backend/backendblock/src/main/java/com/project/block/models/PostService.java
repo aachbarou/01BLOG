@@ -54,15 +54,11 @@ public class PostService {
      * @return List of Posts
      */
     public List<Post> getPostsByUserId(Long userId) {
-        List<Post> posts = postRepository.findPostsByUserId(userId);
-        // add isLiked property
-        // User currentUser = (User)
-        // SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        // for (Post post : posts) {
-        // boolean isLiked = likeRepository.existsByUserAndPost(currentUser, post);
-        // post.setLiked(isLiked);
-        // }
-        return posts;
+        return postRepository.findPostsByUserId(userId);
+    }
+
+    public List<Post> getVisiblePostsByUserId(Long userId) {
+        return postRepository.findPostsByUserIdAndStatus(userId, "visible");
     }
 
     /**
@@ -141,6 +137,7 @@ public class PostService {
         post.setMediaUrl(mediaUrl);
         post.setTimestamp(LocalDateTime.now());
         post.setUser(currentUser);
+        post.setStatus("visible");
 
         postRepository.save(post);
     }
@@ -238,10 +235,11 @@ public class PostService {
         dto.setTitle(post.getTitle());
         dto.setContent(post.getContent());
         dto.setMediaUrl(post.getMediaUrl());
-        dto.setTimestamp(post.getTimestamp());
+        dto.setTimestamp(com.project.block.util.TimeFormatterUtil.getTimeAgo(post.getTimestamp()));
         dto.setLikes(post.getLikes() != null ? post.getLikes() : 0);
         dto.setComments(getHowmanyComments(post.getId()));
         dto.setLiked(isLikedByCurrentUser(post.getId()));
+        dto.setStatus(post.getStatus());
 
         if (post.getUser() != null) {
             dto.setUser(new UserDTO(
@@ -261,11 +259,16 @@ public class PostService {
                 .toList();
     }
 
+    public List<PostDTO> getAllVisiblePostsDTO() {
+        return postRepository.findByStatusOrderByTimestampDesc("visible").stream()
+                .map(this::mapToDTO)
+                .toList();
+    }
+
     public void updatePostStatus(Long id, String status) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Post not found"));
-        // Store status as-is (could be "visible", "hidden", etc.)
-        // Post entity doesn't have a status field yet, so we skip for now
+        post.setStatus(status);
         postRepository.save(post);
     }
 }

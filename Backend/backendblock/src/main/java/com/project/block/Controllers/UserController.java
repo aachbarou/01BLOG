@@ -17,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.project.block.dto.PostDTO;
 import com.project.block.dto.ResposeData;
 import com.project.block.dto.UserProfile;
-import com.project.block.entity.Post;
 import com.project.block.entity.User;
 import com.project.block.models.PostService;
 import com.project.block.models.UserService;
