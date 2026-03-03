@@ -189,4 +189,28 @@ export class AdminDashboardComponent implements OnInit {
     goBack(): void {
         this.router.navigate(['/home']);
     }
+
+    navigateToTarget(report: Report): void {
+        if (report.type === 'post') {
+            window.open(`/post/${report.targetId}`, '_blank');
+        } else if (report.type === 'user') {
+            window.open(`/profile/${report.targetId}`, '_blank');
+        }
+    }
+
+    navigateToProfile(userId: number): void {
+        window.open(`/profile/${userId}`, '_blank');
+    }
+
+    openPostInNewTab(postId: number): void {
+        window.open(`/post/${postId}`, '_blank');
+    }
+
+    getReportAvatarUrl(userAvatar: string | undefined, username: string): string {
+        if (userAvatar) {
+            return `http://localhost:8080/files/${userAvatar}`;
+        }
+        return `https://ui-avatars.com/api/?name=${username}&background=e7e5e4&color=1c1917`;
+    }
 }
+

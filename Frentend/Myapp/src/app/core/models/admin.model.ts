@@ -28,4 +28,15 @@ export interface Report {
     targetId: number;
     timestamp: string;
     status: string;
+    reporterUser?: {
+        user_id: number;
+        username: string;
+        userAvatar: string;
+    };
+    targetUser?: {
+        user_id: number;
+        username: string;
+        userAvatar: string;
+    };
+    targetPostTitle?: string;
 }

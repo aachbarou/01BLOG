@@ -1,10 +1,14 @@
 package com.project.block.Controllers;
 
+import com.project.block.dto.ReportDTO;
 import com.project.block.dto.ResposeData;
 import com.project.block.dto.UserDTO;
+import com.project.block.entity.Post;
+import com.project.block.entity.Report;
 import com.project.block.entity.User;
 import com.project.block.models.PostService;
 import com.project.block.models.UserService;
+import com.project.block.repository.PostRepository;
 import com.project.block.repository.ReportRepository;
 import com.project.block.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +17,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -23,13 +29,16 @@ public class AdminController {
     private final PostService postService;
     private final ReportRepository reportRepository;
     private final UserRepository userRepository;
+    private final PostRepository postRepository;
 
     public AdminController(UserService userService, PostService postService,
-            ReportRepository reportRepository, UserRepository userRepository) {
+            ReportRepository reportRepository, UserRepository userRepository,
+            PostRepository postRepository) {
         this.userService = userService;
         this.postService = postService;
         this.reportRepository = reportRepository;
         this.userRepository = userRepository;
+        this.postRepository = postRepository;
     }
 
     // ── Helper: get current admin's ID ──
@@ -96,13 +105,46 @@ public class AdminController {
 
     @GetMapping("/reports")
     public ResponseEntity<?> getReports() {
-        return ResponseEntity
-                .ok(new ResposeData("Reports fetched", 200, reportRepository.findAllByOrderByTimestampDesc()));
+        List<Report> reports = reportRepository.findAllByOrderByTimestampDesc();
+        List<ReportDTO> dtos = reports.stream().map(this::mapReportToDTO).collect(Collectors.toList());
+        return ResponseEntity.ok(new ResposeData("Reports fetched", 200, dtos));
     }
 
     @DeleteMapping("/reports/{id}")
     public ResponseEntity<?> resolveReport(@PathVariable Long id) {
         reportRepository.deleteById(id);
         return ResponseEntity.ok(new ResposeData("Report dismissed", 200, null));
+    }
+
+    private ReportDTO mapReportToDTO(Report report) {
+        ReportDTO dto = new ReportDTO();
+        dto.setId(report.getId());
+        dto.setType(report.getType());
+        dto.setReason(report.getReason());
+        dto.setReporter(report.getReporter());
+        dto.setTargetId(report.getTargetId());
+        dto.setTimestamp(report.getTimestamp() != null
+                ? com.project.block.util.TimeFormatterUtil.getTimeAgo(report.getTimestamp())
+                : null);
+        dto.setStatus(report.getStatus());
+
+        // Resolve reporter user
+        Optional<User> reporterOpt = userRepository.findByUsername(report.getReporter());
+        reporterOpt.ifPresent(user -> dto.setReporterUser(new UserDTO(
+                user.getUser_id(), user.getUsername(), user.getUserAvatar(),
+                user.getRole(), user.getEmail(), user.isBanned())));
+
+        // Resolve target based on type
+        if ("user".equals(report.getType())) {
+            Optional<User> targetOpt = userRepository.findById(report.getTargetId());
+            targetOpt.ifPresent(user -> dto.setTargetUser(new UserDTO(
+                    user.getUser_id(), user.getUsername(), user.getUserAvatar(),
+                    user.getRole(), user.getEmail(), user.isBanned())));
+        } else if ("post".equals(report.getType())) {
+            Optional<Post> postOpt = postRepository.findById(report.getTargetId());
+            postOpt.ifPresent(post -> dto.setTargetPostTitle(post.getTitle()));
+        }
+
+        return dto;
     }
 }
