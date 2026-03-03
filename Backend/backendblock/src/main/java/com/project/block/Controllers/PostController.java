@@ -135,10 +135,17 @@ public class PostController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getPostById(@PathVariable Long id) {
         try {
-            return ResponseEntity.ok(new ResposeData("Post fetched successfully", 200, postService.getPostById(id)));
+            return ResponseEntity
+                    .ok(new ResposeData("Post fetched successfully", 200, postService.getVisiblePostById(id)));
+        } catch (SecurityException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(new ResposeData("Access denied: this post is hidden", 403, null));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ResposeData("Post not found", 404, null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ResposeData("Internal Server Error" + e.getMessage(), 500, null));
+                    .body(new ResposeData("Internal Server Error: " + e.getMessage(), 500, null));
         }
     }
 

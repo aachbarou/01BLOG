@@ -195,6 +195,31 @@ public class PostService {
         return postRepository.findById(id).orElseThrow(() -> new RuntimeException("Post not found"));
     }
 
+    /**
+     * Get a single post by ID with visibility checks.
+     * - If not found → throws RuntimeException("Post not found")
+     * - If hidden and user is not owner/admin → throws SecurityException("Access
+     * denied")
+     * - Otherwise → returns PostDTO
+     */
+    public PostDTO getVisiblePostById(Long id) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Post not found"));
+
+        if (!"visible".equals(post.getStatus())) {
+            User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            boolean isOwner = post.getUser() != null
+                    && post.getUser().getUser_id().equals(currentUser.getUser_id());
+            boolean isAdmin = "admin".equalsIgnoreCase(currentUser.getRole());
+
+            if (!isOwner && !isAdmin) {
+                throw new SecurityException("Access denied");
+            }
+        }
+
+        return mapToDTO(post);
+    }
+
     public boolean canEditPost(Long postId) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new RuntimeException("Post not found"));
         User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
