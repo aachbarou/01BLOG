@@ -53,12 +53,14 @@ public class PostController {
             @org.springframework.web.bind.annotation.RequestParam(value = "file", required = false) org.springframework.web.multipart.MultipartFile file) {
         try {
             postService.createPost(post, file);
-            return ResponseEntity.ok(new ResposeData("Post  Created  Seccess...", 200, null));
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(new ResposeData("Post created successfully", 201, null));
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("hada  hwa  error " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ResposeData("Error: " + e.getMessage(), 400, null));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Internal Server Error: " + e.getMessage());
+                    .body(new ResposeData("Internal Server Error: " + e.getMessage(), 500, null));
         }
 
     }
@@ -86,9 +88,14 @@ public class PostController {
      */
     @GetMapping("/User/{userId}")
     public ResponseEntity<?> getUserPosts(@PathVariable Long userId) {
-
-        return ResponseEntity
-                .ok(new ResposeData("Posts fetched successfully", 200, postService.getVisiblePostsByUserId(userId)));
+        try {
+            return ResponseEntity
+                    .ok(new ResposeData("Posts fetched successfully", 200,
+                            postService.getVisiblePostsByUserId(userId)));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResposeData("Error: " + e.getMessage(), 500, null));
+        }
     }
 
     @PutMapping("/{id}")
@@ -155,7 +162,8 @@ public class PostController {
             boolean liked = postService.toggleLike(id);
             return ResponseEntity.ok(new ResposeData(liked ? "Liked" : "Unliked", 200, liked));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResposeData("Error: " + e.getMessage(), 500, null));
         }
     }
 

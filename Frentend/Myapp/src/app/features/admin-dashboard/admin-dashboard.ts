@@ -128,6 +128,11 @@ export class AdminDashboardComponent implements OnInit {
             next: () => {
                 this.posts = this.posts.filter(p => p.id !== id);
                 this.cdn.detectChanges();
+            },
+            error: (err) => {
+                this.errorMessage = err.error?.message || 'Failed to delete post';
+                this.cdn.detectChanges();
+                setTimeout(() => { this.errorMessage = ''; this.cdn.detectChanges(); }, 4000);
             }
         });
     }
@@ -171,6 +176,11 @@ export class AdminDashboardComponent implements OnInit {
             next: () => {
                 this.reports = this.reports.filter(r => r.id !== id);
                 this.cdn.detectChanges();
+            },
+            error: (err) => {
+                this.errorMessage = err.error?.message || 'Failed to resolve report';
+                this.cdn.detectChanges();
+                setTimeout(() => { this.errorMessage = ''; this.cdn.detectChanges(); }, 4000);
             }
         });
     }

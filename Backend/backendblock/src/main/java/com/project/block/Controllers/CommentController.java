@@ -55,7 +55,8 @@ public class CommentController {
             Comment savedComment = commentService.addComment(postId, cleanContent);
             CommentDTO savedCommentDTO = commentService.mapToDTO(savedComment);
 
-            return ResponseEntity.ok(new ResposeData("Comment added successfully", 200, savedCommentDTO));
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(new ResposeData("Comment added successfully", 201, savedCommentDTO));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new ResposeData("Error: " + e.getMessage(), 400, null));

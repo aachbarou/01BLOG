@@ -18,6 +18,8 @@ export class ProfileComponent implements OnInit {
   profile?: any;
   isOwnProfile: boolean = false;
   isLoadingFollow: boolean = false;
+  isLoading: boolean = true;
+  errorCode: number | null = null;
 
   constructor(
     private userService: UserService,
@@ -26,11 +28,19 @@ export class ProfileComponent implements OnInit {
     private router: Router
   ) { }
   fetchProfile(id?: number): void {
+    this.isLoading = true;
+    this.errorCode = null;
     this.userService.getUserProfile(id).subscribe({
       next: (response) => {
         this.profile = response.data;
         this.profile.avatarUrl = this.profile.avatarUrl;
         this.isOwnProfile = this.profile.owned;
+        this.isLoading = false;
+        this.cdn.detectChanges();
+      },
+      error: (err) => {
+        this.isLoading = false;
+        this.errorCode = err.status || 500;
         this.cdn.detectChanges();
       }
     });
@@ -47,7 +57,6 @@ export class ProfileComponent implements OnInit {
       }
     });
   }
-
 
 
 
@@ -87,5 +96,9 @@ export class ProfileComponent implements OnInit {
 
   onReportSubmitted(): void {
     alert('Thank you, the user has been reported.');
+  }
+
+  goHome(): void {
+    this.router.navigate(['/home']);
   }
 }

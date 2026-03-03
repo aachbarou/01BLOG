@@ -94,8 +94,8 @@ public class UserController {
             return ResponseEntity.ok(new ResposeData("User fetched successfully", 200, userProfile));
 
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ResposeData("Error: " + e.getMessage(), 404, null));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResposeData("Error: " + e.getMessage(), 500, null));
         }
     }
 

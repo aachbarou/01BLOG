@@ -11,6 +11,7 @@ import com.project.block.models.UserService;
 import com.project.block.repository.PostRepository;
 import com.project.block.repository.ReportRepository;
 import com.project.block.repository.UserRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -49,71 +50,113 @@ public class AdminController {
 
     @GetMapping("/users")
     public ResponseEntity<?> getAllUsers() {
-        List<UserDTO> users = userService.getAllUsers();
-        return ResponseEntity.ok(new ResposeData("Users fetched", 200, users));
+        try {
+            List<UserDTO> users = userService.getAllUsers();
+            return ResponseEntity.ok(new ResposeData("Users fetched", 200, users));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResposeData("Error: " + e.getMessage(), 500, null));
+        }
     }
 
     @PostMapping("/users/{id}/ban")
     public ResponseEntity<?> toggleBanUser(@PathVariable Long id) {
-        // Admin cannot ban themselves
-        if (id.equals(getCurrentUserId())) {
-            return ResponseEntity.badRequest()
-                    .body(new ResposeData("You cannot ban yourself", 400, null));
-        }
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        if (user.isBanned()) {
-            userService.unbanUser(user);
-            return ResponseEntity.ok(new ResposeData("User unbanned successfully", 200, "Active"));
-        } else {
-            userService.banUser(user);
-            return ResponseEntity.ok(new ResposeData("User banned successfully", 200, "Banned"));
+        try {
+            // Admin cannot ban themselves
+            if (id.equals(getCurrentUserId())) {
+                return ResponseEntity.badRequest()
+                        .body(new ResposeData("You cannot ban yourself", 400, null));
+            }
+            User user = userRepository.findById(id).orElse(null);
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(new ResposeData("User not found", 404, null));
+            }
+            if (user.isBanned()) {
+                userService.unbanUser(user);
+                return ResponseEntity.ok(new ResposeData("User unbanned successfully", 200, "Active"));
+            } else {
+                userService.banUser(user);
+                return ResponseEntity.ok(new ResposeData("User banned successfully", 200, "Banned"));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResposeData("Error: " + e.getMessage(), 500, null));
         }
     }
 
     @DeleteMapping("/users/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
-        // Admin cannot delete themselves
-        if (id.equals(getCurrentUserId())) {
-            // Check if another admin exists
-            long adminCount = userRepository.countByRole("ADMIN");
-            if (adminCount <= 1) {
-                return ResponseEntity.badRequest()
-                        .body(new ResposeData("Cannot delete yourself — you are the only admin", 400, null));
+        try {
+            // Admin cannot delete themselves if sole admin
+            if (id.equals(getCurrentUserId())) {
+                long adminCount = userRepository.countByRole("ADMIN");
+                if (adminCount <= 1) {
+                    return ResponseEntity.badRequest()
+                            .body(new ResposeData("Cannot delete yourself — you are the only admin", 400, null));
+                }
             }
+            userService.deleteUser(id);
+            return ResponseEntity.ok(new ResposeData("User deleted successfully", 200, null));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResposeData("Error: " + e.getMessage(), 500, null));
         }
-        userService.deleteUser(id);
-        return ResponseEntity.ok(new ResposeData("User deleted successfully", 200, null));
     }
 
     @GetMapping("/posts")
     public ResponseEntity<?> getAllPosts() {
-        return ResponseEntity.ok(new ResposeData("All posts fetched", 200, postService.getAllPostsDTO()));
+        try {
+            return ResponseEntity.ok(new ResposeData("All posts fetched", 200, postService.getAllPostsDTO()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResposeData("Error: " + e.getMessage(), 500, null));
+        }
     }
 
     @PutMapping("/posts/{id}/status")
     public ResponseEntity<?> changePostStatus(@PathVariable Long id, @RequestParam String status) {
-        postService.updatePostStatus(id, status);
-        return ResponseEntity.ok(new ResposeData("Post status updated to " + status, 200, null));
+        try {
+            postService.updatePostStatus(id, status);
+            return ResponseEntity.ok(new ResposeData("Post status updated to " + status, 200, null));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResposeData("Error: " + e.getMessage(), 500, null));
+        }
     }
 
     @DeleteMapping("/posts/{id}")
     public ResponseEntity<?> deletePost(@PathVariable Long id) {
-        postService.deletePost(id);
-        return ResponseEntity.ok(new ResposeData("Post deleted by admin", 200, null));
+        try {
+            postService.deletePost(id);
+            return ResponseEntity.ok(new ResposeData("Post deleted by admin", 200, null));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResposeData("Error: " + e.getMessage(), 500, null));
+        }
     }
 
     @GetMapping("/reports")
     public ResponseEntity<?> getReports() {
-        List<Report> reports = reportRepository.findAllByOrderByTimestampDesc();
-        List<ReportDTO> dtos = reports.stream().map(this::mapReportToDTO).collect(Collectors.toList());
-        return ResponseEntity.ok(new ResposeData("Reports fetched", 200, dtos));
+        try {
+            List<Report> reports = reportRepository.findAllByOrderByTimestampDesc();
+            List<ReportDTO> dtos = reports.stream().map(this::mapReportToDTO).collect(Collectors.toList());
+            return ResponseEntity.ok(new ResposeData("Reports fetched", 200, dtos));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResposeData("Error: " + e.getMessage(), 500, null));
+        }
     }
 
     @DeleteMapping("/reports/{id}")
     public ResponseEntity<?> resolveReport(@PathVariable Long id) {
-        reportRepository.deleteById(id);
-        return ResponseEntity.ok(new ResposeData("Report dismissed", 200, null));
+        try {
+            reportRepository.deleteById(id);
+            return ResponseEntity.ok(new ResposeData("Report dismissed", 200, null));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResposeData("Error: " + e.getMessage(), 500, null));
+        }
     }
 
     private ReportDTO mapReportToDTO(Report report) {

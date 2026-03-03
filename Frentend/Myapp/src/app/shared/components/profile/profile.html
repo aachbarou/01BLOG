@@ -1,4 +1,55 @@
-@if (profile) {
+<!-- Error State -->
+@if (errorCode) {
+<div class="profile-error-container">
+    <div class="profile-error-card">
+        @if (errorCode === 404) {
+        <div class="error-icon-wrap orange">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <path d="m15 9-6 6" />
+                <path d="m9 9 6 6" />
+            </svg>
+        </div>
+        <h2 class="error-title">User Not Found</h2>
+        <p class="error-desc">This user doesn't exist or may have been removed.</p>
+        } @else if (errorCode === 403) {
+        <div class="error-icon-wrap red">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
+        </div>
+        <h2 class="error-title">Access Denied</h2>
+        <p class="error-desc">You don't have permission to view this profile.</p>
+        } @else {
+        <div class="error-icon-wrap gray">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                <line x1="12" y1="9" x2="12" y2="13" />
+                <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>
+        </div>
+        <h2 class="error-title">Something Went Wrong</h2>
+        <p class="error-desc">We couldn't load this profile. Please try again later.</p>
+        }
+        <button class="error-home-btn" (click)="goHome()">← Back to Home</button>
+    </div>
+</div>
+}
+
+<!-- Loading State -->
+@else if (isLoading) {
+<div class="loading-state">
+    <div class="pulse-loader"></div>
+    <p>Fetching profile...</p>
+</div>
+}
+
+<!-- Profile Content -->
+@else if (profile) {
 <div class="profile-wrapper animate-in">
     <header class="profile-card-canvas">
         <div class="header-main-flex">
@@ -74,11 +125,6 @@
             (actionClicked)="goCreatePost()"></app-empty-state>
         }
     </main>
-</div>
-} @else {
-<div class="loading-state">
-    <div class="pulse-loader"></div>
-    <p>Fetching profile...</p>
 </div>
 }
 

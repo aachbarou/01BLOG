@@ -829,3 +829,210 @@
         transform: rotate(360deg);
     }
 }
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE — Mobile & Tablet
+   ═══════════════════════════════════════════ */
+
+/* ── Small screens (< 640px) ── */
+@media (max-width: 639px) {
+
+    .admin-page {
+        padding: 1.5rem 1rem 4rem;
+    }
+
+    .admin-title {
+        font-size: 1.5rem;
+    }
+
+    /* Tabs: smaller on mobile */
+    .tab-bar {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        gap: 0;
+    }
+
+    .tab-btn {
+        padding: 0.5rem 0.85rem;
+        font-size: 0.55rem;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    /* ── Users tab: convert table to card layout ── */
+    .table-card {
+        border-radius: 1.5rem;
+    }
+
+    .admin-table thead {
+        display: none;
+    }
+
+    .admin-table,
+    .admin-table tbody,
+    .admin-table tr,
+    .admin-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .admin-table tbody tr {
+        padding: 1rem 1.25rem;
+        border-top: 1px solid var(--stone-100);
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .td-user {
+        padding: 0;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .admin-table tbody tr td:nth-child(2),
+    .admin-table tbody tr td:nth-child(3) {
+        padding: 0;
+    }
+
+    .td-actions {
+        padding: 0.5rem 0 0 0;
+        width: 100%;
+        justify-content: flex-start;
+        border-top: 1px solid var(--stone-50);
+        margin-top: 0.5rem;
+        padding-top: 0.75rem;
+    }
+
+    /* ── Posts tab: stack vertically ── */
+    .post-card-admin {
+        flex-direction: column;
+        padding: 1rem;
+        border-radius: 1.5rem;
+        gap: 1rem;
+    }
+
+    .post-thumb {
+        width: 100%;
+        height: 10rem;
+        border-radius: 0.75rem;
+    }
+
+    .post-actions {
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 0.5rem;
+    }
+
+    .btn-remove {
+        font-size: 0.55rem;
+        padding: 0.35rem 0.75rem;
+    }
+
+    /* ── Reports tab: stack vertically ── */
+    .report-card {
+        flex-direction: column;
+        padding: 1.25rem;
+        border-radius: 1.5rem;
+        gap: 1rem;
+    }
+
+    .report-actions {
+        flex-direction: row;
+        align-items: stretch;
+        width: 100%;
+    }
+
+    .btn-resolve,
+    .btn-action-report {
+        flex: 1;
+        text-align: center;
+        padding: 0.6rem 0.75rem;
+        font-size: 0.6rem;
+    }
+
+    .report-users-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+    }
+
+    .report-arrow {
+        display: none;
+    }
+
+    .report-user-chip {
+        width: 100%;
+    }
+
+    .report-reason-text {
+        font-size: 0.8rem;
+    }
+
+    /* ── Stats overview ── */
+    .stat-card {
+        padding: 1.5rem;
+        border-radius: 1.5rem;
+    }
+
+    .stat-value {
+        font-size: 2.25rem;
+    }
+}
+
+/* ── Medium screens (640px – 768px) ── */
+@media (min-width: 640px) and (max-width: 767px) {
+
+    .admin-page {
+        padding: 2rem 1.25rem 5rem;
+    }
+
+    /* Users: table still readable, reduce padding */
+    .admin-table th,
+    .admin-table td,
+    .td-user,
+    .td-actions {
+        padding: 1rem;
+    }
+
+    .user-avatar {
+        width: 2rem;
+        height: 2rem;
+    }
+
+    /* Posts: single column */
+    .post-card-admin {
+        gap: 1rem;
+        padding: 1.25rem;
+        border-radius: 2rem;
+    }
+
+    .post-thumb {
+        width: 5rem;
+        height: 5rem;
+    }
+
+    .post-actions {
+        flex-wrap: wrap;
+    }
+
+    /* Reports: more compact */
+    .report-card {
+        padding: 1.5rem;
+        border-radius: 2rem;
+    }
+
+    .report-actions {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .btn-resolve,
+    .btn-action-report {
+        padding: 0.5rem 1rem;
+        font-size: 0.65rem;
+    }
+}

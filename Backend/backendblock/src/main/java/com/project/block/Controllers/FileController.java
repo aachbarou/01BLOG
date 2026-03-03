@@ -30,17 +30,24 @@ public class FileController {
      * @throws IOException if file not found or read error
      */
     @GetMapping("/{filename:.+}")
-    public ResponseEntity<?> getFile(@PathVariable String filename) throws IOException {
-        Path filePath = Paths.get(uploadDir).resolve(filename).normalize();
-        Resource resource = new UrlResource(filePath.toUri());
+    public ResponseEntity<?> getFile(@PathVariable String filename) {
+        try {
+            Path filePath = Paths.get(uploadDir).resolve(filename).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
 
-        if (!resource.exists()) {
-            return ResponseEntity.notFound().build();
+            if (!resource.exists()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            String contentType = Files.probeContentType(filePath);
+            if (contentType == null) {
+                contentType = "application/octet-stream";
+            }
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .body(resource);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).build();
         }
-
-        String contentType = Files.probeContentType(filePath);
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(contentType))
-                .body(resource);
     }
 }

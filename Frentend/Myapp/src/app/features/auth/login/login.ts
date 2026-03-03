@@ -44,7 +44,7 @@ export class LoginComponent {
     this.Auths.login(userlogin).subscribe({
       next: (response) => {
         this.isLoading = false;
-        this.Auths.loginSet(response.token);
+        this.Auths.loginSet(response.data.token);
         this.router.navigate(['/']);
       },
       error: (error) => {
