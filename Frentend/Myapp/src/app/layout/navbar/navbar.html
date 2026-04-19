@@ -8,7 +8,7 @@
 
         <div class="nav-actions">
 
-            @if (formData.role?.toLowerCase() === 'admin') {
+            @if (formData.role.toLowerCase() === 'admin') {
             <button class="btn-admin" (click)="navigateToAdmin()">
                 <i data-lucide="shield-alert" style="width: 14px; height: 14px;"></i>
                 <span>Admin</span>
