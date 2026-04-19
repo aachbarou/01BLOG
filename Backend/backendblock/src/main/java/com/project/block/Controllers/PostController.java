@@ -81,6 +81,21 @@ public class PostController {
     }
 
     /**
+     * Endpoint to get posts from users the current user follows
+     * 
+     * @return ResponseEntity containing following posts
+     */
+    @GetMapping("/following")
+    public ResponseEntity<?> getFollowingPosts() {
+        try {
+            List<PostDTO> posts = postService.getFollowingPostsDTO();
+            return ResponseEntity.ok(new ResposeData("Posts fetched successfully", 200, posts));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResposeData("Error", 500, null));
+        }
+    }
+
+    /**
      * Endpoint to get posts by user ID
      * 
      * @param user_id ID of the user

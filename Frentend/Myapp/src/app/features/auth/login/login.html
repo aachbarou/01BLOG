@@ -42,10 +42,6 @@
                 }
             </div>
 
-            <div class="forgot-password-row">
-                <a (click)="resetpass()" class="forgot-link">Forgot password?</a>
-            </div>
-
             <button type="submit" class="btn-submit" [disabled]="isLoading">
                 <span>Sign in</span>
                 
@@ -68,18 +64,12 @@
 
         <div class="social-divider">
             <div class="divider-line"></div>
-            <span class="divider-text">Or continue with</span>
-        </div>
-
-        <div class="social-grid">
-            <button type="button" class="social-btn">G</button>
-            <button type="button" class="social-btn">A</button>
-            <button type="button" class="social-btn">X</button>
+            <span class="divider-text">Or You can Create a new account </span>
         </div>
 
         <p class="card-footer">
-            Not a member?
-            <a (click)="showregister()" class="register-link">Start writing now</a>
+         
+            <a (click)="showregister()" class="register-link">Register now</a>
         </p>
 
     </div>

@@ -14,11 +14,25 @@ import { Router } from '@angular/router';
 })
 export class HomeComponent implements OnInit {
   posts: Post[] = [];
+  activeTab: 'forYou' | 'following' = 'forYou';
 
   constructor(private postService: PostService, private router: Router, private cdn: ChangeDetectorRef) { }
 
   ngOnInit(): void {
-    this.postService.getPosts().subscribe({
+    this.loadPosts();
+  }
+
+  setTab(tab: 'forYou' | 'following'): void {
+    this.activeTab = tab;
+    this.loadPosts();
+  }
+
+  loadPosts(): void {
+    const request = this.activeTab === 'forYou' 
+      ? this.postService.getPosts() 
+      : this.postService.getFollowingPosts();
+
+    request.subscribe({
       next: (response) => {
         this.posts = response.data
         this.cdn.detectChanges();
@@ -30,8 +44,8 @@ export class HomeComponent implements OnInit {
       }
     });
   }
+
   goCreate() {
     this.router.navigate(['/create-post']);
   }
-
 }

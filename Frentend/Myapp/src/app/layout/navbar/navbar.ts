@@ -1,4 +1,4 @@
-import { Component, Injectable, HostListener, AfterViewChecked, OnInit } from '@angular/core';
+import { Component, Injectable, HostListener, AfterViewChecked, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { AutGuard } from '../../core/guards/auth.guard';
 import { AuthServices } from '../../core/services/auth.service';
@@ -20,7 +20,7 @@ declare var lucide: any;
   providedIn: 'root'
 })
 export class Navbar implements OnInit, AfterViewChecked {
-  constructor(private router: Router, private Auth: AutGuard, private Auths: AuthServices, private User: UserService, private notificationService: NotificationService) { }
+  constructor(private router: Router, private Auth: AutGuard, private Auths: AuthServices, private User: UserService, private notificationService: NotificationService, private cdr: ChangeDetectorRef) { }
 
   formData = {
     name: '',
@@ -94,14 +94,19 @@ export class Navbar implements OnInit, AfterViewChecked {
     this.notificationService.markAsRead(id).subscribe({
       next: () => {
         this.notifications = this.notifications.map(n => n.id === id ? { ...n, isRead: true } : n);
+        this.cdr.detectChanges();
       }
     });
   }
 
-  onMarkAllRead() {
+  onMarkAllRead(event?: Event) {
+    if (event) {
+      event.stopPropagation();
+    }
     this.notificationService.markAllAsRead().subscribe({
       next: () => {
         this.notifications = this.notifications.map(n => ({ ...n, isRead: true }));
+        this.cdr.detectChanges();
       }
     });
   }

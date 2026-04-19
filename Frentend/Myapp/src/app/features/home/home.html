@@ -9,8 +9,8 @@
   </section>
 
   <div class="feed-header">
-    <button class="feed-tab active">For You</button>
-    <button class="feed-tab">Trending</button>
+    <button class="feed-tab" [class.active]="activeTab === 'forYou'" (click)="setTab('forYou')">For You</button>
+    <button class="feed-tab" [class.active]="activeTab === 'following'" (click)="setTab('following')">Following</button>
   </div>
 
   <main class="main-content">

@@ -32,4 +32,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findAllByOrderByTimestampDesc();
 
     List<Post> findByStatusOrderByTimestampDesc(String status);
+
+    @Query("SELECT p FROM Post p WHERE p.status = :status AND p.user.user_id IN " +
+           "(SELECT s.followed.user_id FROM Subscription s WHERE s.follower.user_id = :userId) " +
+           "ORDER BY p.timestamp DESC")
+    List<Post> findFollowingPostsByUserId(@Param("userId") Long userId, @Param("status") String status);
 }

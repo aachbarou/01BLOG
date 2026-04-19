@@ -60,7 +60,4 @@ export class LoginComponent {
     this.router.navigate(['/signup']);
   }
 
-  resetpass() {
-    this.router.navigate(['/help']);
-  }
 }

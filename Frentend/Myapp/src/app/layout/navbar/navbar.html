@@ -29,7 +29,7 @@
                     <div class="notif-header">
                         <h3 class="notif-title">Notifications</h3>
                         @if (unreadCount > 0) {
-                        <button class="notif-mark-read" (click)="onMarkAllRead()">
+                        <button class="notif-mark-read" (click)="onMarkAllRead($event)">
                             <i data-lucide="check-check" style="width: 14px; height: 14px;"></i> Mark all as read
                         </button>
                         }
@@ -48,6 +48,8 @@
                                 @if (n.type === 'comment') { <i data-lucide="message-circle"
                                     style="width: 18px; height: 18px;"></i> }
                                 @if (n.type === 'system') { <i data-lucide="sparkles"
+                                    style="width: 18px; height: 18px;"></i> }
+                                @if (n.type === 'post') { <i data-lucide="file-text"
                                     style="width: 18px; height: 18px;"></i> }
                             </div>
                             <div class="notif-content">

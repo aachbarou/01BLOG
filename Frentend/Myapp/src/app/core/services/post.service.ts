@@ -21,6 +21,10 @@ export class PostService {
     return this.http.get<ApiResponse<Post[]>>(this.apiUrl, { headers: this.getHeaders() });
   }
 
+  getFollowingPosts(): Observable<ApiResponse<Post[]>> {
+    return this.http.get<ApiResponse<Post[]>>(`${this.apiUrl}/following`, { headers: this.getHeaders() });
+  }
+
   getPostById(id: number): Observable<ApiResponse<Post>> {
     return this.http.get<ApiResponse<Post>>(`${this.apiUrl}/${id}`, { headers: this.getHeaders() });
   }

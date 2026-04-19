@@ -23,6 +23,8 @@ import com.project.block.entity.User;
 import com.project.block.repository.CommentRepository;
 import com.project.block.repository.LikeRepository;
 import com.project.block.repository.PostRepository;
+import com.project.block.repository.Subscrepository;
+import com.project.block.entity.Subscription;
 
 @Service
 public class PostService {
@@ -33,6 +35,7 @@ public class PostService {
     private String uploadDir;
     private final LikeRepository likeRepository;
     private final NotificationService notificationService;
+    private final Subscrepository subscrepository;
 
     /**
      * Constructor for PostService
@@ -40,11 +43,12 @@ public class PostService {
      * @param postRepository Repository for Post entity
      */
     public PostService(PostRepository postRepository, CommentRepository CommentRepository,
-            LikeRepository likeRepository, NotificationService notificationService) {
+            LikeRepository likeRepository, NotificationService notificationService, Subscrepository subscrepository) {
         this.postRepository = postRepository;
         this.CommentRepository = CommentRepository;
         this.likeRepository = likeRepository;
         this.notificationService = notificationService;
+        this.subscrepository = subscrepository;
     }
 
     /**
@@ -140,6 +144,13 @@ public class PostService {
         post.setStatus("visible");
 
         postRepository.save(post);
+
+        // Notify followers
+        List<Subscription> followers = subscrepository.findByFollowed(currentUser);
+        for (Subscription sub : followers) {
+            notificationService.createNotification(sub.getFollower(), currentUser, "post",
+                    "published a new post: " + post.getTitle());
+        }
     }
 
     public int getHowmanyComments(Long postId) {
@@ -310,5 +321,12 @@ public class PostService {
                 .orElseThrow(() -> new RuntimeException("Post not found"));
         post.setStatus(status);
         postRepository.save(post);
+    }
+
+    public List<PostDTO> getFollowingPostsDTO() {
+        User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return postRepository.findFollowingPostsByUserId(currentUser.getUser_id(), "visible").stream()
+                .map(this::mapToDTO)
+                .toList();
     }
 }

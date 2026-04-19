@@ -13,6 +13,8 @@ import com.project.block.entity.User;
 public interface Subscrepository extends JpaRepository<Subscription, Long> {
     Optional<Subscription> findByFollowerAndFollowed(User follower, User followed);
 
+    List<Subscription> findByFollowed(User followed);
+
     int countByFollowed(User followed);
 
     int countByFollower(User follower);
