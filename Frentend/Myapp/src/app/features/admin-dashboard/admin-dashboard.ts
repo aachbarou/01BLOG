@@ -90,6 +90,10 @@ export class AdminDashboardComponent implements OnInit {
 
     // ── User Actions ──
     toggleBan(id: number): void {
+        const user = this.users.find(u => u.user_id === id);
+        const action = user?.banned ? 'unban' : 'ban';
+        if (!confirm(`Are you sure you want to ${action} this user?`)) return;
+
         this.errorMessage = '';
         this.adminService.banUser(id).subscribe({
             next: (res) => {
@@ -108,6 +112,8 @@ export class AdminDashboardComponent implements OnInit {
     }
 
     deleteUser(id: number): void {
+        if (!confirm('Are you sure you want to permanently delete this user? This action cannot be undone.')) return;
+
         this.errorMessage = '';
         this.adminService.deleteUser(id).subscribe({
             next: () => {
@@ -124,6 +130,8 @@ export class AdminDashboardComponent implements OnInit {
 
     // ── Post Actions ──
     deletePost(id: number): void {
+        if (!confirm('Are you sure you want to permanently delete this post?')) return;
+
         this.adminService.deletePost(id).subscribe({
             next: () => {
                 this.posts = this.posts.filter(p => p.id !== id);
@@ -139,6 +147,9 @@ export class AdminDashboardComponent implements OnInit {
 
     togglePostStatus(id: number, currentStatus: string | undefined): void {
         const newStatus = currentStatus === 'hidden' ? 'visible' : 'hidden';
+        const action = newStatus === 'hidden' ? 'hide' : 'unhide';
+        if (!confirm(`Are you sure you want to ${action} this post?`)) return;
+
         this.adminService.changePostStatus(id, newStatus).subscribe({
             next: () => {
                 this.posts = this.posts.map(p =>
@@ -155,6 +166,8 @@ export class AdminDashboardComponent implements OnInit {
     }
 
     hidePostFromReport(targetId: number): void {
+        if (!confirm('Are you sure you want to hide this post?')) return;
+
         this.adminService.changePostStatus(targetId, 'hidden').subscribe({
             next: () => {
                 this.posts = this.posts.map(p =>
@@ -172,6 +185,8 @@ export class AdminDashboardComponent implements OnInit {
 
     // ── Report Actions ──
     resolveReport(id: number): void {
+        if (!confirm('Are you sure you want to mark this report as resolved?')) return;
+
         this.adminService.resolveReport(id).subscribe({
             next: () => {
                 this.reports = this.reports.filter(r => r.id !== id);

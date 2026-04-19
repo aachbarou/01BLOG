@@ -57,7 +57,7 @@ public class AuthController {
             var curentuser = this.Userservice.loginUser(user);
             if (curentuser.isBanned()) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body(new ResposeData("User account is banned", 403, null));
+                        .body(new ResposeData("Your account is banned", 403, null));
             }
 
             String token = Userservice.GenerateNewToken(curentuser);

@@ -65,14 +65,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        userRepository.findByUsername(username).ifPresent(user -> {
+        var userOpt = userRepository.findByUsername(username);
+        if (userOpt.isPresent()) {
+            var user = userOpt.get();
+            if (user.isBanned()) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setContentType("application/json");
+                response.getWriter().write("{\"message\":\"Your account has been banned.\",\"status\":401}");
+                return;
+            }
             if (jwtUtil.validateToken(token, user)) {
                 var authority = new SimpleGrantedAuthority(
                         "ROLE_" + (user.getRole() == null ? "USER" : user.getRole()));
                 var auth = new UsernamePasswordAuthenticationToken(user, null, Collections.singletonList(authority));
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
-        });
+        }
 
         filterChain.doFilter(request, response);
     }
