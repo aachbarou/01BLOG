@@ -1,0 +1,116 @@
+# ===================================================
+# .gitignore — 01BLOG (Spring Boot + Angular)
+# Production-level audit standards applied
+# ===================================================
+
+# ---------------------------------------------------
+# Environment & Secrets (CRITICAL — audit failure)
+# ---------------------------------------------------
+.env
+.env.*
+.env.local
+.env.development
+.env.production
+.env.staging
+*.pem
+*.key
+*.crt
+*.p12
+*.jks
+*.keystore
+*.truststore
+
+# Spring Boot sensitive configuration
+**/application.properties
+**/application.yml
+**/application-*.properties
+**/application-*.yml
+
+# ---------------------------------------------------
+# IDE & Editor Files
+# ---------------------------------------------------
+.vscode/
+.idea/
+*.iml
+*.ipr
+*.iws
+.project
+.classpath
+.settings/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ---------------------------------------------------
+# Java / Spring Boot / Maven
+# ---------------------------------------------------
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+*.class
+*.jar
+*.war
+*.ear
+*.log
+hs_err_pid*
+replay_pid*
+
+# Maven wrapper downloaded files
+.mvn/wrapper/maven-wrapper.jar
+
+# ---------------------------------------------------
+# Node.js / Angular / Frontend
+# ---------------------------------------------------
+node_modules/
+dist/
+.angular/
+.cache/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ---------------------------------------------------
+# Build Artifacts & Archives
+# ---------------------------------------------------
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# ---------------------------------------------------
+# Uploads & User-Generated Content
+# ---------------------------------------------------
+Uploads/
+uploads/
+
+# ---------------------------------------------------
+# OS-specific Files
+# ---------------------------------------------------
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ---------------------------------------------------
+# Logs
+# ---------------------------------------------------
+logs/
+*.log
+
+# ---------------------------------------------------
+# Test & Coverage
+# ---------------------------------------------------
+coverage/
+*.lcov
+.nyc_output/
+
+# ---------------------------------------------------
+# Misc
+# ---------------------------------------------------
+*.bak
+*.tmp
+*.temp

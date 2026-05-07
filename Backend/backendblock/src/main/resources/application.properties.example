@@ -1,0 +1,16 @@
+    # Database Configuration — FILL IN YOUR OWN VALUES
+    spring.datasource.url=jdbc:postgresql://localhost:5432/YOUR_DB_NAME
+    spring.datasource.username=YOUR_DB_USER
+    spring.datasource.password=YOUR_DB_PASSWORD
+
+    spring.jpa.hibernate.ddl-auto=update
+    spring.jpa.show-sql=true
+    spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+
+    # File Upload Configuration
+    spring.servlet.multipart.max-file-size=100MB
+    spring.servlet.multipart.max-request-size=100MB
+    file.upload-dir=Uploads
+
+    # Shared File Endpoint Variable
+    app.file-base-url=http://localhost:8080/files/
