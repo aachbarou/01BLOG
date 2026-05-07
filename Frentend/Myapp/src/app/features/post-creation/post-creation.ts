@@ -116,7 +116,6 @@ export class PostCreationComponent implements OnInit {
 
     const formData = new FormData();
     formData.append('title', this.title);
-    formData.append('description', this.description);
     formData.append('content', this.content);
     if (this.mediaFile) {
       formData.append('file', this.mediaFile, this.mediaFile.name);
